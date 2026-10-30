@@ -7,7 +7,7 @@
 <title>Hyperliquid — Where do you stand? / Où te situes-tu ?</title>
 <style>
 :root{
-  --ink:#eefaf6;--mute:#9bbbb2;--line:rgba(111,227,207,.16);--acc:#6fe3cf;--accdim:rgba(111,227,207,.14);
+  --ink:#eefaf6;--mute:#9bbbb2;--line:rgba(111,227,207,.32);--acc:#6fe3cf;--accdim:rgba(111,227,207,.14);
   --glass:rgba(5,32,25,.58);--err:#ffb4b4;
   --serif:"Iowan Old Style","Palatino Linotype",Palatino,"Book Antiqua",Georgia,"Times New Roman",serif;
   --sans:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
@@ -19,18 +19,20 @@ body{margin:0;color:var(--ink);font:16px/1.5 var(--sans);min-height:100vh;overfl
 /* ---------- fond animé ---------- */
 .bg{position:fixed;inset:0;z-index:-1;background:#00110d;overflow:hidden}
 .b{position:absolute;border-radius:50%;filter:blur(70px);will-change:transform}
-.b1{width:70vmax;height:70vmax;left:-22vmax;top:-30vmax;background:radial-gradient(circle at 45% 45%,#00573f 0%,#00352a 50%,transparent 72%);animation:f1 28s ease-in-out infinite alternate}
-.b2{width:62vmax;height:62vmax;right:-24vmax;top:-12vmax;background:radial-gradient(circle,#006a50 0%,#003c2e 52%,transparent 72%);animation:f2 34s ease-in-out infinite alternate}
-.b3{width:58vmax;height:58vmax;left:-8vmax;bottom:-34vmax;background:radial-gradient(circle,#0a8f70 0%,#004d3a 50%,transparent 72%);opacity:.8;animation:f3 30s ease-in-out infinite alternate}
-.b4{width:46vmax;height:46vmax;right:-4vmax;bottom:-30vmax;background:radial-gradient(circle,#006d53 0%,#003a2d 55%,transparent 72%);animation:f4 36s ease-in-out infinite alternate}
-.glow{position:absolute;left:8%;bottom:-22vmax;width:46vmax;height:34vmax;background:radial-gradient(closest-side,rgba(61,240,194,.6),rgba(61,240,194,.14) 62%,transparent);filter:blur(34px);animation:gl 14s ease-in-out infinite alternate}
+.b1{width:70vmax;height:70vmax;left:-22vmax;top:-30vmax;background:radial-gradient(circle at 45% 45%,#00573f 0%,#00352a 50%,transparent 72%);animation:f1 20s ease-in-out infinite alternate}
+.b2{width:62vmax;height:62vmax;right:-24vmax;top:-12vmax;background:radial-gradient(circle,#006a50 0%,#003c2e 52%,transparent 72%);animation:f2 24s ease-in-out infinite alternate}
+.b3{width:58vmax;height:58vmax;left:-8vmax;bottom:-34vmax;background:radial-gradient(circle,#0a8f70 0%,#004d3a 50%,transparent 72%);opacity:.8;animation:f3 22s ease-in-out infinite alternate}
+.b4{width:46vmax;height:46vmax;right:-4vmax;bottom:-30vmax;background:radial-gradient(circle,#006d53 0%,#003a2d 55%,transparent 72%);animation:f4 26s ease-in-out infinite alternate}
+.b5{width:36vmax;height:36vmax;left:36%;top:28%;background:radial-gradient(circle,rgba(46,205,165,.30),transparent 68%);filter:blur(80px);opacity:.85;animation:f5 18s ease-in-out infinite alternate}
+.glow{position:absolute;left:8%;bottom:-22vmax;width:46vmax;height:34vmax;background:radial-gradient(closest-side,rgba(61,240,194,.6),rgba(61,240,194,.14) 62%,transparent);filter:blur(34px);animation:gl 11s ease-in-out infinite alternate}
 .vig{position:absolute;inset:0;background:radial-gradient(120% 90% at 50% 40%,transparent 40%,rgba(0,8,6,.6) 100%)}
 .grain{position:absolute;inset:0;opacity:.07;mix-blend-mode:overlay;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
-@keyframes f1{to{transform:translate(14vmax,10vmax) scale(1.18) rotate(24deg)}}
-@keyframes f2{to{transform:translate(-12vmax,12vmax) scale(.9) rotate(-18deg)}}
-@keyframes f3{to{transform:translate(16vmax,-8vmax) scale(1.2) rotate(30deg)}}
-@keyframes f4{to{transform:translate(-14vmax,-6vmax) scale(1.12) rotate(-22deg)}}
-@keyframes gl{to{transform:translate(18vmax,-3vmax) scale(1.25);opacity:.75}}
+@keyframes f1{to{transform:translate(20vmax,14vmax) scale(1.2) rotate(28deg)}}
+@keyframes f2{to{transform:translate(-18vmax,16vmax) scale(.88) rotate(-22deg)}}
+@keyframes f3{to{transform:translate(22vmax,-12vmax) scale(1.22) rotate(34deg)}}
+@keyframes f4{to{transform:translate(-20vmax,-10vmax) scale(1.14) rotate(-26deg)}}
+@keyframes gl{to{transform:translate(26vmax,-5vmax) scale(1.3);opacity:.7}}
+@keyframes f5{to{transform:translate(-14vmax,12vmax) scale(1.3);opacity:.55}}
 @media (prefers-reduced-motion:reduce){.b,.glow{animation:none}}
 
 /* ---------- composants ---------- */
@@ -43,7 +45,7 @@ body{margin:0;color:var(--ink);font:16px/1.5 var(--sans);min-height:100vh;overfl
 .glass{background:var(--glass);border:1px solid var(--line);border-radius:22px;backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)}
 .pill{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:0;border-radius:999px;background:var(--acc);color:#03211c;font:600 15px var(--sans);padding:0 22px;min-height:46px;cursor:pointer;white-space:nowrap}
 .pill svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
-.pill.ghost{background:rgba(0,0,0,.2);color:var(--acc);border:1px solid rgba(111,227,207,.5)}
+.pill.ghost{background:rgba(0,0,0,.2);color:var(--acc);border:1px solid rgba(111,227,207,.75)}
 .pill:disabled{opacity:.6;cursor:default}
 .kicker{display:inline-flex;align-items:center;gap:7px;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--acc);background:rgba(0,0,0,.22);border:1px solid var(--line);border-radius:999px;padding:5px 13px}
 .mark{display:inline-block;width:14px;height:14px;border-radius:50%;border:2px solid var(--acc);position:relative}
@@ -59,7 +61,7 @@ button.link{background:none;border:0;padding:0;color:var(--acc);font:14px var(--
 .hero{width:100%;max-width:860px;text-align:center;display:flex;flex-direction:column;align-items:center;padding:24px 0}
 .hero h1{font:400 clamp(40px,7.2vw,88px)/1.04 var(--serif);margin:18px 0 18px;letter-spacing:-.02em;text-wrap:balance}
 .hero p.lead{margin:0 0 30px;color:#cfe5de;font-size:clamp(15px,2vw,18px);max-width:560px}
-.bigfield{display:flex;gap:10px;align-items:center;width:100%;max-width:700px;padding:8px 8px 8px 20px;background:rgba(2,24,19,.72);border:1px solid rgba(111,227,207,.28);border-radius:999px;backdrop-filter:blur(14px);box-shadow:0 20px 60px rgba(0,0,0,.35)}
+.bigfield{display:flex;gap:10px;align-items:center;width:100%;max-width:700px;padding:8px 8px 8px 20px;background:rgba(2,24,19,.72);border:1px solid rgba(111,227,207,.5);border-radius:999px;backdrop-filter:blur(14px);box-shadow:0 20px 60px rgba(0,0,0,.35)}
 .bigfield:focus-within{border-color:var(--acc);box-shadow:0 0 0 3px rgba(111,227,207,.18),0 20px 60px rgba(0,0,0,.35)}
 .bigfield svg{width:20px;height:20px;stroke:var(--mute);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0}
 .bigfield input{flex:1;min-width:0;background:transparent;border:0;outline:0;color:var(--ink);font:16px ui-monospace,SFMono-Regular,Menlo,monospace;padding:12px 0}
@@ -93,8 +95,8 @@ button.link{background:none;border:0;padding:0;color:var(--acc);font:14px var(--
 .tb-right{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
 .addr{display:inline-flex;align-items:center;gap:8px;padding:8px 14px;border:1px solid var(--line);border-radius:999px;background:rgba(0,0,0,.25);font:13px ui-monospace,SFMono-Regular,Menlo,monospace;color:#d9efe8}
 .pill.sm{min-height:38px;font-size:13.5px;padding:0 16px}
-.card{background:rgba(4,27,21,.74);border:1px solid rgba(111,227,207,.2);border-radius:20px;backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);overflow:hidden}
-.card-head{display:flex;justify-content:space-between;align-items:center;gap:12px 20px;flex-wrap:wrap;padding:14px 24px;border-bottom:1px solid rgba(111,227,207,.12)}
+.card{background:rgba(4,27,21,.74);border:1px solid rgba(111,227,207,.42);box-shadow:inset 0 1px 0 rgba(255,255,255,.07),0 12px 44px rgba(0,0,0,.28);border-radius:20px;backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);overflow:hidden}
+.card-head{display:flex;justify-content:space-between;align-items:center;gap:12px 20px;flex-wrap:wrap;padding:14px 24px;border-bottom:1px solid rgba(111,227,207,.26)}
 .card-body{padding:24px}
 .ct{font:600 12px var(--sans);letter-spacing:.14em;text-transform:uppercase;color:var(--mute);margin:0}
 .ct.acc{color:var(--acc)}
@@ -112,11 +114,11 @@ button.link{background:none;border:0;padding:0;color:var(--acc);font:14px var(--
 /* carte principale */
 .hero-body{display:grid}
 .hero-main{padding:28px 24px}
-.hero-side{padding:24px;border-top:1px solid rgba(111,227,207,.12);display:flex;flex-direction:column;gap:26px;justify-content:center}
+.hero-side{padding:24px;border-top:1px solid rgba(111,227,207,.26);display:flex;flex-direction:column;gap:26px;justify-content:center}
 @media(min-width:920px){
   .hero-body{grid-template-columns:minmax(0,1.1fr) minmax(0,1fr)}
   .hero-main{padding:36px 32px}
-  .hero-side{padding:36px 32px;border-top:0;border-left:1px solid rgba(111,227,207,.12)}
+  .hero-side{padding:36px 32px;border-top:0;border-left:1px solid rgba(111,227,207,.26)}
 }
 .bigtop{font:400 clamp(60px,9vw,108px)/1 var(--serif);letter-spacing:-.025em;margin:0 0 12px;background:linear-gradient(180deg,#fff 15%,#8ff3dc 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
 .sub{color:#cfe5de;font-size:16px;max-width:440px;margin:0 0 24px}
@@ -127,7 +129,7 @@ button.link{background:none;border:0;padding:0;color:var(--acc);font:14px var(--
 .dot span{position:absolute;bottom:36px;left:50%;transform:translateX(-50%);font:700 12px var(--sans);letter-spacing:.14em;color:var(--acc)}
 .mscale{display:flex;justify-content:space-between;font-size:12px;color:var(--mute);margin-top:12px}
 .facts{margin:0;display:grid}
-.facts div{display:flex;justify-content:space-between;align-items:baseline;gap:14px;padding:13px 0;border-top:1px solid rgba(111,227,207,.12)}
+.facts div{display:flex;justify-content:space-between;align-items:baseline;gap:14px;padding:13px 0;border-top:1px solid rgba(111,227,207,.24)}
 .facts dt{color:var(--mute);font-size:14px}
 .facts dd{margin:0;font-weight:600;font-size:15px;font-variant-numeric:tabular-nums;text-align:right}
 /* indicateurs */
@@ -146,7 +148,7 @@ button.link{background:none;border:0;padding:0;color:var(--acc);font:14px var(--
 svg.chart{width:100%;height:auto;display:block}
 .tbody{padding:8px 16px 14px}
 table{width:100%;border-collapse:collapse;font-size:14.5px}
-td,th{padding:9px 8px;text-align:left;font-weight:400;white-space:nowrap;border-bottom:1px solid rgba(111,227,207,.09)}
+td,th{padding:9px 8px;text-align:left;font-weight:400;white-space:nowrap;border-bottom:1px solid rgba(111,227,207,.18)}
 tr:last-child td{border-bottom:0}
 th{color:var(--mute);font-size:11px;letter-spacing:.08em;text-transform:uppercase}
 td:nth-child(2),th:nth-child(2){text-align:right;font-variant-numeric:tabular-nums}
@@ -172,7 +174,7 @@ textarea:focus{outline:2px solid var(--acc);outline-offset:1px}
 </style>
 </head>
 <body>
-<div class="bg" aria-hidden="true"><i class="b b1"></i><i class="b b2"></i><i class="b b3"></i><i class="b b4"></i><i class="glow"></i><i class="vig"></i><i class="grain"></i></div>
+<div class="bg" aria-hidden="true"><i class="b b1"></i><i class="b b2"></i><i class="b b3"></i><i class="b b4"></i><i class="b b5"></i><i class="glow"></i><i class="vig"></i><i class="grain"></i></div>
 
 <!-- ============ 1. ACCUEIL ============ -->
 <section class="view on" id="v-landing">
@@ -390,7 +392,7 @@ function chart(v,r){
   const lv=Math.min(xmax,Math.max(xmin,Math.log10(Math.max(v,1))));
   const px=X(lv),py=Y(r.q),pc=L==="fr"?" %":"%";
   let s=`<defs><clipPath id="cl"><rect x="0" y="0" width="${px}" height="480"/></clipPath></defs>`;
-  [0,.25,.5,.75,1].forEach(p=>{s+=`<line x1="${A}" x2="${B}" y1="${Y(p)}" y2="${Y(p)}" stroke="rgba(111,227,207,.18)" stroke-width="1.5" ${p===0?"":'stroke-dasharray="3 6"'}/><text x="${A-8}" y="${Y(p)+5}" font-size="16" text-anchor="end" fill="#9bbbb2">${p*100}${pc}</text>`;});
+  [0,.25,.5,.75,1].forEach(p=>{s+=`<line x1="${A}" x2="${B}" y1="${Y(p)}" y2="${Y(p)}" stroke="rgba(111,227,207,.3)" stroke-width="1.5" ${p===0?"":'stroke-dasharray="3 6"'}/><text x="${A-8}" y="${Y(p)+5}" font-size="16" text-anchor="end" fill="#9bbbb2">${p*100}${pc}</text>`;});
   for(let e=Math.ceil(xmin);e<=Math.floor(xmax);e++){const lb=tickLabel(e),hw=lb.length*4.6+4,x=X(e);if(x+hw>598||x-hw<A-6)continue;s+=`<text x="${x}" y="422" font-size="16" text-anchor="middle" fill="#9bbbb2">${lb}</text>`;}
   s+=`<text x="${(A+B)/2}" y="460" font-size="16" text-anchor="middle" fill="#9bbbb2">${tr().xl}</text>`;
   s+=`<path d="${d}L${X(xmax)} ${BASE}L${X(xmin)} ${BASE}Z" fill="rgba(111,227,207,.16)" clip-path="url(#cl)"/>`;
