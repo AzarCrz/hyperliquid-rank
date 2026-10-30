@@ -131,6 +131,19 @@ button.link{background:none;border:0;padding:0;color:var(--acc);font:14px var(--
 }
 .col .ct{margin-bottom:8px}
 svg.chart{width:100%;height:auto;display:block;margin:auto 0}
+.ladder{display:none;grid-template-columns:repeat(7,1fr);border-top:1px solid rgba(111,227,207,.26)}
+.lad{padding:13px 8px;text-align:center;border-left:1px solid rgba(111,227,207,.18)}
+.lad:first-child{border-left:0}
+.lad .le{font-size:24px;line-height:1}
+.lad .ln{font-weight:600;font-size:13.5px;margin-top:5px}
+.lad .lv{font-size:12px;color:var(--mute);font-variant-numeric:tabular-nums;margin-top:2px}
+.lad.sel{background:var(--accdim)}
+.lad.sel .ln,.lad.sel .lv{color:var(--acc)}
+@media(max-width:700px){
+  .ladder{grid-template-columns:repeat(4,1fr)}
+  .lad:nth-child(4n+1){border-left:0}
+  .lad:nth-child(n+5){border-top:1px solid rgba(111,227,207,.18)}
+}
 .tier{margin-top:auto;padding-top:14px;border-top:1px solid rgba(111,227,207,.24);display:flex;align-items:center;gap:14px}
 .ticon{font-size:34px;line-height:1}
 .tier .ct{margin:0 0 2px}
@@ -237,6 +250,7 @@ textarea:focus{outline:2px solid var(--acc);outline-offset:1px}
       <div class="col" id="allwrap"><h2 class="ct acc">All periods</h2><table><tbody id="all"></tbody></table></div>
       <div class="col" id="ladwrap" style="display:none"><h2 class="ct acc">Tiers</h2><table><tbody id="lad"></tbody></table></div>
     </div>
+    <div class="ladder" id="ladstrip"></div>
   </section>
 
   <section class="card" id="share">
@@ -247,7 +261,7 @@ textarea:focus{outline:2px solid var(--acc);outline-offset:1px}
         <textarea id="ttext" maxlength="200" aria-label="Post text"></textarea>
         <div class="sbtns">
           <button class="pill full" id="xshare"><svg viewBox="0 0 24 24"><path d="M7 17L17 7M9 7h8v8"/></svg>Share on X</button>
-          <button class="pill ghost" id="cardsave"><svg viewBox="0 0 24 24"><path d="M12 4v11M7 11l5 5 5-5M5 20h14"/></svg>Save image</button>
+          <button class="pill ghost" id="cardsave"><svg viewBox="0 0 24 24"><path d="M12 4v11M7 11l5 5 5-5M5 20h14"/></svg><span id="t_save">Save image</span></button>
           <button class="pill ghost" id="copytxt"><svg viewBox="0 0 24 24"><rect x="8" y="8" width="12" height="12" rx="2.5"/><path d="M16 8V6.5A2.5 2.5 0 0013.5 4h-7A2.5 2.5 0 004 6.5v7A2.5 2.5 0 006.5 16H8"/></svg><span id="t_copy">Copy text</span></button>
         </div>
         <p class="hint">Attach the saved image to your post.</p>
@@ -365,18 +379,20 @@ function renderResults(){
   $("thr").innerHTML=[0.5,0.75,0.9,0.95,0.99].map(q=>`<tr><td>Top ${nf((1-q)*100,0)}%</td><td>${fmtUSD(t[QS.indexOf(q)])}</td></tr>`).join("");
   if(vols&&!manual){
     $("allwrap").style.display="";$("ladwrap").style.display="none";
+    $("ladstrip").style.display="grid";
+    $("ladstrip").innerHTML=TIERS.map((x,i)=>`<div class="lad ${i===tk?"sel":""}"><div class="le">${x.e}</div><div class="ln">${x.n}</div><div class="lv">${i===0?"< "+fmtUSD(volAtTop(t,TIERS[1].top)):fmtUSD(volAtTop(t,x.top))+"+"}</div></div>`).join("");
     $("all").innerHTML=`<tr><th>Period</th><th>Volume</th><th>Rank</th></tr>`+vols.map((x,i)=>{
       const rr=x>0?quantileOf(x,i):null;
       return `<tr class="pick ${i===W?"sel":""}" data-i="${i}"><td>${S.tabs[i]}</td><td>${x>0?fmtUSD(x):"—"}</td><td>${rr?topText(rr):"—"}</td></tr>`;}).join("");
   }else{
-    $("allwrap").style.display="none";$("ladwrap").style.display="";
+    $("allwrap").style.display="none";$("ladwrap").style.display="";$("ladstrip").style.display="none";
     $("lad").innerHTML=TIERS.map((x,i)=>{
       const txt=i===0?"< "+fmtUSD(volAtTop(t,TIERS[1].top)):fmtUSD(volAtTop(t,x.top))+"+";
       return `<tr class="${i===tk?"sel":""}"><td>${x.e} ${x.n}</td><td>${txt}</td></tr>`;}).join("");
   }
   last={top:topText(r),v:fmtUSD(v),vol:S.vol[W]};
   $("ttext").value=shareText();
-  $("cardimg").src=drawCard().toDataURL("image/png");
+  cacheCard();
   return true;
 }
 function buildTabs(){$("tabs").innerHTML=S.tabs.map((n,i)=>`<button class="tab" data-w="${i}" aria-pressed="${i===W}">${n}</button>`).join("");}
@@ -474,15 +490,21 @@ $("mvol").addEventListener("keydown",e=>{if(e.key==="Enter")manualGo();});
 $("back").onclick=async()=>{await show("v-landing");$("addr").focus();};
 $("tabs").addEventListener("click",e=>{const b=e.target.closest(".tab");if(!b)return;W=+b.dataset.w;buildTabs();renderResults();});
 $("all").addEventListener("click",e=>{const row=e.target.closest("tr.pick");if(!row)return;W=+row.dataset.i;buildTabs();renderResults();});
+let cardBlobCached=null;
+function cacheCard(){cardBlobCached=null;const c=drawCard();$("cardimg").src=c.toDataURL("image/png");c.toBlob(bl=>{cardBlobCached=bl;},"image/png");}
+const isMobile=/Android|iPhone|iPad|iPod/i.test(navigator.userAgent)||(navigator.maxTouchPoints>1&&/Mac/.test(navigator.platform));
 $("cardsave").onclick=async()=>{
-  try{
-    const c=drawCard(),blob=await cardBlob(c),file=new File([blob],"hyperliquid-rank.png",{type:"image/png"});
-    if(navigator.canShare&&navigator.canShare({files:[file]})){
-      try{await navigator.share({files:[file],text:$("ttext").value});return;}catch(e){if(e&&e.name==="AbortError")return;}
-    }
-    const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="hyperliquid-rank.png";document.body.appendChild(a);a.click();a.remove();
-    setTimeout(()=>URL.revokeObjectURL(a.href),4000);
-  }catch(e){}
+  const lab=$("t_save"),orig="Save image";
+  let blob=cardBlobCached;
+  if(!blob)blob=await cardBlob(drawCard());
+  const file=new File([blob],"hyperliquid-volume-checker.png",{type:"image/png"});
+  if(isMobile&&navigator.canShare&&navigator.canShare({files:[file]})){
+    try{await navigator.share({files:[file],text:$("ttext").value});return;}catch(e){if(e&&e.name==="AbortError")return;}
+  }
+  const url=URL.createObjectURL(blob),a=document.createElement("a");
+  a.href=url;a.download="hyperliquid-volume-checker.png";document.body.appendChild(a);a.click();a.remove();
+  setTimeout(()=>URL.revokeObjectURL(url),30000);
+  lab.textContent="Saved ✓";setTimeout(()=>{lab.textContent=orig;},1800);
 };
 $("xshare").onclick=()=>{
   const q=new URLSearchParams({text:$("ttext").value});const u=siteUrl();if(u)q.set("url",u);
