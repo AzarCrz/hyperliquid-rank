@@ -86,44 +86,78 @@ button.link{background:none;border:0;padding:0;color:var(--acc);font:14px var(--
 #v-loading p{font:400 24px var(--serif);margin:0;color:#dff3ed}
 
 /* ---------- résultats ---------- */
-#v-results{align-items:center;padding:18px 16px 40px}
-.wrap{width:100%;max-width:1100px;display:flex;flex-direction:column;gap:18px}
-.rbar{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:10px 12px 10px 18px;border-radius:999px;flex-wrap:wrap}
-.who{display:flex;align-items:center;gap:10px;font:14px ui-monospace,SFMono-Regular,Menlo,monospace;color:#d9efe8}
-.rbtns{display:flex;gap:10px;align-items:center}
-.rbtns .pill{min-height:38px;font-size:14px;padding:0 16px}
-.tabs{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
-.tab{border:1px solid var(--line);background:rgba(0,0,0,.22);color:var(--ink);padding:9px 18px;border-radius:999px;font:14px var(--sans);cursor:pointer;backdrop-filter:blur(8px)}
-.tab[aria-pressed=true]{background:var(--acc);border-color:var(--acc);color:#03211c;font-weight:600}
-.rhero{text-align:center;padding:14px 0 6px;display:flex;flex-direction:column;align-items:center}
-.chip{display:inline-block;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--acc);background:rgba(0,0,0,.25);border:1px solid var(--line);border-radius:999px;padding:5px 14px}
-.bigtop{font:400 clamp(72px,15vw,190px)/1 var(--serif);letter-spacing:-.03em;margin:14px 0 6px;background:linear-gradient(180deg,#fff 20%,#8ff3dc 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
-.sub{color:#cfe5de;font-size:clamp(15px,2vw,19px);max-width:620px;margin:0 0 20px}
-.stats3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
-@media(max-width:700px){.stats3{grid-template-columns:1fr 1fr}.stats3 .stat:last-child{grid-column:1/3}.stat{padding:14px 16px}}
-.stat{padding:16px 20px}
-.stat .pt{font:600 11px var(--sans);letter-spacing:.14em;text-transform:uppercase;color:var(--mute)}
-.stat b{display:block;font:400 clamp(30px,4vw,44px)/1.15 var(--serif);margin-top:4px}
-.rgrid{display:grid;gap:14px}
-@media(min-width:860px){.rgrid{grid-template-columns:minmax(0,1.2fr) minmax(0,1fr)}}
-.panel{padding:18px 20px;min-width:0}
-.pt{font:600 11px var(--sans);letter-spacing:.14em;text-transform:uppercase;color:var(--mute);margin:0 0 8px}
-.pt.acc{color:var(--acc)}
+#v-results{align-items:center;padding:20px 20px 48px}
+.wrap{width:100%;max-width:1120px;display:flex;flex-direction:column;gap:20px}
+.topbar{display:flex;align-items:center;gap:10px 12px;flex-wrap:wrap}
+.topbar .brand{margin-right:auto}
+.tb-right{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.addr{display:inline-flex;align-items:center;gap:8px;padding:8px 14px;border:1px solid var(--line);border-radius:999px;background:rgba(0,0,0,.25);font:13px ui-monospace,SFMono-Regular,Menlo,monospace;color:#d9efe8}
+.pill.sm{min-height:38px;font-size:13.5px;padding:0 16px}
+.card{background:rgba(4,27,21,.74);border:1px solid rgba(111,227,207,.2);border-radius:20px;backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);overflow:hidden}
+.card-head{display:flex;justify-content:space-between;align-items:center;gap:12px 20px;flex-wrap:wrap;padding:14px 24px;border-bottom:1px solid rgba(111,227,207,.12)}
+.card-body{padding:24px}
+.ct{font:600 12px var(--sans);letter-spacing:.14em;text-transform:uppercase;color:var(--mute);margin:0}
+.ct.acc{color:var(--acc)}
+.seg{display:inline-flex;background:rgba(0,0,0,.32);border:1px solid var(--line);border-radius:999px;padding:4px;gap:2px;max-width:100%;overflow-x:auto}
+.tab{border:0;background:transparent;color:var(--mute);padding:8px 16px;border-radius:999px;font:500 14px var(--sans);cursor:pointer;white-space:nowrap}
+.tab:hover{color:var(--ink)}
+.tab[aria-pressed=true]{background:var(--acc);color:#03211c;font-weight:600}
+@media(max-width:640px){
+  .topbar .lang{order:2}.topbar .tb-right{order:3;width:100%}
+  .card-head{padding:14px 16px}
+  .card-head .seg{width:100%}
+  .tab{flex:1 1 auto;padding:8px 8px;font-size:13px}
+  .card-body{padding:16px}.hero-main{padding:22px 18px}.hero-side{padding:20px 18px}
+}
+/* carte principale */
+.hero-body{display:grid}
+.hero-main{padding:28px 24px}
+.hero-side{padding:24px;border-top:1px solid rgba(111,227,207,.12);display:flex;flex-direction:column;gap:26px;justify-content:center}
+@media(min-width:920px){
+  .hero-body{grid-template-columns:minmax(0,1.1fr) minmax(0,1fr)}
+  .hero-main{padding:36px 32px}
+  .hero-side{padding:36px 32px;border-top:0;border-left:1px solid rgba(111,227,207,.12)}
+}
+.bigtop{font:400 clamp(60px,9vw,108px)/1 var(--serif);letter-spacing:-.025em;margin:0 0 12px;background:linear-gradient(180deg,#fff 15%,#8ff3dc 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
+.sub{color:#cfe5de;font-size:16px;max-width:440px;margin:0 0 24px}
+.meter .ct{margin-bottom:38px}
+.track{position:relative;height:10px;border-radius:6px;background:rgba(255,255,255,.1)}
+.fill{position:absolute;top:0;bottom:0;right:0;border-radius:0 6px 6px 0;background:linear-gradient(90deg,#6fe3cf,rgba(111,227,207,.22))}
+.dot{position:absolute;top:50%;width:24px;height:24px;margin:-12px 0 0 -12px;border-radius:50%;background:#fff;border:4px solid var(--acc);box-shadow:0 0 0 7px rgba(111,227,207,.18)}
+.dot span{position:absolute;bottom:36px;left:50%;transform:translateX(-50%);font:700 12px var(--sans);letter-spacing:.14em;color:var(--acc)}
+.mscale{display:flex;justify-content:space-between;font-size:12px;color:var(--mute);margin-top:12px}
+.facts{margin:0;display:grid}
+.facts div{display:flex;justify-content:space-between;align-items:baseline;gap:14px;padding:13px 0;border-top:1px solid rgba(111,227,207,.12)}
+.facts dt{color:var(--mute);font-size:14px}
+.facts dd{margin:0;font-weight:600;font-size:15px;font-variant-numeric:tabular-nums;text-align:right}
+/* indicateurs */
+.kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+@media(max-width:760px){.kpis{grid-template-columns:1fr;gap:12px}.kpi{padding:16px 20px}}
+.kpi{padding:20px 24px}
+.kpi .ct{margin-bottom:10px}
+.kpi b{display:block;font:400 clamp(30px,3.6vw,40px)/1.1 var(--serif)}
+.kpi small{display:block;color:var(--mute);font-size:13px;margin-top:8px}
+/* courbe + tableaux */
+.rgrid{display:grid;gap:20px}
+.rgrid>.card:first-child{display:flex;flex-direction:column}
+.rgrid>.card:first-child .card-body{flex:1;display:flex;align-items:center}
+@media(min-width:900px){.rgrid{grid-template-columns:minmax(0,1.15fr) minmax(0,1fr)}}
+.stack{display:grid;gap:20px;align-content:start}
 svg.chart{width:100%;height:auto;display:block}
+.tbody{padding:8px 16px 14px}
 table{width:100%;border-collapse:collapse;font-size:14.5px}
-td,th{padding:7px 8px;text-align:left;font-weight:400;white-space:nowrap}
+td,th{padding:9px 8px;text-align:left;font-weight:400;white-space:nowrap;border-bottom:1px solid rgba(111,227,207,.09)}
+tr:last-child td{border-bottom:0}
 th{color:var(--mute);font-size:11px;letter-spacing:.08em;text-transform:uppercase}
 td:nth-child(2),th:nth-child(2){text-align:right;font-variant-numeric:tabular-nums}
 td:last-child,th:last-child{text-align:right;font-variant-numeric:tabular-nums}
 tr.sel td{background:var(--accdim);color:var(--acc);font-weight:600}
 tr.sel td:first-child{border-radius:8px 0 0 8px}tr.sel td:last-child{border-radius:0 8px 8px 0}
 tr.pick{cursor:pointer}
-.tbls{display:grid;gap:16px;align-content:start}
-.share{padding:22px}
-.share h2{font:400 clamp(24px,3.2vw,34px)/1.15 var(--serif);margin:0 0 16px}
-.sgrid{display:grid;gap:20px}
+/* partage */
+.sgrid{display:grid;gap:24px}
 @media(min-width:900px){.sgrid{grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);align-items:start}}
-#cardimg{width:100%;height:auto;border-radius:16px;border:1px solid var(--line);display:block}
+#cardimg{width:100%;height:auto;border-radius:14px;border:1px solid var(--line);display:block}
 label{font-size:13px;color:var(--mute);display:block;margin-bottom:6px}
 .msgwrap{position:relative}
 textarea{width:100%;height:96px;resize:none;font:15px var(--sans);padding:12px 14px 28px;border:1px solid var(--line);border-radius:14px;background:rgba(0,0,0,.28);color:var(--ink)}
@@ -132,9 +166,9 @@ textarea:focus{outline:2px solid var(--acc);outline-offset:1px}
 .sbtns{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
 .sbtns .full{grid-column:1/3}
 .sbtns .pill{padding:0 12px}
-.info{display:flex;gap:8px;font-size:13px;color:var(--mute);margin-top:14px}
+.info{display:flex;gap:8px;font-size:13px;color:var(--mute);margin-top:16px}
 .info svg{width:16px;height:16px;flex-shrink:0;margin-top:2px;stroke:var(--mute);fill:none;stroke-width:1.8}
-.note{font-size:12.5px;color:var(--mute);text-align:center;margin:6px auto 0;max-width:860px}
+.note{font-size:12.5px;color:var(--mute);text-align:center;margin:0 auto;max-width:860px}
 </style>
 </head>
 <body>
@@ -175,48 +209,70 @@ textarea:focus{outline:2px solid var(--acc);outline-offset:1px}
 <!-- ============ 3. RÉSULTATS ============ -->
 <section class="view" id="v-results">
  <div class="wrap">
-  <header class="rbar glass">
-    <div class="who"><span class="mark"></span><span id="who"></span></div>
-    <div class="rbtns">
-      <button class="pill ghost" id="back"></button>
-      <div class="lang"><button data-l="fr" aria-pressed="false">FR</button><button data-l="en" aria-pressed="false">EN</button></div>
+  <header class="topbar">
+    <div class="brand"><span class="mark"></span><span id="t_brand2"></span></div>
+    <div class="tb-right">
+      <span class="addr"><span class="mark"></span><span id="who"></span></span>
+      <button class="pill ghost sm" id="back"></button>
     </div>
+    <div class="lang"><button data-l="fr" aria-pressed="false">FR</button><button data-l="en" aria-pressed="false">EN</button></div>
   </header>
-  <div class="tabs" id="tabs" role="group"></div>
-  <div class="rhero">
-    <span class="chip" id="chip"></span>
-    <div class="bigtop" id="top"></div>
-    <p class="sub" id="sub"></p>
-    <button class="pill" id="tosahre"><svg viewBox="0 0 24 24"><path d="M7 17L17 7M9 7h8v8"/></svg><span id="t_toshare"></span></button>
-  </div>
-  <div class="stats3">
-    <div class="glass stat"><div class="pt" id="t_vol"></div><b id="vol"></b></div>
-    <div class="glass stat"><div class="pt" id="t_med"></div><b id="med"></b></div>
-    <div class="glass stat"><div class="pt" id="t_ratio"></div><b id="ratio"></b></div>
-  </div>
-  <div class="rgrid">
-    <div class="glass panel"><div class="pt" id="t_chart"></div><svg class="chart" id="chart" viewBox="0 0 600 420" role="img"></svg></div>
-    <div class="tbls">
-      <div class="glass panel"><div class="pt acc" id="t_thr"></div><table><tbody id="thr"></tbody></table></div>
-      <div class="glass panel" id="allwrap"><div class="pt acc" id="t_all"></div><table><tbody id="all"></tbody></table></div>
-    </div>
-  </div>
-  <section class="glass share" id="share">
-    <h2 id="t_share"></h2>
-    <div class="sgrid">
-      <img id="cardimg" alt="">
-      <div>
-        <label for="ttext" id="t_ttext"></label>
-        <div class="msgwrap"><textarea id="ttext" maxlength="120"></textarea><span class="counter" id="counter">0/120</span></div>
-        <div class="sbtns">
-          <button class="pill full" id="xshare"><svg viewBox="0 0 24 24"><path d="M7 17L17 7M9 7h8v8"/></svg><span id="t_x"></span></button>
-          <button class="pill ghost" id="cardsave"><svg viewBox="0 0 24 24"><path d="M12 4v11M7 11l5 5 5-5M5 20h14"/></svg><span id="t_save"></span></button>
-          <button class="pill ghost" id="copytxt"><svg viewBox="0 0 24 24"><rect x="8" y="8" width="12" height="12" rx="2.5"/><path d="M16 8V6.5A2.5 2.5 0 0013.5 4h-7A2.5 2.5 0 004 6.5v7A2.5 2.5 0 006.5 16H8"/></svg><span id="t_copy"></span></button>
+
+  <section class="card">
+    <div class="card-head"><h2 class="ct" id="t_rank"></h2><div class="seg" id="tabs" role="group"></div></div>
+    <div class="hero-body">
+      <div class="hero-main">
+        <div class="bigtop" id="top"></div>
+        <p class="sub" id="sub"></p>
+        <button class="pill" id="tosahre"><svg viewBox="0 0 24 24"><path d="M7 17L17 7M9 7h8v8"/></svg><span id="t_toshare"></span></button>
+      </div>
+      <div class="hero-side">
+        <div class="meter">
+          <h3 class="ct" id="t_meter"></h3>
+          <div class="track"><i class="fill" id="mfill"></i><i class="dot" id="mdot"><span id="t_you"></span></i></div>
+          <div class="mscale"><span>Top 0 %</span><span>Top 50 %</span><span>Top 100 %</span></div>
         </div>
-        <div class="info"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/></svg><span id="cardhint"></span></div>
+        <dl class="facts">
+          <div><dt id="t_next"></dt><dd id="next"></dd></div>
+          <div><dt id="t_gap"></dt><dd id="gap"></dd></div>
+        </dl>
       </div>
     </div>
   </section>
+
+  <section class="kpis">
+    <div class="card kpi"><div class="ct" id="t_vol"></div><b id="vol"></b><small id="cap_vol"></small></div>
+    <div class="card kpi"><div class="ct" id="t_med"></div><b id="med"></b><small id="cap_med"></small></div>
+    <div class="card kpi"><div class="ct" id="t_ratio"></div><b id="ratio"></b><small id="cap_ratio"></small></div>
+  </section>
+
+  <section class="rgrid">
+    <div class="card"><div class="card-head"><h2 class="ct" id="t_chart"></h2></div><div class="card-body"><svg class="chart" id="chart" viewBox="0 0 600 470" role="img"></svg></div></div>
+    <div class="stack">
+      <div class="card"><div class="card-head"><h2 class="ct acc" id="t_thr"></h2></div><div class="tbody"><table><tbody id="thr"></tbody></table></div></div>
+      <div class="card" id="allwrap"><div class="card-head"><h2 class="ct acc" id="t_all"></h2></div><div class="tbody"><table><tbody id="all"></tbody></table></div></div>
+    </div>
+  </section>
+
+  <section class="card" id="share">
+    <div class="card-head"><h2 class="ct" id="t_share"></h2></div>
+    <div class="card-body">
+      <div class="sgrid">
+        <img id="cardimg" alt="">
+        <div>
+          <label for="ttext" id="t_ttext"></label>
+          <div class="msgwrap"><textarea id="ttext" maxlength="120"></textarea><span class="counter" id="counter">0/120</span></div>
+          <div class="sbtns">
+            <button class="pill full" id="xshare"><svg viewBox="0 0 24 24"><path d="M7 17L17 7M9 7h8v8"/></svg><span id="t_x"></span></button>
+            <button class="pill ghost" id="cardsave"><svg viewBox="0 0 24 24"><path d="M12 4v11M7 11l5 5 5-5M5 20h14"/></svg><span id="t_save"></span></button>
+            <button class="pill ghost" id="copytxt"><svg viewBox="0 0 24 24"><rect x="8" y="8" width="12" height="12" rx="2.5"/><path d="M16 8V6.5A2.5 2.5 0 0013.5 4h-7A2.5 2.5 0 004 6.5v7A2.5 2.5 0 006.5 16H8"/></svg><span id="t_copy"></span></button>
+          </div>
+          <div class="info"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/></svg><span id="cardhint"></span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <p class="note" id="foot"></p>
   <p class="note" id="affil2"></p>
   <p class="note" id="refline" style="display:none"></p>
@@ -242,7 +298,7 @@ const I18N={
   bad:"Adresse invalide : elle doit commencer par 0x et faire 42 caractères.",
   api:"Impossible de lire ce wallet pour le moment. Réessaie, ou entre ton volume à la main ci-dessous.",
   none:"Aucun volume enregistré sur cette période pour ce wallet.",novol:"Entre un volume supérieur à 0.",
-  toshare:"Partager mon classement",
+  toshare:"Partager mon classement",rank:"Ton classement",meter:"Position parmi les traders actifs",next:"Prochain palier",gap:"Volume à ajouter",maxed:"Palier maximal atteint",capmed:"La moitié des traders actifs font moins",capratio:"Ton volume ÷ la médiane",
   vol:"Ton volume",med:"Médiane des traders actifs",ratio:"Par rapport à la médiane",
   sub:(p,per)=>`Tu fais partie des ${p} % des traders actifs avec le plus gros volume (${per}).`,
   lowedge:"Tu es parmi les plus petits volumes des traders actifs sur cette période.",highedge:"Tu es tout en haut du classement des traders actifs sur cette période.",
@@ -270,7 +326,7 @@ const I18N={
   bad:"Invalid address: it must start with 0x and be 42 characters long.",
   api:"Couldn't read this wallet right now. Try again, or enter your volume manually below.",
   none:"No volume recorded over this period for this wallet.",novol:"Enter a volume greater than 0.",
-  toshare:"Share my rank",
+  toshare:"Share my rank",rank:"Your rank",meter:"Position among active traders",next:"Next milestone",gap:"Volume to add",maxed:"Top milestone reached",capmed:"Half of active traders trade less",capratio:"Your volume ÷ the median",
   vol:"Your volume",med:"Median active trader",ratio:"Versus the median",
   sub:(p,per)=>`You're among the ${p}% of active traders with the highest volume (${per}).`,
   lowedge:"You're among the smallest volumes of active traders over this period.",highedge:"You're at the very top of active traders over this period.",
@@ -329,14 +385,14 @@ function currentVolume(){return manual?manualVol:(vols?vols[W]:null);}
 
 function chart(v,r){
   const t=T[WK[W]],n=t.length,xmin=Math.log10(t[0]),xmax=Math.log10(t[n-1]);
-  const A=62,B=588,X=l=>A+(l-xmin)/(xmax-xmin)*(B-A),Y=p=>350-p*330,BASE=350;
+  const A=62,B=588,X=l=>A+(l-xmin)/(xmax-xmin)*(B-A),Y=p=>390-p*370,BASE=390;
   let d="";t.forEach((x,i)=>{d+=(i?"L":"M")+X(Math.log10(x)).toFixed(1)+" "+Y(QS[i]).toFixed(1);});
   const lv=Math.min(xmax,Math.max(xmin,Math.log10(Math.max(v,1))));
   const px=X(lv),py=Y(r.q),pc=L==="fr"?" %":"%";
-  let s=`<defs><clipPath id="cl"><rect x="0" y="0" width="${px}" height="440"/></clipPath></defs>`;
+  let s=`<defs><clipPath id="cl"><rect x="0" y="0" width="${px}" height="480"/></clipPath></defs>`;
   [0,.25,.5,.75,1].forEach(p=>{s+=`<line x1="${A}" x2="${B}" y1="${Y(p)}" y2="${Y(p)}" stroke="rgba(111,227,207,.18)" stroke-width="1.5" ${p===0?"":'stroke-dasharray="3 6"'}/><text x="${A-8}" y="${Y(p)+5}" font-size="16" text-anchor="end" fill="#9bbbb2">${p*100}${pc}</text>`;});
-  for(let e=Math.ceil(xmin);e<=Math.floor(xmax);e++){const lb=tickLabel(e),hw=lb.length*4.6+4,x=X(e);if(x+hw>598||x-hw<A-6)continue;s+=`<text x="${x}" y="380" font-size="16" text-anchor="middle" fill="#9bbbb2">${lb}</text>`;}
-  s+=`<text x="${(A+B)/2}" y="418" font-size="16" text-anchor="middle" fill="#9bbbb2">${tr().xl}</text>`;
+  for(let e=Math.ceil(xmin);e<=Math.floor(xmax);e++){const lb=tickLabel(e),hw=lb.length*4.6+4,x=X(e);if(x+hw>598||x-hw<A-6)continue;s+=`<text x="${x}" y="422" font-size="16" text-anchor="middle" fill="#9bbbb2">${lb}</text>`;}
+  s+=`<text x="${(A+B)/2}" y="460" font-size="16" text-anchor="middle" fill="#9bbbb2">${tr().xl}</text>`;
   s+=`<path d="${d}L${X(xmax)} ${BASE}L${X(xmin)} ${BASE}Z" fill="rgba(111,227,207,.16)" clip-path="url(#cl)"/>`;
   s+=`<path d="${d}" fill="none" stroke="#6fe3cf" stroke-width="3" stroke-linejoin="round"/>`;
   s+=`<line x1="${px}" x2="${px}" y1="${py}" y2="${BASE}" stroke="#6fe3cf" stroke-dasharray="4 3"/><line x1="${A}" x2="${px}" y1="${py}" y2="${py}" stroke="#6fe3cf" stroke-dasharray="4 3"/><circle cx="${px}" cy="${py}" r="8" fill="#6fe3cf" stroke="#06231c" stroke-width="3"/>`;
@@ -347,11 +403,15 @@ function renderResults(){
   if(v===null||v<=0){return false;}
   const r=quantileOf(v,W),t=T[WK[W]],med=t[QS.indexOf(0.5)];
   $("who").textContent=manual?T_.manualwho:addrShown;
-  $("chip").textContent=T_.chip[W];
   $("top").textContent=topText(r);
   $("sub").textContent=r.edge==="low"?T_.lowedge:r.edge==="high"?T_.highedge:T_.sub(fmtPct((1-r.q)*100),T_.per[W]);
   $("vol").textContent=fmtUSD(v);$("med").textContent=fmtUSD(med);
   const ra=v/med;$("ratio").textContent="×"+fmtNum(ra,ra<10?2:ra<100?1:0);
+  $("cap_vol").textContent=T_.chip[W];$("cap_med").textContent=T_.capmed;$("cap_ratio").textContent=T_.capratio;
+  const topPct=Math.min(100,Math.max(0,(1-r.q)*100));$("mdot").style.left=topPct+"%";$("mfill").style.left=topPct+"%";
+  const nq=[0.5,0.75,0.9,0.95,0.99].find(q=>q>r.q+1e-9);
+  if(nq===undefined){$("next").textContent=T_.maxed;$("gap").textContent="—";}
+  else{const need=t[QS.indexOf(nq)];$("next").textContent=T_.thrrow(fmtNum((1-nq)*100,0))+" · "+fmtUSD(need);$("gap").textContent="+ "+fmtUSD(Math.max(0,need-v));}
   chart(v,r);
   $("thr").innerHTML=[0.5,0.75,0.9,0.95,0.99].map(q=>`<tr><td>${T_.thrrow(fmtNum((1-q)*100,0))}</td><td>${fmtUSD(t[QS.indexOf(q)])}</td></tr>`).join("");
   if(vols&&!manual){
@@ -366,7 +426,7 @@ function renderResults(){
 }
 function applyLang(){
   const T_=tr();document.documentElement.lang=L;
-  $("t_brand").textContent=T_.brand;$("t_kicker").textContent=T_.kicker;$("t_title").textContent=T_.title;$("t_lead").textContent=T_.lead;
+  $("t_brand").textContent=T_.brand;$("t_brand2").textContent=T_.brand;$("t_rank").textContent=T_.rank;$("t_meter").textContent=T_.meter;$("t_next").textContent=T_.next;$("t_gap").textContent=T_.gap;$("t_you").textContent=T_.cardyou;$("t_kicker").textContent=T_.kicker;$("t_title").textContent=T_.title;$("t_lead").textContent=T_.lead;
   $("go").textContent=T_.go;$("t_mini").textContent=T_.mini;$("mtoggle").textContent=T_.mtoggle;$("mgo").textContent=T_.mgo;$("t_mlabel").textContent=T_.mlabel;
   $("t_loading").textContent=T_.loading;$("back").textContent=T_.back;$("t_toshare").textContent=T_.toshare;
   $("t_vol").textContent=T_.vol;$("t_med").textContent=T_.med;$("t_ratio").textContent=T_.ratio;$("t_chart").textContent=T_.chart;$("t_thr").textContent=T_.thr;$("t_all").textContent=T_.all;
