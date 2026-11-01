@@ -215,7 +215,7 @@ textarea:focus{outline:2px solid var(--acc);outline-offset:1px}
     </div>
     <p class="mini">No connection. No signature.</p>
   </div>
-  <div class="lfoot">Independent tool, not affiliated with Hyperliquid.</div>
+  <div class="lfoot">Independent tool, not affiliated with Hyperliquid. · Made by <a href="https://x.com/hugocrza" target="_blank" rel="noopener">@hugocrza</a></div>
 </section>
 
 <!-- ============ 2. LOADING ============ -->
@@ -293,7 +293,7 @@ textarea:focus{outline:2px solid var(--acc);outline-offset:1px}
   </section>
 
   <p class="note" id="foot"></p>
-  <p class="note">Independent tool, not affiliated with Hyperliquid.</p>
+  <p class="note">Independent tool, not affiliated with Hyperliquid. · Made by <a href="https://x.com/hugocrza" target="_blank" rel="noopener">@hugocrza</a></p>
   <p class="note" id="refline" style="display:none"></p>
  </div>
 </section>
@@ -318,7 +318,7 @@ textarea:focus{outline:2px solid var(--acc);outline-offset:1px}
       <li><b>Accuracy</b>About ±1 point. Less precise at the extremes (very top, very low volumes), and the 24h figure moves the most. The sample is refreshed periodically; its date is shown at the bottom of your results.</li>
     </ol>
   </section>
-  <p class="note">Independent tool, not affiliated with Hyperliquid.</p>
+  <p class="note">Independent tool, not affiliated with Hyperliquid. · Made by <a href="https://x.com/hugocrza" target="_blank" rel="noopener">@hugocrza</a></p>
  </div>
 </section>
 
@@ -648,7 +648,7 @@ $("cardsave").onclick=async()=>{
   lab.textContent="Saved ✓";setTimeout(()=>{lab.textContent=orig;},1800);
 };
 $("xshare").onclick=()=>{
-  const q=new URLSearchParams({text:$("ttext").value});const u=siteUrl();if(u)q.set("url",u);
+  const q=new URLSearchParams({text:$("ttext").value});q.set("via","hugocrza");const u=siteUrl();if(u)q.set("url",u);
   window.open("https://twitter.com/intent/tweet?"+q.toString(),"_blank","noopener");
 };
 $("copytxt").onclick=async()=>{
