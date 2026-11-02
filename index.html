@@ -171,6 +171,46 @@ textarea:focus{outline:2px solid var(--acc);outline-offset:1px}
 .hint{font-size:12.5px;color:var(--mute);margin:12px 0 0}
 .note{font-size:12.5px;color:var(--mute);text-align:center;margin:0 auto;max-width:860px}
 .mlink{margin-left:auto}
+/* ---- motion ---- */
+.seg{position:relative}
+.seg .ind{position:absolute;top:3px;bottom:3px;left:0;width:0;border-radius:999px;background:var(--acc);transition:transform .4s cubic-bezier(.3,.8,.2,1),width .4s cubic-bezier(.3,.8,.2,1);z-index:0;pointer-events:none}
+.tab{position:relative;z-index:1;transition:color .25s}
+.seg.ready .tab[aria-pressed=true]{background:transparent}
+.pill{transition:transform .18s ease,box-shadow .3s ease,background .25s ease,color .25s ease,opacity .2s}
+.pill:hover:not(:disabled){transform:translateY(-1px);box-shadow:0 8px 26px rgba(111,227,207,.22)}
+.pill:active:not(:disabled){transform:scale(.97);box-shadow:none}
+.bigfield{transition:border-color .25s,box-shadow .3s}
+#v-landing.on .hero>*{animation:rise .85s cubic-bezier(.2,.8,.2,1) both}
+#v-landing.on .hero>*:nth-child(2){animation-delay:.07s}#v-landing.on .hero>*:nth-child(3){animation-delay:.14s}
+#v-landing.on .hero>*:nth-child(4){animation-delay:.22s}#v-landing.on .hero>*:nth-child(n+5){animation-delay:.3s}
+.chart .ln{stroke-dasharray:1;stroke-dashoffset:1;animation:draw 1.15s cubic-bezier(.3,.7,.2,1) .05s forwards}
+.chart .ar{animation:fadein .9s ease .45s both}
+.chart line.mk{animation:fadein .5s ease .85s both}
+.chart circle.mk{transform-box:fill-box;transform-origin:center;animation:dotpop .55s cubic-bezier(.3,1.7,.5,1) .95s both}
+@keyframes draw{to{stroke-dashoffset:0}}
+@keyframes fadein{from{opacity:0}to{opacity:1}}
+@keyframes dotpop{from{transform:scale(0)}to{transform:scale(1)}}
+#thr tr,#all tr,#lad tr{animation:rowin .5s cubic-bezier(.2,.8,.2,1) both}
+#thr tr:nth-child(2),#all tr:nth-child(2),#lad tr:nth-child(2){animation-delay:.05s}
+#thr tr:nth-child(3),#all tr:nth-child(3),#lad tr:nth-child(3){animation-delay:.1s}
+#thr tr:nth-child(4),#all tr:nth-child(4),#lad tr:nth-child(4){animation-delay:.15s}
+#thr tr:nth-child(5),#all tr:nth-child(5),#lad tr:nth-child(5){animation-delay:.2s}
+#thr tr:nth-child(n+6),#all tr:nth-child(n+6),#lad tr:nth-child(n+6){animation-delay:.25s}
+#ladstrip .lad{animation:rowin .55s cubic-bezier(.2,.8,.2,1) both}
+#ladstrip .lad:nth-child(2){animation-delay:.05s}#ladstrip .lad:nth-child(3){animation-delay:.1s}#ladstrip .lad:nth-child(4){animation-delay:.15s}
+#ladstrip .lad:nth-child(5){animation-delay:.2s}#ladstrip .lad:nth-child(6){animation-delay:.25s}#ladstrip .lad:nth-child(7){animation-delay:.3s}
+@keyframes rowin{from{opacity:0;transform:translateX(-10px)}to{opacity:1;transform:none}}
+.ticon.pop{display:inline-block;animation:tpop .75s cubic-bezier(.3,1.5,.5,1) both}
+.ticon.glow{animation:tpop .75s cubic-bezier(.3,1.5,.5,1) both,tglow 2.4s ease-in-out .8s 3}
+@keyframes tpop{0%{transform:scale(.3) rotate(-16deg);opacity:0}60%{transform:scale(1.2) rotate(5deg);opacity:1}100%{transform:none;opacity:1}}
+@keyframes tglow{50%{filter:drop-shadow(0 0 12px rgba(111,227,207,.95))}}
+#more,#share{opacity:0;transform:translateY(26px);transition:opacity .8s ease,transform .8s cubic-bezier(.2,.8,.2,1)}
+#more.in,#share.in{opacity:1;transform:none}
+#v-results.on .wrap>#more,#v-results.on .wrap>#share{animation:none}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.001ms!important;animation-delay:0s!important;animation-iteration-count:1!important;transition-duration:.001ms!important}
+  #more,#share{opacity:1;transform:none}
+}
 .tab:disabled{opacity:.35;cursor:default}
 .pill.ghost.on{background:var(--acc);color:#03211c}
 .more .facts{margin:0;border-top:0}
@@ -243,7 +283,7 @@ textarea:focus{outline:2px solid var(--acc);outline-offset:1px}
   </header>
 
   <section class="card">
-    <div class="card-head"><h2 class="ct">Your rank</h2><div class="seg" id="modeseg" role="group" style="display:none"><button class="tab" data-m="all" aria-pressed="true">All volume</button><button class="tab" data-m="hip" aria-pressed="false">HIP-3 only</button></div><div class="seg" id="tabs" role="group"></div></div>
+    <div class="card-head"><h2 class="ct">Your rank</h2><div class="seg" id="modeseg" role="group" style="display:none"><i class="ind"></i><button class="tab" data-m="all" aria-pressed="true">All volume</button><button class="tab" data-m="hip" aria-pressed="false">HIP-3 only</button></div><div class="seg" id="tabs" role="group"></div></div>
     <div class="hero-body">
       <div class="bigtop" id="top"></div>
       <p class="sub" id="sub"></p>
@@ -367,13 +407,15 @@ function startProgress(){
 async function finishProgress(){const i=$("bari");i.style.transition="width .3s ease";i.style.width="100%";await sleep(380);}
 function resetProgress(){const i=$("bari");i.style.transition="none";i.style.width="0";}
 function intro(){
+  introRan=true;const g=++introGen;moveInd($("tabs"));moveInd($("modeseg"));armReveal();
   const dot=$("mdot"),fill=$("mfill");
   dot.style.transition=fill.style.transition="none";dot.style.left=fill.style.left="100%";void dot.offsetWidth;
   dot.style.transition=fill.style.transition="left 1.1s cubic-bezier(.2,.8,.2,1)";dot.style.left=fill.style.left=lastTp+"%";
   if(lastEdge)return;
   const t0=performance.now(),dur=1000,from=100,to=lastTopVal;
   (function step(now){const k=Math.min(1,(now-t0)/dur),e=1-Math.pow(1-k,3);
-    if(k<1){$("top").textContent="Top "+fmtPct(from+(to-from)*e)+"%";requestAnimationFrame(step);}else{$("top").textContent=lastTopText;}})(t0);
+    if(g!==introGen)return;
+    if(k<1){$("top").textContent="Top "+fmtPct(from+(to-from)*e)+"%";requestAnimationFrame(step);}else{$("top").textContent=lastTopText;$("top")._v=lastTopVal;}})(t0);
 }
 const TIERS=[{n:"Shrimp",e:"🦐",top:100},{n:"Crab",e:"🦀",top:50},{n:"Fish",e:"🐟",top:25},{n:"Dolphin",e:"🐬",top:10},{n:"Shark",e:"🦈",top:5},{n:"Whale",e:"🐋",top:1},{n:"Leviathan",e:"🐉",top:0.1}];
 function tierOf(topPct){let k=0;for(let i=0;i<TIERS.length;i++){if(topPct<=TIERS[i].top)k=i;}return k;}
@@ -388,6 +430,40 @@ function fmtUSD(x){
 }
 function tickLabel(e){const x=Math.pow(10,e);if(x>=1e9)return (x/1e9)+"B";if(x>=1e6)return (x/1e6)+"M";if(x>=1e3)return (x/1e3)+"k";return String(x);}
 const fmtPct=p=>nf(p,p<1?2:1);
+const REDUCE=!!(window.matchMedia&&matchMedia("(prefers-reduced-motion: reduce)").matches);
+let introRan=false,introGen=0,lastTier=-1,revealIO=null;
+function tween(el,to,fmt,dur,f0){
+  if(el._raf)cancelAnimationFrame(el._raf);
+  if(REDUCE||!isFinite(to)){el.textContent=fmt(to);el._v=to;return;}
+  const from=isFinite(el._v)?el._v:(f0===undefined?0:f0);
+  if(from===to){el.textContent=fmt(to);el._v=to;return;}
+  const t0=performance.now();
+  (function step(now){
+    const k=Math.min(1,(now-t0)/dur),e=1-Math.pow(1-k,3),v=k<1?from+(to-from)*e:to;
+    el.textContent=fmt(v);el._v=v;
+    if(k<1)el._raf=requestAnimationFrame(step);
+  })(t0);
+}
+function retrig(el,c){el.classList.remove(c);void el.offsetWidth;el.classList.add(c);}
+function moveInd(box){
+  requestAnimationFrame(()=>{
+    const ind=box.querySelector(".ind"),b=box.querySelector('.tab[aria-pressed="true"]');
+    if(!ind||!b||!b.offsetWidth)return;
+    const first=!box.classList.contains("ready");
+    if(first)ind.style.transition="none";
+    ind.style.width=b.offsetWidth+"px";ind.style.transform="translateX("+b.offsetLeft+"px)";
+    if(first){void ind.offsetWidth;ind.style.transition="";box.classList.add("ready");}
+  });
+}
+function armReveal(){
+  const els=[$("more"),$("share")];
+  if(revealIO){revealIO.disconnect();revealIO=null;}
+  if(REDUCE||!("IntersectionObserver" in window)){els.forEach(e=>e.classList.add("in"));return;}
+  els.forEach(e=>e.classList.remove("in"));
+  revealIO=new IntersectionObserver(es=>{es.forEach(en=>{if(en.isIntersecting){en.target.classList.add("in");revealIO.unobserve(en.target);}});},{threshold:.12});
+  els.forEach(e=>revealIO.observe(e));
+}
+window.addEventListener("resize",()=>{moveInd($("tabs"));moveInd($("modeseg"));});
 function THR(w){return MODE==="hip"?D.h[WK[w]]:T[WK[w]];}
 const POP=()=>MODE==="hip"?"HIP-3 traders":"active traders";
 const volLabel=w=>MODE==="hip"?S.volh[w]:S.vol[w];
@@ -417,9 +493,9 @@ function chart(v,r){
   let s=`<defs><clipPath id="cl"><rect x="0" y="0" width="${px}" height="300"/></clipPath></defs>`;
   [0,.5,1].forEach(p=>{s+=`<line x1="${A}" x2="${B}" y1="${Y(p)}" y2="${Y(p)}" stroke="rgba(111,227,207,.3)" stroke-width="1.5" ${p===0?"":'stroke-dasharray="3 6"'}/><text x="${A-8}" y="${Y(p)+6}" font-size="18" text-anchor="end" fill="#9bbbb2">${p*100}%</text>`;});
   for(let e=Math.ceil(xmin);e<=Math.floor(xmax);e++){const lb=tickLabel(e),hw=lb.length*5.4+4,x=X(e);if(x+hw>598||x-hw<A-6)continue;s+=`<text x="${x}" y="284" font-size="18" text-anchor="middle" fill="#9bbbb2">${lb}</text>`;}
-  s+=`<path d="${d}L${X(xmax)} ${BASE}L${X(xmin)} ${BASE}Z" fill="rgba(111,227,207,.16)" clip-path="url(#cl)"/>`;
-  s+=`<path d="${d}" fill="none" stroke="#6fe3cf" stroke-width="3" stroke-linejoin="round"/>`;
-  s+=`<line x1="${px}" x2="${px}" y1="${py}" y2="${BASE}" stroke="#6fe3cf" stroke-dasharray="4 3"/><line x1="${A}" x2="${px}" y1="${py}" y2="${py}" stroke="#6fe3cf" stroke-dasharray="4 3"/><circle cx="${px}" cy="${py}" r="8" fill="#6fe3cf" stroke="#06231c" stroke-width="3"/>`;
+  s+=`<path class="ar" d="${d}L${X(xmax)} ${BASE}L${X(xmin)} ${BASE}Z" fill="rgba(111,227,207,.16)" clip-path="url(#cl)"/>`;
+  s+=`<path class="ln" pathLength="1" d="${d}" fill="none" stroke="#6fe3cf" stroke-width="3" stroke-linejoin="round"/>`;
+  s+=`<line class="mk" x1="${px}" x2="${px}" y1="${py}" y2="${BASE}" stroke="#6fe3cf" stroke-dasharray="4 3"/><line class="mk" x1="${A}" x2="${px}" y1="${py}" y2="${py}" stroke="#6fe3cf" stroke-dasharray="4 3"/><circle class="mk" cx="${px}" cy="${py}" r="8" fill="#6fe3cf" stroke="#06231c" stroke-width="3"/>`;
   $("chart").innerHTML=s;
 }
 function shareText(){return last?`${last.top} of ${last.hip?"Hyperliquid HIP-3 traders":"active Hyperliquid traders"} · ${lc(last.vol)} ${last.v}${last.subs&&!last.hip?" (incl. sub-accounts)":""}`:"";}
@@ -428,18 +504,22 @@ function renderResults(){
   if(v===null||v<=0)return false;
   const r=quantileOf(v,W),t=THR(W),med=t[QS.indexOf(0.5)];
   $("who").textContent=manual?S.manualwho:addrShown;
-  $("top").textContent=topText(r);
+  if(introRan&&!r.edge){introGen++;tween($("top"),(1-r.q)*100,x=>"Top "+fmtPct(x)+"%",750,100);}
+  else{$("top").textContent=topText(r);$("top")._v=r.edge?NaN:(1-r.q)*100;}
   $("sub").textContent=(r.edge==="low"?"lowest volumes of "+POP():r.edge==="high"?"top of "+POP():"of "+POP())+" · "+lc(volLabel(W));
   $("k_vol").textContent=MODE==="hip"?"Your HIP-3 volume":"Your volume";
-  $("vol").textContent=(MODE==="hip"&&hipCov&&!hipCov[W]?"≥ ":"")+fmtUSD(v);$("med").textContent=fmtUSD(med);
+  const pre=MODE==="hip"&&hipCov&&!hipCov[W]?"≥ ":"";
+  tween($("vol"),v,x=>pre+fmtUSD(x),850);tween($("med"),med,fmtUSD,850);
   const tp=Math.min(100,Math.max(0,(1-r.q)*100));$("mdot").style.left=tp+"%";$("mfill").style.left=tp+"%";
   lastTp=tp;lastTopVal=(1-r.q)*100;lastEdge=!!r.edge;lastTopText=topText(r);
   const tk=tierOf(tp),tr_=TIERS[tk],nt=TIERS[tk+1];
   $("ticon").textContent=tr_.e;$("tname").textContent=tr_.n;
+  if(tk!==lastTier){lastTier=tk;retrig($("ticon"),"pop");}
+  $("ticon").classList.toggle("glow",tk>=5);
   $("tnext").textContent=nt?`Next: ${nt.n} · ${fmtUSD(volAtTop(t,nt.top))}`:"Top tier";
   const nq=[0.5,0.75,0.9,0.95,0.99].find(q=>q>r.q+1e-9);
-  if(nq===undefined){$("next").textContent="Top 1% reached";$("gap").textContent="—";}
-  else{const need=t[QS.indexOf(nq)];$("next").textContent="Top "+nf((1-nq)*100,0)+"% · "+fmtUSD(need);$("gap").textContent="+ "+fmtUSD(Math.max(0,need-v));}
+  if(nq===undefined){$("next").textContent="Top 1% reached";$("gap").textContent="—";$("gap")._v=NaN;}
+  else{const need=t[QS.indexOf(nq)];$("next").textContent="Top "+nf((1-nq)*100,0)+"% · "+fmtUSD(need);tween($("gap"),Math.max(0,need-v),x=>"+ "+fmtUSD(x),850);}
   chart(v,r);
   $("thr").innerHTML=[0.5,0.75,0.9,0.95,0.99].map(q=>`<tr><td>Top ${nf((1-q)*100,0)}%</td><td>${fmtUSD(t[QS.indexOf(q)])}</td></tr>`).join("");
   if(vols&&!manual){
@@ -468,8 +548,12 @@ function listenText(){
   return (D.sessions||1)>1?`${D.sessions} sessions (${D.hours}h, last ${d})`:`${D.hours}h (${d})`;
 }
 function buildTabs(){
-  const names=MODE==="hip"?S.tabs.slice(0,3):S.tabs;
-  $("tabs").innerHTML=names.map((n,i)=>`<button class="tab" data-w="${i}" aria-pressed="${i===W}"${MODE==="hip"&&!(hipVols[i]>0&&D.h[HW[i]])?" disabled":""}>${n}</button>`).join("");
+  const names=MODE==="hip"?S.tabs.slice(0,3):S.tabs,box=$("tabs");
+  let ind=box.querySelector(".ind");
+  if(!ind){ind=document.createElement("i");ind.className="ind";box.prepend(ind);}
+  box.querySelectorAll(".tab").forEach(b=>b.remove());
+  box.insertAdjacentHTML("beforeend",names.map((n,i)=>`<button class="tab" data-w="${i}" aria-pressed="${i===W}"${MODE==="hip"&&!(hipVols[i]>0&&D.h[HW[i]])?" disabled":""}>${n}</button>`).join(""));
+  moveInd(box);
 }
 function renderNote(){
   const p=[subMsg];
@@ -482,7 +566,8 @@ function renderMode(){
   if(!ok)return;
   const has=hipVols.some((x,i)=>x>0&&D.h[HW[i]]),hb=$("modeseg").querySelector('[data-m="hip"]');
   hb.disabled=!has;hb.title=has?"":"No HIP-3 volume found for this wallet";
-  for(const b of $("modeseg").children)b.setAttribute("aria-pressed",String(b.dataset.m===MODE));
+  for(const b of $("modeseg").querySelectorAll(".tab"))b.setAttribute("aria-pressed",String(b.dataset.m===MODE));
+  moveInd($("modeseg"));
 }
 function setMode(m){
   if(m===MODE||!hipVols)return;
@@ -628,10 +713,10 @@ function renderMore(){
   if(!on)return;
   $("k_pnl").textContent="Profit · "+S.tabs[W];
   const p=X.pnl[W],act=vols[W]>0,mp=$("m_pnl");
-  if(p===null||!act){mp.textContent="—";mp.className="";$("s_pnl").textContent=act?"":"No activity";}
-  else{const r=quantileSigned(p,D.p[WK[W]]);mp.textContent=fmtSigned(p);mp.className=p<0?"neg":"pos";$("s_pnl").textContent=topText(r)+" by profit";}
-  if(X.av>0){const r=quantileSigned(X.av,D.a);$("m_av").textContent=fmtUSD(X.av);$("s_av").textContent=topText(r)+" by size";}
-  else{$("m_av").textContent="—";$("s_av").textContent="";}
+  if(p===null||!act){mp.textContent="—";mp._v=NaN;mp.className="";$("s_pnl").textContent=act?"":"No activity";}
+  else{const r=quantileSigned(p,D.p[WK[W]]);tween(mp,p,fmtSigned,800);mp.className=p<0?"neg":"pos";$("s_pnl").textContent=topText(r)+" by profit";}
+  if(X.av>0){const r=quantileSigned(X.av,D.a);tween($("m_av"),X.av,fmtUSD,900);$("s_av").textContent=topText(r)+" by size";}
+  else{$("m_av").textContent="—";$("m_av")._v=NaN;$("s_av").textContent="";}
   const kf=$("k_first"),mf=$("m_first"),sf=$("s_first"),me=$("m_fees"),se=$("s_fees"),hl=$("hip");
   if(F.state==="ok"&&F.tot>0){
     const scope=F.capped?`your last ${F.n.toLocaleString("en-US")} fills`:"your full history";
@@ -640,13 +725,13 @@ function renderMore(){
       ?`HIP-3 markets: <b>${nf(F.hip/F.tot*100,F.hip/F.tot<.1?1:0)}%</b> of the volume in ${scope} · most traded: <b>${F.top[0].replace(/[<>&]/g,"")}</b> (${fmtUSD(F.top[1])})${subsOn?" · main address":""}`
       :`HIP-3 markets: none in ${scope}${subsOn?" · main address":""}`;
   }else hl.style.display="none";
-  if(F.state==="loading"||F.state==="idle"){kf.textContent="First trade";mf.textContent="…";sf.textContent="";me.textContent="…";se.textContent="";return;}
+  if(F.state==="loading"||F.state==="idle"){kf.textContent="First trade";mf.textContent="…";sf.textContent="";me.textContent="…";me._v=NaN;se.textContent="";return;}
   const mainOnly=subsOn?" · main address":"";
   if(F.state==="ok"&&!F.capped&&F.first){kf.textContent="First trade";mf.textContent=dfmt(F.first);sf.textContent=subsOn?"main address":"";}
   else if(X.since){kf.textContent="Active since";mf.textContent=dfmt(X.since);sf.textContent="account history";}
   else{kf.textContent="First trade";mf.textContent="—";sf.textContent="";}
-  if(F.state==="ok"){me.textContent=(F.capped?"≥ ":"")+(F.fees<0?"+"+fmtUSD(-F.fees):fmtUSD(F.fees));se.textContent=(F.fees<0?"net rebates · ":"")+(F.capped?"last "+F.n.toLocaleString("en-US")+" fills only":"all-time")+mainOnly;}
-  else{me.textContent="—";se.textContent="unavailable";}
+  if(F.state==="ok"){tween(me,F.fees,f=>(F.capped?"≥ ":"")+(f<0?"+"+fmtUSD(-f):fmtUSD(f)),1000);se.textContent=(F.fees<0?"net rebates · ":"")+(F.capped?"last "+F.n.toLocaleString("en-US")+" fills only":"all-time")+mainOnly;}
+  else{me.textContent="—";me._v=NaN;se.textContent="unavailable";}
 }
 async function lookup(){
   const raw=$("addr").value.trim().toLowerCase();$("err").textContent="";
@@ -666,14 +751,14 @@ async function lookup(){
   vols=res;addrShown=raw.slice(0,6)+"…"+raw.slice(-4);
   if(!(vols[W]>0)){const k=[3,2,1,0].find(i=>vols[i]>0);if(k!==undefined)W=k;}
   if(vols.every(x=>!(x>0))){resetProgress();await show("v-landing");$("err").textContent=S.none;return;}
-  fillsTok++;F={state:"loading"};mainAddr=raw;subsOn=false;subList=null;subData=null;subMsg="";MODE="all";hipVols=null;hipCov=null;$("subnote").textContent="";$("subbtn").classList.remove("on");$("subbtn").disabled=false;$("subbtn").textContent="Include sub-accounts";
+  fillsTok++;F={state:"loading"};mainAddr=raw;subsOn=false;subList=null;subData=null;subMsg="";MODE="all";hipVols=null;hipCov=null;$("subnote").textContent="";introRan=false;lastTier=-1;$("subbtn").classList.remove("on");$("subbtn").disabled=false;$("subbtn").textContent="Include sub-accounts";
   buildTabs();renderResults();await finishProgress();await show("v-results");intro();
   loadFills(raw);
 }
 async function manualGo(){
   const x=parseFloat($("mvol").value);$("err").textContent="";
   if(!isFinite(x)||x<=0){$("err").textContent=S.novol;return;}
-  manual=true;manualVol=x;vols=null;fillsTok++;subsOn=false;subMsg="";MODE="all";hipVols=null;hipCov=null;$("subnote").textContent="";buildTabs();renderResults();await show("v-results");intro();
+  manual=true;manualVol=x;vols=null;fillsTok++;subsOn=false;subMsg="";MODE="all";hipVols=null;hipCov=null;$("subnote").textContent="";introRan=false;lastTier=-1;buildTabs();renderResults();await show("v-results");intro();
 }
 
 // ---------- share card (canvas 1200x675) ----------
