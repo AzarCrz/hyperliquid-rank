@@ -320,7 +320,7 @@ textarea:focus{outline:2px solid var(--acc);outline-offset:1px}
       <li><b>Thresholds</b>From that sample we computed, for each period, the volume needed to beat 1%, 2%, … 99% of active traders. These are the thresholds shown in your results.</li>
       <li><b>Your rank</b>Your volume is placed between the two closest thresholds (log scale) to get a percentile. "Top 10%" means you out-traded about 90% of active traders.</li>
       <li><b>Profit and account size</b>Same sample, same method. Your profit (PnL) for the selected period and your current account value come from the same API call as your volume, and are ranked against the sampled wallets that traded in that period.</li>
-      <li><b>First trade and fees</b>Read from your own trade history, of which Hyperliquid only keeps the last 10,000 fills. If yours is longer, fees cover those fills only, and the start date comes from your account history instead ("Active since"). Fees in other tokens are converted at the fill price. The same fills show how much of your volume is on HIP-3 markets (stocks, commodities and other builder-deployed perps), but this is not ranked.</li>
+      <li><b>First trade and fees</b>Read from your own trade history. Hyperliquid may only expose part of a very long history; when that happens, fees are shown as a minimum ("≥") for the fills we could read, and the start date comes from your account history instead ("Active since"). Fees in other tokens are converted at the fill price. The same fills show how much of your volume is on HIP-3 markets (stocks, commodities and other builder-deployed perps), but this is not ranked.</li>
       <li><b>What "active" means</b>Wallets that traded during the listening window. Dormant addresses are not counted, so your rank is stricter than a comparison with every address ever created.</li>
       <li><b>Accuracy</b>About ±1 point. Less precise at the extremes (very top, very low volumes), and the 24h figure moves the most. The sample is refreshed periodically; its date is shown at the bottom of your results.</li>
     </ol>
@@ -511,9 +511,10 @@ async function fetchFills(addr){
   const seen=new Map();let start=0,end=null,mode="fwd",complete=false,p0=null;
   const add=arr=>{let n=0;for(const f of arr){const id=f.tid!=null?String(f.tid):[f.hash,f.time,f.sz,f.px].join("|");if(!seen.has(id)){seen.set(id,f);n++;}}return n;};
   const span=arr=>{let mn=Infinity,mx=-Infinity;for(const f of arr){if(f.time<mn)mn=f.time;if(f.time>mx)mx=f.time;}return [mn,mx];};
-  for(let page=0;page<7;page++){
+  for(let page=0;page<12;page++){
     const body={type:"userFillsByTime",user:addr,startTime:start};if(end!==null)body.endTime=end;
-    const arr=await hlPost(body);
+    let arr;
+    try{arr=await hlPost(body);}catch(e){if(seen.size)break;throw e;}
     if(!Array.isArray(arr))break;
     const n=add(arr);
     if(page===0){if(arr.length<2000){complete=true;break;}p0=span(arr);start=p0[1];continue;}
@@ -539,7 +540,7 @@ async function loadFills(addr){
       if(typeof f.time==="number"&&(first===null||f.time<first))first=f.time;
     }
     const top=Object.entries(hm).sort((a,b)=>b[1]-a[1])[0]||null;
-    F={state:"ok",fees,first,n:list.length,capped:!complete||list.length>=10000,tot,hip,top};
+    F={state:"ok",fees,first,n:list.length,capped:!complete||list.length===10000,tot,hip,top};
   }catch(e){if(tok!==fillsTok)return;F={state:"err"};}
   renderMore();
 }
