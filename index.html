@@ -5,6 +5,21 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#00110d">
 <title>Hyperliquid Volume Checker</title>
+<meta name="description" content="Paste a Hyperliquid wallet address to see your rank by trading volume, profit and account size. No connection, no signature. Unofficial tool.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Hyperliquid Volume Checker">
+<meta property="og:title" content="Hyperliquid Volume Checker">
+<meta property="og:description" content="Paste a Hyperliquid wallet address to see your rank by trading volume, profit and account size. No connection, no signature. Unofficial tool.">
+<meta property="og:url" content="https://azarcrz.github.io/hyperliquid-rank/">
+<meta property="og:image" content="https://azarcrz.github.io/hyperliquid-rank/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Hyperliquid Volume Checker: paste a wallet address and see where you rank">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Hyperliquid Volume Checker">
+<meta name="twitter:description" content="Paste a Hyperliquid wallet address to see your rank by trading volume, profit and account size. No connection, no signature. Unofficial tool.">
+<meta name="twitter:image" content="https://azarcrz.github.io/hyperliquid-rank/og-image.png">
+<meta name="twitter:creator" content="@hugocrza">
 <style>
 :root{
   --ink:#eefaf6;--mute:#9bbbb2;--line:rgba(111,227,207,.32);--acc:#6fe3cf;--accdim:rgba(111,227,207,.14);--err:#ffb4b4;
@@ -100,10 +115,10 @@ button.link{background:none;border:0;padding:0;color:var(--acc);font:14px var(--
 .tab:hover{color:var(--ink)}
 .tab[aria-pressed=true]{background:var(--acc);color:#03211c;font-weight:600}
 /* main card */
-.hero-body{padding:28px 32px 8px}
+.hero-body{padding:28px 32px 8px;position:relative}.subwrap{position:absolute;top:18px;right:24px;z-index:2}
 .bigtop{font:700 clamp(54px,7.5vw,88px)/1 var(--sans);letter-spacing:-.035em;margin:0 0 6px;background:linear-gradient(180deg,#fff 20%,#8ff3dc 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
 .sub{color:#cfe5de;font-size:15px;margin:0}
-.meter{margin-top:50px}
+.meter{margin-top:42px}
 .track{position:relative;height:10px;border-radius:6px;background:rgba(255,255,255,.1)}
 .fill,.dot{transition:left .7s cubic-bezier(.2,.8,.2,1)}
 .fill{position:absolute;top:0;bottom:0;right:0;border-radius:0 6px 6px 0;background:linear-gradient(90deg,#6fe3cf,rgba(111,227,207,.22))}
@@ -171,6 +186,92 @@ textarea:focus{outline:2px solid var(--acc);outline-offset:1px}
 .hint{font-size:12.5px;color:var(--mute);margin:12px 0 0}
 .note{font-size:12.5px;color:var(--mute);text-align:center;margin:0 auto;max-width:860px}
 .mlink{margin-left:auto}
+.ltop{gap:10px}
+#v-pulse{align-items:center;padding:20px 20px 48px}
+#v-pulse .wrap{animation:rise .6s cubic-bezier(.2,.8,.2,1) both}
+.phead{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:10px 20px;margin:6px 4px 0}
+.ptitle{margin:0;font:700 clamp(40px,6vw,64px)/1 var(--sans);letter-spacing:-.035em;background:linear-gradient(180deg,#fff 20%,#8ff3dc 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
+.psub{margin:10px 0 0;color:#cfe5de;font-size:14px;display:flex;align-items:center;gap:9px}
+.live{display:inline-block;width:9px;height:9px;border-radius:50%;background:var(--acc);animation:ping 1.9s ease-out infinite}
+@keyframes ping{0%{box-shadow:0 0 0 0 rgba(111,227,207,.65)}80%,100%{box-shadow:0 0 0 11px rgba(111,227,207,0)}}
+.pkpi{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
+.pk{padding:18px 22px;display:flex;flex-direction:column;gap:6px;min-width:0}
+.pk b{font:700 clamp(24px,3.2vw,34px)/1.1 var(--sans);letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.pk small{color:var(--mute);font-size:12.5px;min-height:17px}
+.pbar{display:flex;height:8px;border-radius:4px;overflow:hidden;background:rgba(255,255,255,.1);margin-top:2px}
+.pbar i{display:block;height:100%;background:var(--acc);transition:width 1s cubic-bezier(.2,.8,.2,1)}
+.pscroll{overflow-x:auto}
+.ptable{min-width:680px}
+.ptable td,.ptable th{text-align:right;padding:11px 14px;font-variant-numeric:tabular-nums}
+.ptable td:first-child,.ptable th:first-child{text-align:left}
+.ptable th[data-s]{cursor:pointer;user-select:none}
+.ptable th[data-s]:hover{color:var(--ink)}
+.ptable th.on{color:var(--acc)}
+.ptable tbody tr{animation:rowin .45s cubic-bezier(.2,.8,.2,1) both}
+.ptable tbody.still tr{animation:none}
+.ptable tbody tr:hover td{background:rgba(111,227,207,.06)}
+.psearch{display:flex;align-items:center;gap:10px;margin:14px 20px 4px;padding:0 14px;border:1px solid var(--line);border-radius:999px;background:rgba(0,0,0,.28);color:var(--mute);transition:border-color .2s,box-shadow .2s}
+.psearch:focus-within{border-color:rgba(111,227,207,.6);box-shadow:0 0 0 3px rgba(111,227,207,.12);color:var(--acc)}
+.psearch input{flex:1;min-width:0;background:none;border:0;outline:0;color:var(--ink);font:15px var(--sans);padding:11px 0}
+.psearch input::placeholder{color:var(--mute)}
+#pcount{font-size:12px;color:var(--mute);white-space:nowrap}
+.pempty{padding:22px;text-align:center;color:var(--mute)}
+.ptip{font-size:13px;color:var(--mute);font-variant-numeric:tabular-nums}
+.pcwrap{position:relative;padding:8px 14px 0}
+#pc_svg{width:100%;height:260px;display:block;touch-action:pan-y;cursor:crosshair}
+#pc_empty{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:0}
+.pclegend{display:flex;flex-wrap:wrap;gap:6px 18px;padding:2px 20px 4px;font-size:12px;color:var(--mute)}
+.pclegend i{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:7px;vertical-align:-1px}
+.pclegend .lg1{background:var(--acc);width:14px;height:3px;border-radius:2px;vertical-align:3px}.pclegend .lg2{background:rgba(111,227,207,.45);border:1px solid var(--acc)}
+.pcsum{padding:2px 20px 16px;font-size:13px;color:var(--mute);line-height:1.5}
+.story{margin:10px 0 0;font-size:16.5px;line-height:1.5;color:#cfe6df;max-width:720px}.story em{font-style:normal;color:var(--acc);font-weight:600}.story:empty{display:none}
+.hgrid{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px 36px;align-items:start}
+.hright{display:flex;flex-direction:column;align-items:flex-end;gap:14px;padding-top:2px}
+.hright .subwrap{position:static}
+.chip{display:flex;flex-direction:column;align-items:flex-end;gap:8px}
+.cwrap{container-type:inline-size;width:150px}
+.cdots{display:grid;grid-template-columns:repeat(10,1fr);gap:4px;grid-auto-rows:calc((100cqw - 36px)/10)}
+.cdots i{display:block;border-radius:50%;background:rgba(255,255,255,.11);transition:background .55s ease,transform .55s cubic-bezier(.2,.8,.2,1),box-shadow .55s ease;transition-delay:calc(var(--i)*8ms)}
+.cdots i.cb{background:var(--acc);box-shadow:0 0 6px rgba(111,227,207,.35)}
+.cdots i.cy{background:#ffc457;transform:scale(1.5);box-shadow:0 0 0 3px rgba(255,196,87,.25),0 0 14px rgba(255,196,87,.85);position:relative;z-index:1}
+.cmini{margin:0;font-size:13px;color:var(--mute);text-align:right;line-height:1.35}.cmini em{font-style:normal;color:var(--acc);font-weight:700}
+.tcap{margin:8px 0 0;font-size:11.5px;color:var(--mute)}
+#all tr.pick{background:linear-gradient(90deg,rgba(111,227,207,.2) var(--p,0%),transparent var(--p,0%))}
+#all tr.pick.sel{background:linear-gradient(90deg,rgba(111,227,207,.42) var(--p,0%),rgba(111,227,207,.12) var(--p,0%))}
+.rwrap{padding:48px 44px 62px}
+@media(max-width:820px){.hgrid{grid-template-columns:1fr}.hright{flex-direction:row;align-items:center;justify-content:space-between;flex-wrap:wrap}.chip{flex-direction:row;align-items:center;gap:14px}.cwrap{width:104px}.cdots{gap:3px;grid-auto-rows:calc((100cqw - 27px)/10)}.cmini{text-align:left;max-width:170px}.rwrap{padding:44px 24px 58px}}
+@media(prefers-reduced-motion:reduce){.cdots i{transition:none}}
+.psec{font:600 12px var(--sans);letter-spacing:.16em;text-transform:uppercase;color:var(--acc);margin:12px 4px -4px;display:flex;align-items:center;gap:12px}
+.psec:after{content:"";flex:1;height:1px;background:linear-gradient(90deg,rgba(111,227,207,.4),transparent)}
+.pstory{margin:0;padding:22px 24px 8px;font:600 clamp(18px,2.3vw,25px)/1.38 var(--sans);letter-spacing:-.012em;max-width:980px}
+.pstory em{font-style:normal;color:var(--acc)}
+.pstats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));margin-top:10px;border-top:1px solid rgba(111,227,207,.2);border-bottom:1px solid rgba(111,227,207,.2)}
+.pstats>div{padding:14px 24px;display:flex;flex-direction:column;gap:4px;border-left:1px solid rgba(111,227,207,.14);min-width:0}
+.pstats>div:first-child{border-left:0}
+.pstats b{font:700 clamp(20px,2.4vw,28px)/1.15 var(--sans);letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.pstats small{color:var(--mute);font-size:12.5px;min-height:17px}.pstats small b{font:600 13px var(--sans);letter-spacing:0}
+.pctl{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px 16px;padding:14px 20px 0}
+.pctl .ptip{flex:1;text-align:center;min-width:180px}
+.lg3{width:46px!important;height:8px!important;border-radius:4px!important;border:0!important;background:linear-gradient(90deg,#6fe3cf,#ffc457)!important;vertical-align:0!important;margin:0 6px!important}
+.lgheat{display:inline-flex;align-items:center}.lgheat em{font-style:normal}
+.pcap{margin:-4px 4px 0;font-size:13px;color:var(--mute);min-height:0}.pcap:empty{display:none}
+.phlpb{padding:16px 22px 18px;display:flex;flex-direction:column;gap:6px}
+.phlpb b{font:700 clamp(24px,3.2vw,34px)/1.1 var(--sans);letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.phlpb small{color:var(--mute);font-size:13px;min-height:17px}.phlpb small b{font:600 13px var(--sans)}
+.phlpb .seg{align-self:flex-start;margin:2px 0 2px}
+#h_svg{width:100%;height:70px;display:block;margin:4px 0}
+.pmcols{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 20px;padding:8px 22px 16px}
+.pmcols h3{margin:6px 0 4px;font:600 11px var(--sans);letter-spacing:.12em;text-transform:uppercase;color:var(--mute)}
+.pmr{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.06);font-variant-numeric:tabular-nums}
+.pmr:last-child{border-bottom:0}
+.pb{display:inline-block;margin-left:8px;padding:2px 8px;border-radius:999px;border:1px solid rgba(111,227,207,.4);color:var(--acc);font-size:11px;letter-spacing:.04em}
+.pos{color:#7ee8c9}.neg{color:var(--err)}
+.pduo{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.pf{display:flex;justify-content:space-between;gap:12px;padding:11px 20px;border-bottom:1px solid rgba(111,227,207,.14);font-variant-numeric:tabular-nums}
+.pf:last-child{border-bottom:0}
+.pf small{display:block;color:var(--mute);font-size:12px}
+@media(max-width:820px){.pkpi{grid-template-columns:repeat(2,minmax(0,1fr))}.pduo{grid-template-columns:1fr}}
+@media(max-width:640px){#v-pulse{padding:16px 14px 36px}}
 .rwrap{padding:64px 48px 78px}
 .rtrack{position:relative;height:8px;border-radius:4px;background:rgba(255,255,255,.12)}
 .rfill{position:absolute;left:0;top:0;bottom:0;width:0;border-radius:4px;background:var(--acc);transition:width 1.1s cubic-bezier(.2,.8,.2,1)}
@@ -252,8 +353,11 @@ textarea:focus{outline:2px solid var(--acc);outline-offset:1px}
   .topbar .tb-right{order:3;width:100%}
   .card-head{padding:12px 14px}
   .card-head .seg{width:100%}
+  .pstats{grid-template-columns:repeat(2,minmax(0,1fr))}.pstats>div{padding:12px 16px}.pstats>div:nth-child(3){border-left:0}.pstats>div:nth-child(n+3){border-top:1px solid rgba(111,227,207,.14)}.pstory{padding:18px 16px 6px}.pctl{padding:12px 14px 0}.pctl .seg{width:auto}.pcwrap{padding:8px 8px 0}.pmcols{padding:6px 16px 14px;gap:0 14px}
+  #pview .tab{flex:1 1 auto;padding:9px 8px;font-size:12.5px;white-space:nowrap;min-width:0}
+  .psearch{margin:12px 14px 4px}
   .tab{flex:1 1 auto;padding:7px 8px;font-size:13px}
-  .hero-body{padding:22px 18px 4px}.facts{margin:20px -18px 0}.facts div{padding:12px 18px}
+  .hero-body{padding:22px 18px 4px}.subwrap{position:static;margin:0 0 12px;display:flex;justify-content:flex-end}.facts{margin:20px -18px 0}.facts div{padding:12px 18px}
   .col{padding:16px 14px}.sbody{padding:14px}
 }
 </style>
@@ -263,7 +367,7 @@ textarea:focus{outline:2px solid var(--acc);outline-offset:1px}
 
 <!-- ============ 1. LANDING ============ -->
 <section class="view on" id="v-landing">
-  <div class="ltop"><button class="pill ghost sm mlink" data-method>How it works</button></div>
+  <div class="ltop"><button class="pill ghost sm" data-method>How it works</button></div>
   <div class="hero">
     <span class="kicker">Unofficial tool</span>
     <h1>Hyperliquid Volume Checker</h1>
@@ -295,19 +399,28 @@ textarea:focus{outline:2px solid var(--acc);outline-offset:1px}
   <header class="topbar">
     <div class="brand"><span>Hyperliquid Volume Checker</span></div>
     <div class="tb-right">
-      <span class="addr"><span id="who"></span></span>
-      <button class="pill ghost sm" id="subbtn">Include sub-accounts</button>
+      <button class="pill ghost sm" data-pulse>Pulse</button>
       <button class="pill ghost sm" data-method>How it works</button>
       <button class="pill ghost sm" id="back">Change address</button>
+      <span class="addr"><span id="who"></span></span>
     </div>
   </header>
 
   <section class="card">
     <div class="card-head"><h2 class="ct">Your rank</h2><div class="seg" id="modeseg" role="group" style="display:none"><i class="ind"></i><button class="tab" data-m="all" aria-pressed="true">All volume</button><button class="tab" data-m="hip" aria-pressed="false">HIP-3 only</button></div><div class="seg" id="tabs" role="group"></div></div>
     <div class="hero-body">
-      <div class="bigtop" id="top"></div>
-      <p class="sub" id="sub"></p>
-      <p class="note" id="subnote" style="text-align:left;margin:8px 0 0;min-height:0"></p>
+      <div class="hgrid">
+        <div class="hleft">
+          <div class="bigtop" id="top"></div>
+          <p class="sub" id="sub"></p>
+          <p class="story" id="story"></p>
+          <p class="note" id="subnote" style="text-align:left;margin:8px 0 0;min-height:0"></p>
+        </div>
+        <aside class="hright">
+          <div class="subwrap"><button class="pill ghost sm" id="subbtn">Include sub-accounts</button></div>
+          <div class="chip"><div class="cwrap"><div class="cdots" id="cdots" aria-hidden="true"></div></div><p class="cmini" id="cbig"></p></div>
+        </aside>
+      </div>
       <div class="meter">
         <div class="track"><i class="fill" id="mfill"></i><i class="dot" id="mdot"><span>YOU</span></i></div>
         <div class="mscale"><span>Top 0%</span><span>Top 50%</span><span>Top 100%</span></div>
@@ -321,23 +434,6 @@ textarea:focus{outline:2px solid var(--acc);outline-offset:1px}
     </div>
   </section>
 
-  <section class="card">
-    <div class="trio">
-      <div class="col"><h2 class="ct">Distribution (log)</h2><svg class="chart" id="chart" viewBox="0 0 600 300" role="img"></svg></div>
-      <div class="col"><h2 class="ct acc">Thresholds</h2><table><tbody id="thr"></tbody></table>
-        <div class="tier"><span class="ticon" id="ticon"></span><div><div class="ct">Your tier</div><div class="tname" id="tname"></div><div class="tnext" id="tnext"></div></div></div>
-      </div>
-      <div class="col" id="allwrap"><h2 class="ct acc">All periods</h2><table><tbody id="all"></tbody></table></div>
-      <div class="col" id="ladwrap" style="display:none"><h2 class="ct acc">Tiers</h2><table><tbody id="lad"></tbody></table></div>
-    </div>
-    <div class="ladder" id="ladstrip"></div>
-  </section>
-
-  <section class="card" id="ruler">
-    <div class="card-head"><h2 class="ct acc">Your place on the ladder</h2></div>
-    <div class="rwrap"><div class="rtrack"><i class="rfill" id="rfill"></i><i class="rpin" id="rpin"><span id="rpinl">YOU</span></i><div id="rst"></div></div></div>
-  </section>
-
   <section class="card more" id="more">
     <div class="card-head"><h2 class="ct">More on this wallet</h2></div>
     <dl class="facts">
@@ -348,6 +444,24 @@ textarea:focus{outline:2px solid var(--acc);outline-offset:1px}
     </dl>
     <div class="hip" id="hip" style="display:none"></div>
   </section>
+
+  <section class="card">
+    <div class="trio">
+      <div class="col"><h2 class="ct">Distribution (log)</h2><svg class="chart" id="chart" viewBox="0 0 600 300" role="img"></svg></div>
+      <div class="col"><h2 class="ct acc">Thresholds</h2><table><tbody id="thr"></tbody></table>
+        <div class="tier"><span class="ticon" id="ticon"></span><div><div class="ct">Your tier</div><div class="tname" id="tname"></div><div class="tnext" id="tnext"></div></div></div>
+      </div>
+      <div class="col" id="allwrap"><h2 class="ct acc">All periods</h2><table><tbody id="all"></tbody></table><p class="tcap">Bar length = share of traders you beat.</p></div>
+      <div class="col" id="ladwrap" style="display:none"><h2 class="ct acc">Tiers</h2><table><tbody id="lad"></tbody></table></div>
+    </div>
+    <div class="ladder" id="ladstrip"></div>
+  </section>
+
+  <section class="card" id="ruler">
+    <div class="card-head"><h2 class="ct acc">Your place on the ladder</h2></div>
+    <div class="rwrap"><div class="rtrack"><i class="rfill" id="rfill"></i><i class="rpin" id="rpin"><span id="rpinl">YOU</span></i><div id="rst"></div></div></div>
+  </section>
+
 
   <section class="card" id="share">
     <div class="card-head"><h2 class="ct">Share</h2></div>
@@ -368,6 +482,64 @@ textarea:focus{outline:2px solid var(--acc);outline-offset:1px}
   <p class="note" id="foot"></p>
   <p class="note">Independent tool, not affiliated with Hyperliquid. · Made by <a href="https://x.com/hugocrza" target="_blank" rel="noopener">@hugocrza</a></p>
   <p class="note" id="refline" style="display:none"></p>
+ </div>
+</section>
+
+<!-- ============ 5. PULSE ============ -->
+<section class="view" id="v-pulse">
+ <div class="wrap">
+  <header class="topbar">
+    <div class="brand"><span>Hyperliquid Volume Checker</span></div>
+    <div class="tb-right"><button class="pill ghost sm" id="pback">Back</button></div>
+  </header>
+  <div class="phead"><div><h1 class="ptitle">Pulse</h1><p class="psub"><i class="live"></i><span id="pstat">Loading the market…</span></p></div></div>
+  <div class="psec">Buyback · the protocol's engine</div>
+  <section class="card" id="pbuy">
+    <p class="pstory" id="pb_head">Reading the Assistance Fund…</p>
+    <div class="pstats">
+      <div><span class="ct">HYPE held</span><b id="b_hold">—</b><small id="b_val">&nbsp;</small></div>
+      <div><span class="ct">Total spent</span><b id="b_spent">—</b><small>cost basis</small></div>
+      <div><span class="ct">Average buy price</span><b id="b_avg">—</b><small id="b_avg_s">&nbsp;</small></div>
+      <div><span class="ct">Bought · 24h</span><b id="b_24">—</b><small id="b_24s">&nbsp;</small></div>
+    </div>
+    <div class="pctl">
+      <div class="seg" id="cmode" role="group"><i class="ind"></i><button class="tab" data-c="px" aria-pressed="true">Price + buys</button><button class="tab" data-c="cum" aria-pressed="false">Cumulative</button></div>
+      <span class="ptip" id="pc_tip">Loading…</span>
+      <div class="seg" id="crange" role="group"><i class="ind"></i><button class="tab" data-r="24" aria-pressed="false">24h</button><button class="tab" data-r="48" aria-pressed="true">48h</button></div>
+    </div>
+    <div class="pcwrap"><svg id="pc_svg" viewBox="0 0 800 280" role="img" aria-label="HYPE price with Assistance Fund buyback"></svg><p class="pempty" id="pc_empty">Loading the chart…</p></div>
+    <div class="pclegend"><span><i class="lg1"></i>HYPE price</span><span><i class="lg2"></i>Fund buys · size and colour = HYPE bought that hour</span><span class="lgheat"><em>less</em><i class="lg3"></i><em>more</em></span></div>
+  </section>
+
+  <div class="psec">Market snapshot</div>
+  <div class="pkpi">
+    <div class="card pk"><span class="ct">24h perp volume</span><b id="p_vol">—</b><small id="p_vol_s"></small></div>
+    <div class="card pk"><span class="ct">Open interest</span><b id="p_oi">—</b><small id="p_oi_s"></small></div>
+    <div class="card pk"><span class="ct">HIP-3 share of volume</span><b id="p_hip">—</b><div class="pbar"><i id="p_hipbar" style="width:0"></i></div><small id="p_hip_s"></small></div>
+    <div class="card pk"><span class="ct">Markets</span><b id="p_mk">—</b><small id="p_mk_s"></small></div>
+  </div>
+  <p class="pcap" id="p_cap"></p>
+
+  <div class="pduo">
+    <section class="card phlp">
+      <div class="card-head"><h2 class="ct">HLP vault · liquidity provider</h2><div class="seg" id="hrange" role="group"><i class="ind"></i><button class="tab" data-k="day" aria-pressed="false">24h</button><button class="tab" data-k="week" aria-pressed="true">7d</button><button class="tab" data-k="month" aria-pressed="false">30d</button><button class="tab" data-k="allTime" aria-pressed="false">All</button></div></div>
+      <div class="phlpb"><b id="h_tvl">—</b><div class="seg" id="hmode" role="group"><i class="ind"></i><button class="tab" data-m="pnl" aria-pressed="true">PnL</button><button class="tab" data-m="val" aria-pressed="false">Value</button></div><small id="h_s1">&nbsp;</small><svg id="h_svg" viewBox="0 0 300 70" role="img" aria-label="HLP profit and loss"></svg><small id="h_s2"></small></div>
+    </section>
+    <section class="card pmov">
+      <div class="card-head"><h2 class="ct">Movers · 24h</h2></div>
+      <div class="pmcols"><div><h3>Gainers</h3><div id="mv_up"></div></div><div><h3>Losers</h3><div id="mv_dn"></div></div></div>
+    </section>
+  </div>
+
+  <div class="psec">All markets</div>
+  <section class="card">
+    <div class="card-head"><div class="seg" id="pview" role="group"><i class="ind"></i><button class="tab" data-v="mk" aria-pressed="true">Markets</button><button class="tab" data-v="hi" aria-pressed="false">High funding</button><button class="tab" data-v="lo" aria-pressed="false">Low funding</button><button class="tab" data-v="cx" aria-pressed="false">vs CEX</button></div><div class="seg" id="pfilter" role="group"><i class="ind"></i><button class="tab" data-f="all" aria-pressed="true">All</button><button class="tab" data-f="core" aria-pressed="false">Core</button><button class="tab" data-f="hip" aria-pressed="false">HIP-3</button></div></div>
+    <div class="psearch"><svg viewBox="0 0 20 20" width="16" height="16" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5.5" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="M13 13l4 4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg><input id="psearch" type="search" placeholder="Search (BTC, TSLA…)" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Search a market"><span id="pcount"></span></div>
+    <div class="pscroll" id="pscm"><table class="ptable"><thead><tr><th>Market</th><th data-s="px">Price</th><th data-s="chg">24h</th><th data-s="vol" class="on">Volume</th><th data-s="oi">Open interest</th><th data-s="fr">Funding (APR)</th></tr></thead><tbody id="ptbody"></tbody></table></div>
+    <div class="pscroll" id="pscx" style="display:none"><table class="ptable"><thead><tr><th>Market</th><th>Hyperliquid</th><th>Binance</th><th>Bybit</th><th>HL vs CEX</th></tr></thead><tbody id="pxbody"></tbody></table></div>
+    <p class="pempty" id="pempty" style="display:none">No market matches your search.</p>
+  </section>
+  <p class="note">Source: Hyperliquid public API (api.hyperliquid.xyz), read live in your browser (markets every 30 seconds, buyback, HLP and funding comparison every 2 minutes). Buyback = HYPE held by the Assistance Fund system address 0xfefe…fefe, whose HYPE is treated as burned; the 24h figure is the change in that balance and its dollar value uses the current HYPE price. Volume is the rolling 24h notional. Funding is annualized from the current hourly rate and only shown for markets with at least $1M of open interest. Informational only, not financial advice.</p>
  </div>
 </section>
 
@@ -398,7 +570,7 @@ textarea:focus{outline:2px solid var(--acc);outline-offset:1px}
 
 <script>
 const REFERRAL="";  // optional: your referral link (shown and labelled as such). Empty = disabled.
-const D={"generated":"2026-11-02","hours":20,"sessions":2,"seen":71313,"sample":37160,"q":[0.001,0.005,0.01,0.02,0.03,0.04,0.05,0.06,0.07,0.08,0.09,0.1,0.11,0.12,0.13,0.14,0.15,0.16,0.17,0.18,0.19,0.2,0.21,0.22,0.23,0.24,0.25,0.26,0.27,0.28,0.29,0.3,0.31,0.32,0.33,0.34,0.35,0.36,0.37,0.38,0.39,0.4,0.41,0.42,0.43,0.44,0.45,0.46,0.47,0.48,0.49,0.5,0.51,0.52,0.53,0.54,0.55,0.56,0.57,0.58,0.59,0.6,0.61,0.62,0.63,0.64,0.65,0.66,0.67,0.68,0.69,0.7,0.71,0.72,0.73,0.74,0.75,0.76,0.77,0.78,0.79,0.8,0.81,0.82,0.83,0.84,0.85,0.86,0.87,0.88,0.89,0.9,0.91,0.92,0.93,0.94,0.95,0.96,0.97,0.98,0.99,0.995,0.999],"t":{"day":[5.09,10.51,11.95,14.97,20.26,24.36,29.41,35.2,40.62,47.35,53.79,61.28,70.01,78.04,87.35,96.88,103.79,115.9,128.87,142.13,154.01,170.22,186.88,199.97,216.65,236.67,255.01,277.49,299.56,323.96,350.54,378.3,403.69,436.46,469.65,499.45,528.22,568.79,606.56,651.01,701.08,748.03,799.48,865.06,933.6,998.5,1059.7,1145.51,1227.43,1329.55,1443.08,1541.14,1661.94,1806.23,1945.78,2068.59,2220.95,2400.67,2588.58,2812.23,3021.71,3305.41,3584.43,3888.74,4165.35,4545.88,4933.13,5319.0,5804.2,6320.46,6930.92,7646.52,8385.69,9205.46,10008.67,10845.86,11993.96,13374.64,15024.21,16816.08,18982.3,20721.83,23221.39,25997.66,29412.53,33388.81,38119.44,44197.25,51015.92,60102.77,72335.96,87250.74,106632.87,136036.89,174029.55,235984.03,323512.42,480521.98,767820.49,1399191.49,3796563.18,8737451.7,48060298.01],"week":[10.02,14.91,22.38,34.23,49.12,66.75,87.46,109.61,136.19,165.51,197.3,229.87,265.89,309.84,358.96,406.43,457.03,512.68,571.48,637.06,703.92,770.71,845.24,923.22,999.32,1081.07,1171.24,1267.29,1370.4,1491.25,1608.55,1741.4,1888.3,2017.99,2193.12,2377.97,2573.04,2768.48,2985.15,3207.43,3437.77,3679.79,3957.48,4243.33,4576.79,4892.49,5236.43,5698.66,6119.21,6602.78,7065.47,7591.22,8189.82,8782.58,9420.29,10082.37,10837.27,11711.75,12618.26,13749.52,14995.79,16232.45,17731.8,19284.75,20849.99,22910.86,24996.12,26878.04,29431.51,32006.79,35035.83,38372.19,41867.32,45774.28,50020.86,55267.34,61047.7,68036.27,75554.36,83295.14,93526.44,106182.2,119962.97,135749.19,154190.19,175943.32,202573.03,232982.92,270940.59,315319.42,377879.79,450901.33,542299.5,663752.49,841426.51,1113632.24,1549525.92,2288558.2,3676229.68,6905573.3,18745303.32,49914568.44,290602313.05],"month":[10.77,20.46,30.34,59.12,91.91,130.89,178.33,230.19,295.2,369.84,446.0,532.01,626.06,736.39,849.37,976.68,1101.59,1247.24,1417.81,1590.82,1789.04,1990.76,2201.95,2443.42,2698.75,2974.04,3246.27,3538.46,3833.65,4116.5,4449.28,4833.14,5185.51,5606.34,6115.3,6558.32,7097.62,7674.68,8336.05,8991.03,9717.25,10466.44,11316.78,12138.35,13228.73,14288.48,15536.13,16736.95,18070.6,19611.18,21295.27,23220.45,25298.62,27330.98,29435.84,31632.6,34320.91,37264.11,40223.45,43436.39,47149.34,51344.68,55814.8,60925.81,66218.64,71774.1,78212.1,84747.65,92165.17,100755.52,110043.25,120032.74,131982.37,145966.4,160958.82,179275.53,197728.9,218226.32,243716.41,272894.27,306917.11,346910.87,388130.96,439774.75,495891.4,561788.85,641718.99,739843.35,860216.66,1000349.35,1194325.87,1440948.86,1769908.41,2193646.37,2849087.29,3785581.11,5141537.78,7501012.6,11716343.48,22991484.42,64134847.98,177982356.18,1019525837.98],"allTime":[13.23,28.41,43.86,89.24,149.51,219.19,316.3,433.68,567.88,723.58,895.07,1070.18,1329.4,1595.74,1861.91,2176.05,2497.34,2884.95,3286.42,3735.41,4179.27,4705.04,5280.99,5904.11,6601.95,7386.89,8236.89,9195.01,10191.91,11352.25,12594.74,14020.24,15607.71,17267.99,19151.93,21090.11,23425.94,25908.67,28463.18,31385.59,34672.89,38367.42,42140.35,46053.41,50233.68,55520.24,60735.3,66479.23,72503.09,79304.68,85786.42,93014.71,101224.22,111069.84,121106.3,133501.05,147344.03,161240.65,179208.51,196639.41,217416.3,239365.62,265316.65,291389.72,321524.01,355376.93,392117.79,434568.92,478277.09,527106.48,583921.87,643825.97,714588.52,802128.41,897745.24,1003237.66,1126294.99,1265808.28,1413526.43,1593004.89,1798930.85,2046709.5,2345831.6,2693240.25,3112652.21,3623782.0,4193579.75,4954674.57,5890972.19,7082770.09,8557424.07,10411075.38,13329400.05,17023314.88,22029568.17,29069760.83,41022413.66,62485937.73,103435027.62,205580460.01,649167688.14,1808111436.81,12066186200.88]},"p":{"day":[-223464.89,-35329.11,-13411.43,-5648.85,-2978.71,-1831.48,-1239.84,-859.43,-621.76,-480.51,-376.61,-292.24,-238.75,-192.38,-158.76,-133.2,-110.84,-93.45,-79.18,-66.92,-57.73,-51.13,-44.02,-37.82,-32.78,-28.23,-24.97,-21.9,-18.93,-16.59,-14.47,-12.59,-11.05,-9.64,-8.42,-7.43,-6.52,-5.79,-5.15,-4.51,-3.96,-3.45,-3.03,-2.67,-2.37,-2.05,-1.76,-1.52,-1.33,-1.15,-0.98,-0.85,-0.71,-0.6,-0.5,-0.41,-0.33,-0.26,-0.2,-0.14,-0.09,-0.06,-0.02,0.01,0.06,0.13,0.2,0.29,0.38,0.51,0.65,0.83,1.04,1.32,1.67,2.06,2.54,3.1,3.81,4.63,5.64,6.94,8.55,10.51,13.21,16.22,20.31,25.74,32.6,41.71,53.25,67.62,88.62,117.38,161.73,227.9,331.4,510.32,988.29,2123.23,7066.35,18611.41,151736.68],"week":[-226376.06,-44272.75,-18556.33,-7745.17,-4369.2,-2745.87,-1856.67,-1347.95,-1005.1,-783.33,-628.29,-518.44,-422.07,-343.03,-284.73,-238.07,-201.55,-172.44,-148.5,-124.71,-108.63,-94.41,-82.34,-71.06,-61.88,-54.25,-47.22,-41.38,-36.33,-31.99,-28.61,-25.15,-22.1,-19.66,-17.57,-15.75,-13.95,-12.42,-11.02,-9.67,-8.52,-7.51,-6.67,-5.81,-5.07,-4.43,-3.85,-3.32,-2.89,-2.47,-2.1,-1.75,-1.43,-1.15,-0.93,-0.72,-0.54,-0.4,-0.26,-0.14,-0.06,0.02,0.14,0.32,0.56,0.85,1.21,1.68,2.25,2.98,3.89,4.89,6.18,7.85,9.8,12.34,15.77,19.65,24.12,29.52,36.75,45.45,56.1,69.29,85.46,106.46,129.68,164.53,204.31,266.27,339.57,448.82,606.27,817.58,1139.89,1594.04,2470.07,3765.76,6388.61,13285.63,40949.12,102181.99,610221.18],"month":[-972039.05,-171203.27,-78863.81,-31053.92,-17247.75,-11164.6,-7848.71,-5782.23,-4440.22,-3406.55,-2749.53,-2231.53,-1839.08,-1519.39,-1262.24,-1078.98,-923.14,-804.41,-687.9,-602.3,-522.64,-459.77,-404.79,-356.78,-312.99,-276.55,-244.44,-215.79,-190.94,-168.75,-148.81,-132.36,-118.48,-105.46,-93.08,-83.63,-74.97,-67.42,-60.68,-54.4,-49.41,-44.41,-39.67,-35.5,-31.86,-28.59,-25.31,-22.72,-20.24,-18.13,-16.01,-14.11,-12.45,-11.06,-9.71,-8.46,-7.42,-6.42,-5.53,-4.74,-4.06,-3.42,-2.82,-2.29,-1.83,-1.42,-1.09,-0.77,-0.52,-0.31,-0.13,-0.02,0.13,0.41,0.86,1.5,2.37,3.46,4.91,7.04,9.85,13.04,17.75,24.03,32.34,44.31,60.19,81.09,106.84,142.94,192.79,267.88,389.8,568.62,831.34,1304.78,2062.93,3339.11,6248.71,14507.75,58084.81,192819.16,1725243.82],"allTime":[-2315757.99,-377818.54,-158603.7,-57748.33,-31320.79,-19806.9,-13738.34,-9872.89,-7712.85,-6018.34,-4831.86,-3958.1,-3202.41,-2649.46,-2186.6,-1866.32,-1547.95,-1322.57,-1131.87,-969.24,-833.41,-711.61,-611.14,-529.72,-465.4,-404.84,-351.63,-310.01,-270.73,-233.8,-204.43,-179.25,-157.66,-138.35,-121.86,-109.12,-96.62,-86.39,-76.2,-67.2,-58.97,-52.4,-46.69,-41.41,-36.4,-31.97,-28.11,-24.58,-21.62,-18.94,-16.49,-14.38,-12.24,-10.55,-8.94,-7.65,-6.48,-5.35,-4.4,-3.56,-2.83,-2.17,-1.61,-1.16,-0.73,-0.42,-0.16,-0.02,0.18,0.67,1.47,2.58,4.23,6.55,9.98,14.21,20.66,28.88,42.04,59.46,81.14,109.98,146.89,208.79,277.88,376.21,506.67,679.69,943.37,1333.97,1801.18,2569.61,3763.61,5500.67,8453.11,13385.39,22741.13,38794.64,73561.92,162628.42,473796.53,1215314.96,7212329.03]},"pp":{"day":0.382,"week":0.402,"month":0.298,"allTime":0.338},"a":[0.0,0.0,0.0,0.0,0.01,0.05,0.45,0.95,1.56,2.25,3.07,3.89,4.66,5.44,6.4,7.44,8.59,9.78,11.21,12.54,14.26,16.14,18.15,19.98,22.46,24.89,27.68,30.79,34.06,37.6,41.27,45.9,49.58,53.59,58.76,64.16,70.1,77.21,83.92,91.26,97.29,102.82,110.59,120.98,133.34,146.48,161.01,178.89,195.55,211.57,232.01,254.01,278.42,303.28,335.25,370.87,404.11,444.03,486.49,521.78,569.18,623.49,692.64,764.08,842.04,925.19,1000.45,1076.73,1176.48,1297.57,1456.46,1620.33,1828.32,2016.33,2240.64,2507.6,2806.44,3146.04,3618.78,4121.37,4682.11,5225.13,5944.07,6857.66,7929.79,9238.19,10241.07,11598.28,13421.85,16061.76,19100.31,22322.25,27620.87,34831.72,45959.41,62464.96,85709.61,120206.44,193386.97,355966.07,983692.87,2186627.16,10097336.0]};
+const D={"generated":"2026-11-02","hours":20,"sessions":2,"seen":71313,"sample":37160,"q":[0.001,0.005,0.01,0.02,0.03,0.04,0.05,0.06,0.07,0.08,0.09,0.1,0.11,0.12,0.13,0.14,0.15,0.16,0.17,0.18,0.19,0.2,0.21,0.22,0.23,0.24,0.25,0.26,0.27,0.28,0.29,0.3,0.31,0.32,0.33,0.34,0.35,0.36,0.37,0.38,0.39,0.4,0.41,0.42,0.43,0.44,0.45,0.46,0.47,0.48,0.49,0.5,0.51,0.52,0.53,0.54,0.55,0.56,0.57,0.58,0.59,0.6,0.61,0.62,0.63,0.64,0.65,0.66,0.67,0.68,0.69,0.7,0.71,0.72,0.73,0.74,0.75,0.76,0.77,0.78,0.79,0.8,0.81,0.82,0.83,0.84,0.85,0.86,0.87,0.88,0.89,0.9,0.91,0.92,0.93,0.94,0.95,0.96,0.97,0.98,0.99,0.995,0.999],"t":{"day":[5.09,10.51,11.95,14.97,20.26,24.36,29.41,35.2,40.62,47.35,53.79,61.28,70.01,78.04,87.35,96.88,103.79,115.9,128.87,142.13,154.01,170.22,186.88,199.97,216.65,236.67,255.01,277.49,299.56,323.96,350.54,378.3,403.69,436.46,469.65,499.45,528.22,568.79,606.56,651.01,701.08,748.03,799.48,865.06,933.6,998.5,1059.7,1145.51,1227.43,1329.55,1443.08,1541.14,1661.94,1806.23,1945.78,2068.59,2220.95,2400.67,2588.58,2812.23,3021.71,3305.41,3584.43,3888.74,4165.35,4545.88,4933.13,5319.0,5804.2,6320.46,6930.92,7646.52,8385.69,9205.46,10008.67,10845.86,11993.96,13374.64,15024.21,16816.08,18982.3,20721.83,23221.39,25997.66,29412.53,33388.81,38119.44,44197.25,51015.92,60102.77,72335.96,87250.74,106632.87,136036.89,174029.55,235984.03,323512.42,480521.98,767820.49,1399191.49,3796563.18,8737451.7,48060298.01],"week":[10.02,14.91,22.38,34.23,49.12,66.75,87.46,109.61,136.19,165.51,197.3,229.87,265.89,309.84,358.96,406.43,457.03,512.68,571.48,637.06,703.92,770.71,845.24,923.22,999.32,1081.07,1171.24,1267.29,1370.4,1491.25,1608.55,1741.4,1888.3,2017.99,2193.12,2377.97,2573.04,2768.48,2985.15,3207.43,3437.77,3679.79,3957.48,4243.33,4576.79,4892.49,5236.43,5698.66,6119.21,6602.78,7065.47,7591.22,8189.82,8782.58,9420.29,10082.37,10837.27,11711.75,12618.26,13749.52,14995.79,16232.45,17731.8,19284.75,20849.99,22910.86,24996.12,26878.04,29431.51,32006.79,35035.83,38372.19,41867.32,45774.28,50020.86,55267.34,61047.7,68036.27,75554.36,83295.14,93526.44,106182.2,119962.97,135749.19,154190.19,175943.32,202573.03,232982.92,270940.59,315319.42,377879.79,450901.33,542299.5,663752.49,841426.51,1113632.24,1549525.92,2288558.2,3676229.68,6905573.3,18745303.32,49914568.44,290602313.05],"month":[10.77,20.46,30.34,59.12,91.91,130.89,178.33,230.19,295.2,369.84,446.0,532.01,626.06,736.39,849.37,976.68,1101.59,1247.24,1417.81,1590.82,1789.04,1990.76,2201.95,2443.42,2698.75,2974.04,3246.27,3538.46,3833.65,4116.5,4449.28,4833.14,5185.51,5606.34,6115.3,6558.32,7097.62,7674.68,8336.05,8991.03,9717.25,10466.44,11316.78,12138.35,13228.73,14288.48,15536.13,16736.95,18070.6,19611.18,21295.27,23220.45,25298.62,27330.98,29435.84,31632.6,34320.91,37264.11,40223.45,43436.39,47149.34,51344.68,55814.8,60925.81,66218.64,71774.1,78212.1,84747.65,92165.17,100755.52,110043.25,120032.74,131982.37,145966.4,160958.82,179275.53,197728.9,218226.32,243716.41,272894.27,306917.11,346910.87,388130.96,439774.75,495891.4,561788.85,641718.99,739843.35,860216.66,1000349.35,1194325.87,1440948.86,1769908.41,2193646.37,2849087.29,3785581.11,5141537.78,7501012.6,11716343.48,22991484.42,64134847.98,177982356.18,1019525837.98],"allTime":[13.23,28.41,43.86,89.24,149.51,219.19,316.3,433.68,567.88,723.58,895.07,1070.18,1329.4,1595.74,1861.91,2176.05,2497.34,2884.95,3286.42,3735.41,4179.27,4705.04,5280.99,5904.11,6601.95,7386.89,8236.89,9195.01,10191.91,11352.25,12594.74,14020.24,15607.71,17267.99,19151.93,21090.11,23425.94,25908.67,28463.18,31385.59,34672.89,38367.42,42140.35,46053.41,50233.68,55520.24,60735.3,66479.23,72503.09,79304.68,85786.42,93014.71,101224.22,111069.84,121106.3,133501.05,147344.03,161240.65,179208.51,196639.41,217416.3,239365.62,265316.65,291389.72,321524.01,355376.93,392117.79,434568.92,478277.09,527106.48,583921.87,643825.97,714588.52,802128.41,897745.24,1003237.66,1126294.99,1265808.28,1413526.43,1593004.89,1798930.85,2046709.5,2345831.6,2693240.25,3112652.21,3623782.0,4193579.75,4954674.57,5890972.19,7082770.09,8557424.07,10411075.38,13329400.05,17023314.88,22029568.17,29069760.83,41022413.66,62485937.73,103435027.62,205580460.01,649167688.14,1808111436.81,12066186200.88]},"p":{"day":[-223464.89,-35329.11,-13411.43,-5648.85,-2978.71,-1831.48,-1239.84,-859.43,-621.76,-480.51,-376.61,-292.24,-238.75,-192.38,-158.76,-133.2,-110.84,-93.45,-79.18,-66.92,-57.73,-51.13,-44.02,-37.82,-32.78,-28.23,-24.97,-21.9,-18.93,-16.59,-14.47,-12.59,-11.05,-9.64,-8.42,-7.43,-6.52,-5.79,-5.15,-4.51,-3.96,-3.45,-3.03,-2.67,-2.37,-2.05,-1.76,-1.52,-1.33,-1.15,-0.98,-0.85,-0.71,-0.6,-0.5,-0.41,-0.33,-0.26,-0.2,-0.14,-0.09,-0.06,-0.02,0.01,0.06,0.13,0.2,0.29,0.38,0.51,0.65,0.83,1.04,1.32,1.67,2.06,2.54,3.1,3.81,4.63,5.64,6.94,8.55,10.51,13.21,16.22,20.31,25.74,32.6,41.71,53.25,67.62,88.62,117.38,161.73,227.9,331.4,510.32,988.29,2123.23,7066.35,18611.41,151736.68],"week":[-226376.06,-44272.75,-18556.33,-7745.17,-4369.2,-2745.87,-1856.67,-1347.95,-1005.1,-783.33,-628.29,-518.44,-422.07,-343.03,-284.73,-238.07,-201.55,-172.44,-148.5,-124.71,-108.63,-94.41,-82.34,-71.06,-61.88,-54.25,-47.22,-41.38,-36.33,-31.99,-28.61,-25.15,-22.1,-19.66,-17.57,-15.75,-13.95,-12.42,-11.02,-9.67,-8.52,-7.51,-6.67,-5.81,-5.07,-4.43,-3.85,-3.32,-2.89,-2.47,-2.1,-1.75,-1.43,-1.15,-0.93,-0.72,-0.54,-0.4,-0.26,-0.14,-0.06,0.02,0.14,0.32,0.56,0.85,1.21,1.68,2.25,2.98,3.89,4.89,6.18,7.85,9.8,12.34,15.77,19.65,24.12,29.52,36.75,45.45,56.1,69.29,85.46,106.46,129.68,164.53,204.31,266.27,339.57,448.82,606.27,817.58,1139.89,1594.04,2470.07,3765.76,6388.61,13285.63,40949.12,102181.99,610221.18],"month":[-972039.05,-171203.27,-78863.81,-31053.92,-17247.75,-11164.6,-7848.71,-5782.23,-4440.22,-3406.55,-2749.53,-2231.53,-1839.08,-1519.39,-1262.24,-1078.98,-923.14,-804.41,-687.9,-602.3,-522.64,-459.77,-404.79,-356.78,-312.99,-276.55,-244.44,-215.79,-190.94,-168.75,-148.81,-132.36,-118.48,-105.46,-93.08,-83.63,-74.97,-67.42,-60.68,-54.4,-49.41,-44.41,-39.67,-35.5,-31.86,-28.59,-25.31,-22.72,-20.24,-18.13,-16.01,-14.11,-12.45,-11.06,-9.71,-8.46,-7.42,-6.42,-5.53,-4.74,-4.06,-3.42,-2.82,-2.29,-1.83,-1.42,-1.09,-0.77,-0.52,-0.31,-0.13,-0.02,0.13,0.41,0.86,1.5,2.37,3.46,4.91,7.04,9.85,13.04,17.75,24.03,32.34,44.31,60.19,81.09,106.84,142.94,192.79,267.88,389.8,568.62,831.34,1304.78,2062.93,3339.11,6248.71,14507.75,58084.81,192819.16,1725243.82],"allTime":[-2315757.99,-377818.54,-158603.7,-57748.33,-31320.79,-19806.9,-13738.34,-9872.89,-7712.85,-6018.34,-4831.86,-3958.1,-3202.41,-2649.46,-2186.6,-1866.32,-1547.95,-1322.57,-1131.87,-969.24,-833.41,-711.61,-611.14,-529.72,-465.4,-404.84,-351.63,-310.01,-270.73,-233.8,-204.43,-179.25,-157.66,-138.35,-121.86,-109.12,-96.62,-86.39,-76.2,-67.2,-58.97,-52.4,-46.69,-41.41,-36.4,-31.97,-28.11,-24.58,-21.62,-18.94,-16.49,-14.38,-12.24,-10.55,-8.94,-7.65,-6.48,-5.35,-4.4,-3.56,-2.83,-2.17,-1.61,-1.16,-0.73,-0.42,-0.16,-0.02,0.18,0.67,1.47,2.58,4.23,6.55,9.98,14.21,20.66,28.88,42.04,59.46,81.14,109.98,146.89,208.79,277.88,376.21,506.67,679.69,943.37,1333.97,1801.18,2569.61,3763.61,5500.67,8453.11,13385.39,22741.13,38794.64,73561.92,162628.42,473796.53,1215314.96,7212329.03]},"pp":{"day":0.382,"week":0.402,"month":0.298,"allTime":0.338},"a":[0.0,0.0,0.0,0.0,0.01,0.05,0.45,0.95,1.56,2.25,3.07,3.89,4.66,5.44,6.4,7.44,8.59,9.78,11.21,12.54,14.26,16.14,18.15,19.98,22.46,24.89,27.68,30.79,34.06,37.6,41.27,45.9,49.58,53.59,58.76,64.16,70.1,77.21,83.92,91.26,97.29,102.82,110.59,120.98,133.34,146.48,161.01,178.89,195.55,211.57,232.01,254.01,278.42,303.28,335.25,370.87,404.11,444.03,486.49,521.78,569.18,623.49,692.64,764.08,842.04,925.19,1000.45,1076.73,1176.48,1297.57,1456.46,1620.33,1828.32,2016.33,2240.64,2507.6,2806.44,3146.04,3618.78,4121.37,4682.11,5225.13,5944.07,6857.66,7929.79,9238.19,10241.07,11598.28,13421.85,16061.76,19100.31,22322.25,27620.87,34831.72,45959.41,62464.96,85709.61,120206.44,193386.97,355966.07,983692.87,2186627.16,10097336.0],"h":{"day":[4.49,10.76,14.32,19.41,24.26,29.89,34.81,41.61,48.84,56.58,65.23,75.42,84.96,97.59,106.51,118.63,134.0,149.5,165.32,183.89,198.81,212.57,230.1,247.82,271.19,289.14,307.02,338.49,366.11,395.1,424.09,465.44,496.99,524.05,568.46,604.67,648.65,696.41,752.55,818.42,884.76,945.7,999.55,1058.74,1143.51,1224.88,1349.95,1474.0,1583.56,1716.97,1892.42,1999.6,2137.01,2329.33,2523.89,2755.94,2945.51,3120.91,3386.74,3700.96,3999.41,4283.86,4591.03,4962.97,5244.55,5686.56,6103.4,6760.13,7261.58,7958.6,8710.28,9565.73,10224.42,11146.16,12190.18,13634.83,15086.57,16574.06,18353.31,20166.51,22462.88,25163.7,28158.42,32059.78,35718.2,40600.56,47144.28,53872.1,62648.04,74877.94,89771.87,107454.39,131619.15,169451.98,212030.42,280638.43,392276.83,529494.04,906568.79,1759757.92,4101649.21,8775731.24,37945814.41],"week":[8.12,15.4,24.57,33.89,45.67,62.77,81.91,100.76,122.49,148.98,177.77,202.05,240.4,276.91,319.68,353.24,382.63,416.26,452.22,499.59,559.03,616.9,697.68,776.68,858.6,941.27,1002.76,1091.84,1182.94,1290.18,1396.49,1493.11,1629.36,1763.77,1902.88,2035.02,2210.98,2392.04,2575.31,2785.36,3009.03,3252.33,3543.86,3845.58,4141.78,4543.57,4877.76,5145.82,5672.65,6062.84,6608.62,7049.83,7664.62,8277.8,9044.79,9795.1,10538.83,11290.28,12451.35,13474.44,14421.09,15880.39,17368.58,18854.63,20394.75,22485.83,24738.78,26934.47,29504.47,32778.92,35502.34,39077.58,41991.83,45802.16,49456.05,53210.64,58591.87,64713.16,73615.65,82489.49,92313.0,103668.19,116924.5,134797.91,150418.88,173456.64,196823.36,226921.72,261418.77,315201.17,367821.72,435095.86,532998.74,668080.37,847500.0,1078201.7,1452530.49,2083847.03,3265663.72,5717428.65,13872593.61,22367023.88,62204155.28],"month":[10.98,22.08,29.7,44.09,68.75,99.15,135.07,178.02,211.99,272.47,329.8,372.82,415.18,466.64,534.08,620.96,721.3,815.93,936.95,1054.32,1184.61,1354.46,1522.13,1686.74,1867.05,2052.18,2242.62,2486.64,2708.25,2974.62,3243.43,3571.52,3876.66,4246.14,4630.54,5028.94,5505.18,6006.32,6555.45,7056.59,7651.06,8186.37,8937.23,9806.56,10594.07,11565.43,12491.08,13680.29,14715.59,15842.9,16930.97,18437.43,20088.52,22044.4,24027.2,25917.63,28101.25,30759.14,33641.81,36943.84,39911.23,43266.81,47839.02,52404.54,57155.31,62999.81,68736.97,74382.23,80803.2,89160.53,96576.49,104211.93,114490.86,125390.57,140150.24,156186.56,174205.67,194673.63,217587.02,243816.62,276262.09,308613.5,354316.38,397593.5,444608.65,496994.1,573335.59,645833.45,746124.12,882496.96,1042410.53,1210088.89,1422301.28,1783661.54,2219123.66,2856215.01,3898032.71,5248412.23,8248825.94,13385524.32,27645344.6,50172226.34,109304739.47]},"hs":12040,"hw":20956,"hh":10};
 const QS=D.q, T=D.t, WK=["day","week","month","allTime"];
 const SANS='system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif';
 let MODE="all",hipVols=null,hipCov=null,subMsg="";
@@ -528,15 +700,42 @@ function chart(v,r){
   let d="";t.forEach((x,i)=>{d+=(i?"L":"M")+X(Math.log10(x)).toFixed(1)+" "+Y(QS[i]).toFixed(1);});
   const lv=Math.min(xmax,Math.max(xmin,Math.log10(Math.max(v,1))));
   const px=X(lv),py=Y(r.q);
-  let s=`<defs><clipPath id="cl"><rect x="0" y="0" width="${px}" height="300"/></clipPath></defs>`;
+  const cols=["138,168,159","111,227,207","90,208,230","122,167,255","180,140,255","255,196,87","255,143,107"];
+  const tkv=tierOf(Math.min(100,Math.max(0,(1-r.q)*100)));
+  let s=`<defs><clipPath id="cl"><rect x="0" y="0" width="${px}" height="300"/></clipPath><linearGradient id="lg" gradientUnits="userSpaceOnUse" x1="${A}" y1="0" x2="${B}" y2="0"><stop offset="0" stop-color="#6fe3cf"/><stop offset=".6" stop-color="#7aa7ff"/><stop offset="1" stop-color="#ffc457"/></linearGradient></defs>`;
+  // tier bands
+  const edges=[xmin];for(let i=1;i<TIERS.length;i++){const bv=volAtTop(t,TIERS[i].top);edges.push(bv>0?Math.min(xmax,Math.max(xmin,Math.log10(bv))):edges[edges.length-1]);}edges.push(xmax);
+  for(let i=0;i<TIERS.length;i++){
+    const x0=X(edges[i]),x1=X(edges[i+1]);if(x1-x0<1)continue;
+    s+=`<rect x="${x0.toFixed(1)}" y="20" width="${(x1-x0).toFixed(1)}" height="${BASE-20}" fill="rgba(${cols[i]},${i===tkv?.2:.07})"/>`;
+    if(i>0)s+=`<line x1="${x0.toFixed(1)}" x2="${x0.toFixed(1)}" y1="20" y2="${BASE}" stroke="rgba(${cols[i]},.35)" stroke-width="1"/>`;
+    if(x1-x0>26)s+=`<text x="${((x0+x1)/2).toFixed(1)}" y="16" font-size="15" text-anchor="middle">${TIERS[i].e}</text>`;
+  }
   [0,.5,1].forEach(p=>{s+=`<line x1="${A}" x2="${B}" y1="${Y(p)}" y2="${Y(p)}" stroke="rgba(111,227,207,.3)" stroke-width="1.5" ${p===0?"":'stroke-dasharray="3 6"'}/><text x="${A-8}" y="${Y(p)+6}" font-size="18" text-anchor="end" fill="#9bbbb2">${p*100}%</text>`;});
   for(let e=Math.ceil(xmin);e<=Math.floor(xmax);e++){const lb=tickLabel(e),hw=lb.length*5.4+4,x=X(e);if(x+hw>598||x-hw<A-6)continue;s+=`<text x="${x}" y="284" font-size="18" text-anchor="middle" fill="#9bbbb2">${lb}</text>`;}
-  s+=`<path class="ar" d="${d}L${X(xmax)} ${BASE}L${X(xmin)} ${BASE}Z" fill="rgba(111,227,207,.16)" clip-path="url(#cl)"/>`;
-  s+=`<path class="ln" pathLength="1" d="${d}" fill="none" stroke="#6fe3cf" stroke-width="3" stroke-linejoin="round"/>`;
-  s+=`<line class="mk" x1="${px}" x2="${px}" y1="${py}" y2="${BASE}" stroke="#6fe3cf" stroke-dasharray="4 3"/><line class="mk" x1="${A}" x2="${px}" y1="${py}" y2="${py}" stroke="#6fe3cf" stroke-dasharray="4 3"/><circle class="mk" cx="${px}" cy="${py}" r="8" fill="#6fe3cf" stroke="#06231c" stroke-width="3"/>`;
+  s+=`<path class="ar" d="${d}L${X(xmax)} ${BASE}L${X(xmin)} ${BASE}Z" fill="rgba(255,196,87,.18)" clip-path="url(#cl)"/>`;
+  s+=`<path class="ln" pathLength="1" d="${d}" fill="none" stroke="url(#lg)" stroke-width="3.5" stroke-linejoin="round"/>`;
+  const lbl=topText(r),anc=px>B-90?"end":(px<A+60?"start":"middle"),ly=py<56?py+34:py-16;
+  s+=`<line class="mk" x1="${px}" x2="${px}" y1="${py}" y2="${BASE}" stroke="#ffc457" stroke-dasharray="4 3"/><line class="mk" x1="${A}" x2="${px}" y1="${py}" y2="${py}" stroke="#ffc457" stroke-dasharray="4 3"/><circle class="mk" cx="${px}" cy="${py}" r="8" fill="#ffc457" stroke="#06231c" stroke-width="3"/><text class="mk" x="${px}" y="${ly}" font-size="17" font-weight="700" text-anchor="${anc}" fill="#ffc457" stroke="#06231c" stroke-width="4" paint-order="stroke">${lbl}</text>`;
   $("chart").innerHTML=s;
 }
 function shareText(){return last?`${last.top} of ${last.hip?"Hyperliquid HIP-3 traders":"active Hyperliquid traders"} · ${lc(last.vol)} ${last.v}${last.subs&&!last.hip?" (incl. sub-accounts)":""}`:"";}
+function crowdRender(v,t,r,tp,med){
+  try{
+    const K=Math.max(1,Math.min(100,Math.round(tp))),beat=100-K;
+    const box=$("cdots");
+    if(!box.children.length){box.innerHTML=Array.from({length:100},(_,i)=>'<i style="--i:'+i+'"></i>').join("");}
+    [...box.children].forEach((d,i)=>{d.className=i<K-1?"":(i===K-1?"cy":"cb");});
+    $("cbig").innerHTML="You beat <em>"+beat+"</em> of 100 traders<br>1 dot = 1% of traders";
+    const ratio=med>0?v/med:0;
+    const a=ratio>=1?"You trade <em>"+nf(ratio,ratio<10?1:0)+"×</em> the median trader":"You trade <em>"+nf(ratio*100,0)+"%</em> of the median trader's volume";
+    const nq=[0.5,0.75,0.9,0.95,0.99].find(q=>q>r.q+1e-9);
+    const b=nq===undefined?". You are already in the Top 1%.":". <em>"+fmtUSD(Math.max(0,t[QS.indexOf(nq)]-v))+"</em> more would take you to <em>Top "+nf((1-nq)*100,0)+"%</em>.";
+    let m="";
+    if(vols&&!manual&&MODE==="all"&&vols[1]>0&&vols[2]>0){const rt=(vols[1]/7)/(vols[2]/30);m=" Your last 7 days ran at <em>"+nf(rt,rt<10?1:0)+"×</em> your 30-day pace.";}
+    $("story").innerHTML=a+b+m;
+  }catch(e){}
+}
 function renderResults(){
   const v=currentVolume();
   if(v===null||v<=0)return false;
@@ -567,7 +766,7 @@ function renderResults(){
     $("ladstrip").innerHTML=TIERS.map((x,i)=>`<div class="lad ${i===tk?"sel":""}"><div class="le">${x.e}</div><div class="ln">${x.n}</div><div class="lv">${i===0?"< "+fmtUSD(volAtTop(t,TIERS[1].top)):fmtUSD(volAtTop(t,x.top))+"+"}</div></div>`).join("");
     $("all").innerHTML=`<tr><th>Period</th><th>${MODE==="hip"?"HIP-3 volume":"Volume"}</th><th>Rank</th></tr>`+(MODE==="hip"?hipVols:vols).map((x,i)=>{
       const rr=x>0?quantileOf(x,i):null;
-      return `<tr class="pick ${i===W?"sel":""}" data-i="${i}"><td>${S.tabs[i]}</td><td>${x>0?fmtUSD(x):"—"}</td><td>${rr?topText(rr):"—"}</td></tr>`;}).join("");
+      return `<tr class="pick ${i===W?"sel":""}" data-i="${i}" style="--p:${rr?(rr.q*100).toFixed(1):0}%"><td>${S.tabs[i]}</td><td>${x>0?fmtUSD(x):"—"}</td><td>${rr?topText(rr):"—"}</td></tr>`;}).join("");
   }else{
     $("allwrap").style.display="none";$("ladwrap").style.display="";$("ladstrip").style.display="none";
     $("lad").innerHTML=TIERS.map((x,i)=>{
@@ -575,7 +774,9 @@ function renderResults(){
       return `<tr class="${i===tk?"sel":""}"><td>${x.e} ${x.n}</td><td>${txt}</td></tr>`;}).join("");
   }
   renderMore();
+  crowdRender(v,t,r,tp,med);
   $("subbtn").style.display=(vols&&!manual)?"":"none";
+  document.querySelectorAll("#v-results [data-pulse]").forEach(b=>{b.style.display=manual?"none":"";});
   last={top:topText(r),v:fmtUSD(v),vol:volLabel(W),subs:subsOn,hip:MODE==="hip"};
   renderNote();
   $("ttext").value=shareText();
@@ -853,6 +1054,272 @@ $("mgo").onclick=manualGo;
 $("mvol").addEventListener("keydown",e=>{if(e.key==="Enter")manualGo();});
 $("back").onclick=async()=>{await show("v-landing");$("addr").focus();};
 let prevView="v-landing";
+/* ---------------- Pulse: live market ---------------- */
+const PU={timer:null,tick:null,rows:null,hip:0,core:0,ts:0,filter:"all",view:"mk",q:"",sort:"vol",dir:-1,first:true,busy:false};
+function fmtPx(x){return "$"+(x>=1000?nf(x,0):x>=100?nf(x,1):x>=1?nf(x,3):nf(x,5));}
+function fmtApr(a){const v=a*100;return (v>=0?"+":"−")+nf(Math.abs(v),Math.abs(v)<10?2:1)+"%";}
+async function pulseLoad(){
+  if(PU.busy)return;PU.busy=true;
+  try{
+    let names=[];
+    try{const d=await hlPost({type:"perpDexs"});if(Array.isArray(d))names=d.filter(x=>x&&x.name).map(x=>x.name);}catch(e){}
+    const res=await Promise.all([hlPost({type:"metaAndAssetCtxs"}),...names.map(n=>hlPost({type:"metaAndAssetCtxs",dex:n}).catch(()=>null))]);
+    const rows=[];
+    const add=(r,dex)=>{
+      if(!Array.isArray(r)||r.length<2||!r[0]||!Array.isArray(r[0].universe)||!Array.isArray(r[1]))return;
+      r[0].universe.forEach((m,i)=>{
+        const x=r[1][i];if(!x||m.isDelisted)return;
+        const px=parseFloat(x.markPx)||parseFloat(x.midPx)||parseFloat(x.oraclePx);if(!(px>0))return;
+        const prev=parseFloat(x.prevDayPx);
+        const nm=String(m.name);
+        rows.push({name:dex&&nm.indexOf(":")<0?dex+":"+nm:nm,dex:dex||"",px,chg:prev>0?px/prev-1:0,vol:parseFloat(x.dayNtlVlm)||0,oi:(parseFloat(x.openInterest)||0)*px,fr:(parseFloat(x.funding)||0)*24*365});
+      });
+    };
+    add(res[0],"");names.forEach((n,i)=>add(res[i+1],n));
+    if(!rows.length)throw new Error("empty");
+    PU.rows=rows;PU.ts=Date.now();
+    pulseRender();protoRender();moversRender();
+  }catch(e){
+    $("pstat").textContent=PU.rows?"Couldn't refresh, showing the last data":"Couldn't load the market. Try again in a moment.";
+  }
+  PU.busy=false;
+}
+const AF="0xfefefefefefefefefefefefefefefefefefefefe",HLP="0xdfc24b077bc1425ad1dea75bcb6f8158e10df303";
+const fmtS=x=>(x>=0?"+":"−")+fmtUSD(Math.abs(x));
+const twOnce=(el,v,f)=>{if(!el)return;if(el.dataset.v===String(v))return;el.dataset.v=String(v);tween(el,v,f,900);};
+const esc=t=>String(t).replace(/[<>&]/g,"");
+async function protoLoad(){
+  if(PU.pbusy)return;PU.pbusy=true;
+  const c=p=>p.catch(()=>null);
+  const [sp,vd,pf,cap]=await Promise.all([c(hlPost({type:"spotClearinghouseState",user:AF})),c(hlPost({type:"vaultDetails",vaultAddress:HLP})),c(hlPost({type:"predictedFundings"})),c(hlPost({type:"perpsAtOpenInterestCap"}))]);
+  PU.proto={sp,vd,pf,cap};PU.pbusy=false;protoRender();pulseRender();
+}
+function protoRender(){
+  const P=PU.proto;if(!P)return;
+  try{
+    const cap=Array.isArray(P.cap)?P.cap:[];
+    $("p_cap").innerHTML=cap.length?"At their open-interest cap right now: "+cap.slice(0,12).map(n=>'<span class="pb">'+esc(n)+'</span>').join(" "):"";
+    hlpRender();
+  }catch(e){}
+  buyRender();
+}
+function sparkDraw(svg,pts,color,zero){
+  if(zero===undefined)zero=true;
+  if(!svg)return;
+  const W=Math.max(200,Math.round(svg.getBoundingClientRect().width)||300),H=70;svg.setAttribute("viewBox","0 0 "+W+" "+H);
+  if(pts.length<2){svg.innerHTML="";return;}
+  const xs=pts.map(p=>p[0]),ys=pts.map(p=>p[1]),x0=Math.min(...xs),x1=Math.max(...xs),lo=zero?Math.min(0,...ys):Math.min(...ys),hi=zero?Math.max(0,...ys):Math.max(...ys),r=(hi-lo)||1;
+  const X=t=>4+(t-x0)/((x1-x0)||1)*(W-8),Y=v=>6+(hi-v)/r*(H-12);
+  const d="M"+pts.map(p=>X(p[0]).toFixed(1)+","+Y(p[1]).toFixed(1)).join(" L");
+  const z=(zero?Y(0):H-6).toFixed(1);
+  svg.innerHTML='<defs><linearGradient id="hg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="'+color+'" stop-opacity=".32"/><stop offset="1" stop-color="'+color+'" stop-opacity="0"/></linearGradient></defs>'+(zero?'<line x1="4" x2="'+(W-4)+'" y1="'+z+'" y2="'+z+'" stroke="rgba(255,255,255,.2)" stroke-dasharray="3 4"/>':'')+'<path d="'+d+' L'+X(x1).toFixed(1)+','+z+' L'+X(x0).toFixed(1)+','+z+' Z" fill="url(#hg)"/><path d="'+d+'" fill="none" stroke="'+color+'" stroke-width="2" stroke-linejoin="round"/>';
+}
+function hlpRender(){
+  const v=PU.proto&&PU.proto.vd;if(!v||!Array.isArray(v.portfolio))return;
+  const g=k=>{const e=v.portfolio.find(x=>x[0]===k);return e&&e[1]?e[1]:null;};
+  const lastv=a=>a&&a.length?parseFloat(a[a.length-1][1]):NaN;
+  const d=g("day");if(d)twOnce($("h_tvl"),lastv(d.accountValueHistory),fmtUSD);
+  const k=PU.hr||"week",cur=g(k),vm=PU.hm==="val";
+  const lab={day:"24h",week:"7d",month:"30d",allTime:"all-time"}[k];
+  const ser=cur?(vm?cur.accountValueHistory:cur.pnlHistory):null;
+  const pts=ser?ser.map(x=>[+x[0],parseFloat(x[1])]).filter(x=>!isNaN(x[1])):[];
+  const last=pts.length?pts[pts.length-1][1]:NaN,first=pts.length?pts[0][1]:NaN;
+  if(vm){
+    const dv=last-first,pc=first>0&&k!=="allTime"?" ("+(dv>=0?"+":"−")+nf(Math.abs(dv/first)*100,1)+"%)":"";
+    $("h_s1").innerHTML=isNaN(dv)?"&nbsp;":"Value change "+lab+' <b class="'+(dv>=0?"pos":"neg")+'">'+fmtS(dv)+pc+"</b>";
+    sparkDraw($("h_svg"),pts,"#6fe3cf",false);
+  }else{
+    $("h_s1").innerHTML=isNaN(last)?"&nbsp;":"PnL "+lab+' <b class="'+(last>=0?"pos":"neg")+'">'+fmtS(last)+"</b>";
+    sparkDraw($("h_svg"),pts,last>=0?"#7ee8c9":"#ffb4b4");
+  }
+  const all=g("allTime"),al=all&&all.pnlHistory?lastv(all.pnlHistory):NaN;
+  let t=isNaN(al)||k==="allTime"?"":"All-time PnL "+fmtS(al);
+  const hh=PU.hlpHype;if(hh)t+=(t?" · ":"")+"HYPE exposure: "+(hh.net>=0?"long ":"short ")+nf(Math.abs(hh.net),0)+" HYPE";
+  $("h_s2").textContent=t;
+}
+function moversRender(){
+  const R=PU.rows;if(!R)return;
+  const L=R.filter(r=>r.oi>=1e6).slice().sort((a,b)=>b.chg-a.chg);
+  const row=r=>{const nm=r.dex?r.name.slice(r.dex.length+1):r.name;return '<div class="pmr"><span><b>'+esc(nm)+"</b>"+(r.dex?'<span class="pb">'+esc(r.dex)+"</span>":"")+'</span><span class="'+(r.chg>=0?"pos":"neg")+'">'+(r.chg>=0?"+":"−")+nf(Math.abs(r.chg*100),1)+"%</span></div>";};
+  $("mv_up").innerHTML=L.filter(r=>r.chg>0).slice(0,4).map(row).join("");
+  $("mv_dn").innerHTML=L.filter(r=>r.chg<0).slice(-4).reverse().map(row).join("");
+}
+function buyRender(){
+  const P=PU.proto,B=PU.buys;
+  const hb=P&&P.sp&&Array.isArray(P.sp.balances)?P.sp.balances.find(b=>b.coin==="HYPE"):null;
+  if(!hb)return;
+  const tot=parseFloat(hb.total),cost=parseFloat(hb.entryNtl);
+  const hr=PU.rows&&PU.rows.find(r=>r.name==="HYPE");
+  const pxN=hr?hr.px:(PU.cand&&PU.cand.length?parseFloat(PU.cand[PU.cand.length-1].c):0);
+  twOnce($("b_hold"),tot,x=>nf(x/1e6,2)+"M");
+  $("b_val").textContent=pxN>0?"≈ "+fmtUSD(tot*pxN)+" at market":" ";
+  twOnce($("b_spent"),cost,fmtUSD);
+  const avg=cost>0&&tot>0?cost/tot:0;
+  twOnce($("b_avg"),avg,x=>"$"+nf(x,2));
+  $("b_avg_s").innerHTML=avg>0&&pxN>0?'HYPE is <b class="'+(pxN>=avg?"pos":"neg")+'">'+(pxN>=avg?"+":"−")+nf(Math.abs(pxN/avg-1)*100,0)+"%</b> vs. this":" ";
+  if(B&&B.f&&B.f.length){
+    const n=Date.now(),d24=n-864e5,d48=n-1728e5;
+    let a=0,au=0,b=0;
+    B.f.forEach(f=>{if(f[0]>=d24){a+=f[1];au+=f[2];}else if(f[0]>=d48){b+=f[1];}});
+    twOnce($("b_24"),Math.round(a),x=>nf(Math.round(x),0));$("b_24s").textContent="HYPE · ≈ "+fmtUSD(au);
+    let pace="";
+    if(b>0){const dl=a/b-1;pace=Math.abs(dl)<0.03?"in line with the 24 hours before":"<em>"+nf(Math.abs(dl)*100,0)+"% "+(dl>0?"above":"below")+"</em> the 24 hours before";}
+    $("pb_head").innerHTML="The Assistance Fund bought <em>"+nf(Math.round(a),0)+" HYPE</em> (≈ <em>"+fmtUSD(au)+"</em>) over the last 24 hours"+(pace?", "+pace:"")+"."+(avg>0&&pxN>0?" It now holds <em>"+nf(tot/1e6,1)+"M HYPE</em>, bought at <em>$"+nf(avg,2)+"</em> on average.":"");
+  }
+}
+async function chartLoad(){
+  if(PU.cbusy)return;PU.cbusy=true;
+  const n=Date.now(),c=p=>p.catch(()=>null);
+  try{
+    const cand=await c(hlPost({type:"candleSnapshot",req:{coin:"HYPE",interval:"1h",startTime:n-48*3600000,endTime:n}}));
+    if(Array.isArray(cand)&&cand.length)PU.cand=cand;
+    const B=PU.buys||(PU.buys={f:[],seen:{},t:n-48*3600000});
+    let t=B.t,pages=0;
+    while(pages<12){
+      const d=await c(hlPost({type:"userFillsByTime",user:AF,startTime:t}));
+      if(!Array.isArray(d))break;pages++;
+      d.forEach(f=>{if(f.coin==="@107"&&f.dir==="Buy"&&f.tid!=null){const k=f.tid+"_"+f.time;if(B.seen[k])return;B.seen[k]=1;const sz=parseFloat(f.sz),px=parseFloat(f.px);if(sz>0&&px>0)B.f.push([f.time,sz,sz*px]);}});
+      if(d.length<2000){B.t=d.length?d[d.length-1].time+1:Math.max(B.t,n-3600000);break;}
+      t=d[d.length-1].time+1;B.t=t;
+    }
+    const cut=n-49*3600000;B.f=B.f.filter(f=>f[0]>=cut);
+    const vd=(PU.proto&&PU.proto.vd)||null;
+    const kids=vd&&vd.relationship&&vd.relationship.data&&vd.relationship.data.childAddresses||[];
+    if(kids.length){
+      const st=await Promise.all([HLP,...kids.slice(0,10)].map(a=>c(hlPost({type:"clearinghouseState",user:a}))));
+      let net=0,lg=0,sh=0,ok=0;
+      st.forEach(x=>{if(!x||!Array.isArray(x.assetPositions))return;ok++;x.assetPositions.forEach(ap=>{const q=ap.position;if(q&&q.coin==="HYPE"){const z=parseFloat(q.szi)||0;net+=z;if(z>0)lg+=z;else sh+=-z;}});});
+      if(ok)PU.hlpHype={net,lg,sh};
+    }
+  }catch(e){}
+  PU.cbusy=false;chartRender();buyRender();hlpRender();
+}
+const heatC=t=>{const a=[111,227,207],b=[255,196,87];return a.map((v,i)=>Math.round(v+(b[i]-v)*t));};
+const heatS=(t,al)=>{const c=heatC(t);return "rgba("+c[0]+","+c[1]+","+c[2]+","+al+")";};
+function chartRender(){
+  const all=PU.cand,B=PU.buys,svg=$("pc_svg");
+  if(!all||!all.length){$("pc_empty").style.display="";return;}
+  $("pc_empty").style.display="none";
+  const R=+PU.crange||48,C=all.slice(-(R+1)),mode=PU.cmode||"px";
+  const W=Math.max(280,Math.round(svg.getBoundingClientRect().width)||800),H=280,pl=8,pr=8,pt=16,pb=50,iw=W-pl-pr,ih=H-pt-pb;
+  svg.setAttribute("viewBox","0 0 "+W+" "+H);
+  const hrs=C.map(k=>Math.floor(k.t/3600000)),hm={};
+  ((B&&B.f)||[]).forEach(f=>{const h=Math.floor(f[0]/3600000),e=hm[h]||(hm[h]={sz:0,usd:0});e.sz+=f[1];e.usd+=f[2];});
+  const bh=hrs.map(h=>hm[h]?hm[h].sz:0),mx=Math.max(1,...bh);
+  const cs=[];bh.reduce((a,v,i)=>(cs[i]=a+v),0);
+  const total=cs[cs.length-1]||0,cumUsd=[];hrs.reduce((a,h,i)=>(cumUsd[i]=a+(hm[h]?hm[h].usd:0)),0);
+  const x=i=>pl+(C.length>1?i/(C.length-1):0)*iw;
+  const px=C.map(k=>parseFloat(k.c)),lo=Math.min(...C.map(k=>parseFloat(k.l))),hi=Math.max(...C.map(k=>parseFloat(k.h))),rng=(hi-lo)||1;
+  const yP=v=>pt+ih-(v-lo)/rng*ih*0.86-ih*0.05,yC=v=>pt+ih-(total>0?v/total:0)*ih*0.9-ih*0.03;
+  const yy=mode==="px"?(i=>yP(px[i])):(i=>yC(cs[i]));
+  const up=px[px.length-1]>=px[0],lc=up?"#6fe3cf":"#ff9b9b";
+  const accent=mode==="px"?lc:"#ffc457";
+  let g='<defs><linearGradient id="pcg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="'+accent+'" stop-opacity=".3"/><stop offset="1" stop-color="'+accent+'" stop-opacity="0"/></linearGradient></defs>';
+  for(let k=0;k<4;k++){const y=pt+ih*k/3;g+='<line x1="'+pl+'" x2="'+(W-pr)+'" y1="'+y+'" y2="'+y+'" stroke="rgba(255,255,255,.07)"/>';}
+  let line;
+  if(mode==="px"){line="M"+px.map((v,i)=>x(i).toFixed(1)+","+yP(v).toFixed(1)).join(" L");}
+  else{let d="M"+x(0).toFixed(1)+","+yC(0).toFixed(1);cs.forEach((v,i)=>{d+=" L"+x(i).toFixed(1)+","+yC(v).toFixed(1);});line=d;}
+  g+='<path d="'+line+' L'+x(C.length-1).toFixed(1)+','+(pt+ih)+' L'+x(0).toFixed(1)+','+(pt+ih)+' Z" fill="url(#pcg)"/><path d="'+line+'" fill="none" stroke="'+accent+'" stroke-width="2.2" stroke-linejoin="round"/>';
+  if(mode==="px"){bh.forEach((v,i)=>{if(v>0){const t=Math.sqrt(v/mx),r=2.5+7.5*t;g+='<circle cx="'+x(i).toFixed(1)+'" cy="'+yP(px[i]).toFixed(1)+'" r="'+r.toFixed(1)+'" fill="'+heatS(t,.5)+'" stroke="'+heatS(t,1)+'" stroke-width="1.2"/>';}});}
+  // heat strip: one cell per hour, same x positions as the chart
+  const sy=pt+ih+10,cw=Math.max(2,iw/C.length-2);
+  bh.forEach((v,i)=>{const t=v>0?Math.sqrt(v/mx):0;g+='<rect x="'+(x(i)-cw/2).toFixed(1)+'" y="'+sy+'" width="'+cw.toFixed(1)+'" height="13" rx="3" fill="'+(v>0?heatS(t,.22+.78*t):"rgba(255,255,255,.06)")+'"/>';});
+  const fmtT=ms=>new Date(ms).toLocaleString("en-GB",{day:"numeric",month:"short",hour:"2-digit",minute:"2-digit"});
+  g+='<text x="'+pl+'" y="'+(H-8)+'" fill="#8aa89f" font-size="12">'+fmtT(C[0].t)+'</text><text x="'+(W-pr)+'" y="'+(H-8)+'" fill="#8aa89f" font-size="12" text-anchor="end">'+fmtT(C[C.length-1].t)+"</text>";
+  if(mode==="px"){g+='<text x="'+(W-pr)+'" y="'+(pt+10)+'" fill="#8aa89f" font-size="12" text-anchor="end">'+fmtPx(hi)+'</text><text x="'+(W-pr)+'" y="'+(pt+ih-4)+'" fill="#8aa89f" font-size="12" text-anchor="end">'+fmtPx(lo)+"</text>";}
+  else{g+='<text x="'+(W-pr)+'" y="'+(pt+10)+'" fill="#ffc457" font-size="12" text-anchor="end">'+nf(Math.round(total),0)+" HYPE</text>";}
+  g+='<line id="pc_g" x1="0" x2="0" y1="'+pt+'" y2="'+(pt+ih+24)+'" stroke="rgba(255,255,255,.35)" style="display:none"/><circle id="pc_d" r="4.5" fill="#fff" stroke="'+accent+'" stroke-width="2" style="display:none"/>';
+  svg.innerHTML=g;
+  PU.cmeta={C,px,bh,cs,cumUsd,hm,mode,W,pl,iw,yy,R,fmtT};
+  const chg=(px[px.length-1]/px[0]-1)*100;
+  $("pc_tip").textContent=mode==="px"?"HYPE "+fmtPx(px[px.length-1])+" · "+(chg>=0?"+":"−")+nf(Math.abs(chg),1)+"% over "+R+"h · hover for details":nf(Math.round(total),0)+" HYPE bought over "+R+"h · hover for details";
+}
+(function(){
+  const svg=document.getElementById("pc_svg");if(!svg)return;
+  let rzT;window.addEventListener("resize",()=>{clearTimeout(rzT);rzT=setTimeout(()=>{if(PU.cand)chartRender();hlpRender();},150);});
+  const mv=e=>{const m=PU.cmeta;if(!m)return;
+    const r=svg.getBoundingClientRect(),rx=(e.clientX-r.left)/r.width*m.W;
+    let i=Math.round((rx-m.pl)/m.iw*(m.C.length-1));i=Math.max(0,Math.min(m.C.length-1,i));
+    const gx=m.pl+(m.C.length>1?i/(m.C.length-1):0)*m.iw,g=document.getElementById("pc_g"),d=document.getElementById("pc_d");
+    if(g){g.setAttribute("x1",gx);g.setAttribute("x2",gx);g.style.display="";}
+    if(d){d.setAttribute("cx",gx);d.setAttribute("cy",m.yy(i));d.style.display="";}
+    const h=m.hm[Math.floor(m.C[i].t/3600000)],t=m.fmtT(m.C[i].t);
+    $("pc_tip").textContent=m.mode==="px"
+      ?t+" · "+fmtPx(m.px[i])+(h?" · bought "+nf(Math.round(h.sz),0)+" HYPE (≈ "+fmtUSD(h.usd)+")":" · no buy")
+      :t+" · "+nf(Math.round(m.cs[i]),0)+" HYPE bought so far (≈ "+fmtUSD(m.cumUsd[i])+")"+(h?" · +"+nf(Math.round(h.sz),0)+" this hour":"");};
+  svg.addEventListener("pointermove",mv);svg.addEventListener("pointerdown",mv);
+  svg.addEventListener("pointerleave",()=>{const g=document.getElementById("pc_g"),d=document.getElementById("pc_d");if(g)g.style.display="none";if(d)d.style.display="none";if(PU.cand)chartRender();});
+  const bind=(id,attr,key,after)=>{const el=document.getElementById(id);if(!el)return;el.addEventListener("click",e=>{const b=e.target.closest("["+attr+"]");if(!b)return;PU[key]=b.getAttribute(attr);el.querySelectorAll(".tab").forEach(x=>x.setAttribute("aria-pressed",String(x===b)));moveInd(el);after();});};
+  bind("cmode","data-c","cmode",chartRender);bind("crange","data-r","crange",chartRender);bind("hrange","data-k","hr",hlpRender);bind("hmode","data-m","hm",hlpRender);
+})();
+function cxRender(){
+  const P=PU.proto,tb=$("pxbody");
+  const q=PU.q.trim().toLowerCase();
+  if(!P||!Array.isArray(P.pf)){tb.innerHTML="";$("pcount").textContent="";$("pempty").style.display="";$("pempty").textContent=P?"Couldn't load the comparison. Try again in a moment.":"Loading…";return;}
+  const apr=o=>o&&o.fundingRate!=null?parseFloat(o.fundingRate)*8760/(o.fundingIntervalHours||1):NaN;
+  let L=[];
+  P.pf.forEach(e=>{
+    const nm=String(e[0]);const m={};(e[1]||[]).forEach(x=>{m[x[0]]=apr(x[1]);});
+    const hl=m.HlPerp,bn=m.BinPerp,by=m.BybitPerp;
+    const ce=[bn,by].filter(x=>!isNaN(x));
+    if(isNaN(hl)||!ce.length)return;
+    const avg=ce.reduce((a,b)=>a+b,0)/ce.length;
+    L.push({nm,hl,bn,by,sp:hl-avg});
+  });
+  if(q)L=L.filter(r=>r.nm.toLowerCase().includes(q));
+  L.sort((a,b)=>Math.abs(b.sp)-Math.abs(a.sp));
+  const total=L.length;L=L.slice(0,q?30:15);
+  $("pcount").textContent=q?(total+" result"+(total===1?"":"s")):"Largest gaps · "+total+" markets";
+  $("pempty").textContent="No market matches your search.";$("pempty").style.display=total?"none":"";
+  const cl=x=>isNaN(x)?"":(x>=0?"pos":"neg"),ft=x=>isNaN(x)?"—":fmtApr(x);
+  tb.classList.toggle("still",!PU.anim);
+  tb.innerHTML=L.map(r=>`<tr><td><b>${r.nm.replace(/[<>&]/g,"")}</b></td><td class="${cl(r.hl)}">${ft(r.hl)}</td><td class="${cl(r.bn)}">${ft(r.bn)}</td><td class="${cl(r.by)}">${ft(r.by)}</td><td class="${cl(r.sp)}">${fmtApr(r.sp)}</td></tr>`).join("");
+}
+function pulseRender(){
+  const R=PU.rows;if(!R)return;
+  const core=R.filter(r=>!r.dex),hip=R.filter(r=>r.dex),sum=(a,k)=>a.reduce((x,r)=>x+r[k],0);
+  const vC=sum(core,"vol"),vH=sum(hip,"vol"),vT=vC+vH,oiT=sum(R,"oi"),share=vT>0?vH/vT*100:0;
+  tween($("p_vol"),vT,fmtUSD,900);$("p_vol_s").textContent=fmtUSD(vC)+" core · "+fmtUSD(vH)+" HIP-3";
+  tween($("p_oi"),oiT,fmtUSD,900);$("p_oi_s").textContent=fmtUSD(sum(core,"oi"))+" core · "+fmtUSD(sum(hip,"oi"))+" HIP-3";
+  tween($("p_hip"),share,x=>nf(x,1)+"%",900);$("p_hipbar").style.width=Math.min(100,share)+"%";$("p_hip_s").textContent=hip.length?"across "+new Set(hip.map(r=>r.dex)).size+" builder-deployed dexs":"";
+  tween($("p_mk"),R.length,x=>nf(Math.round(x),0),700);$("p_mk_s").textContent=core.length+" core · "+hip.length+" HIP-3";
+  // table
+  $("pscm").style.display=PU.view==="cx"?"none":"";$("pscx").style.display=PU.view==="cx"?"":"none";$("pfilter").style.display=PU.view==="cx"?"none":"";
+  if(PU.view==="cx"){cxRender();PU.first=false;PU.anim=false;pulseStat();return;}
+  $("pempty").textContent="No market matches your search.";
+  const q=PU.q.trim().toLowerCase();
+  let L=R.filter(r=>(PU.filter==="all"||(PU.filter==="hip")===!!r.dex)&&(!q||r.name.toLowerCase().includes(q)));
+  const fv=PU.view!=="mk";
+  if(fv)L=L.filter(r=>r.oi>=1e6);
+  const k=fv?"fr":PU.sort,d=fv?(PU.view==="hi"?-1:1):PU.dir;
+  L=L.slice().sort((a,b)=>(a[k]-b[k])*d);
+  const total=L.length,lim=q?30:15;L=L.slice(0,lim);
+  $("pcount").textContent=q?(total+" result"+(total===1?"":"s")):(fv?"OI ≥ $1M":"Top "+Math.min(lim,total)+" of "+total);
+  $("pempty").style.display=total?"none":"";
+  const tb=$("ptbody");tb.classList.toggle("still",!PU.first&&!PU.anim);
+  tb.innerHTML=L.map(r=>{
+    const nm=r.dex?r.name.slice(r.dex.length+1):r.name;
+    return `<tr><td><b>${nm.replace(/[<>&]/g,"")}</b>${r.dex?`<span class="pb">${r.dex.replace(/[<>&]/g,"")}</span>`:""}</td><td>${fmtPx(r.px)}</td><td class="${r.chg>=0?"pos":"neg"}">${(r.chg>=0?"+":"−")+nf(Math.abs(r.chg*100),2)}%</td><td>${fmtUSD(r.vol)}</td><td>${fmtUSD(r.oi)}</td><td class="${r.fr>=0?"pos":"neg"}">${r.oi>=1e6?fmtApr(r.fr):"—"}</td></tr>`;}).join("");
+  PU.first=false;PU.anim=false;
+  document.querySelectorAll(".ptable th[data-s]").forEach(th=>th.classList.toggle("on",th.dataset.s===(PU.view!=="mk"?"fr":PU.sort)));
+  pulseStat();
+}
+function pulseStat(){
+  if(!PU.ts)return;
+  const s=Math.max(0,Math.round((Date.now()-PU.ts)/1000));
+  $("pstat").textContent="Live · updated "+(s<2?"just now":s+"s ago")+" · refreshes every 30s";
+}
+async function openPulse(){
+  const cur=document.querySelector(".view.on");if(cur&&cur.id!=="v-pulse"&&cur.id!=="v-method")prevView=cur.id;
+  await show("v-pulse");["pfilter","pview","cmode","crange","hrange","hmode"].forEach(i=>moveInd($(i)));
+  PU.first=true;if(PU.rows){PU.anim=true;pulseRender();}
+  clearInterval(PU.timer);clearInterval(PU.tick);
+  pulseLoad();protoLoad().then(chartLoad);
+  clearInterval(PU.ptimer);PU.ptimer=setInterval(()=>{if(document.visibilityState==="visible")protoLoad().then(chartLoad);},120000);
+  PU.timer=setInterval(()=>{if(document.visibilityState==="visible")pulseLoad();},30000);
+  PU.tick=setInterval(pulseStat,1000);
+}
+function closePulse(){clearInterval(PU.ptimer);clearInterval(PU.timer);clearInterval(PU.tick);}
 async function openMethod(){
   const cur=document.querySelector(".view.on");if(cur&&cur.id!=="v-method")prevView=cur.id;
   $("m_listen").textContent=listenText();
@@ -864,6 +1331,12 @@ async function openMethod(){
 document.querySelectorAll("[data-method]").forEach(b=>b.addEventListener("click",openMethod));
 $("mback").onclick=()=>show(prevView);
 $("subbtn").onclick=toggleSubs;
+document.querySelectorAll("[data-pulse]").forEach(b=>b.addEventListener("click",openPulse));
+$("pback").onclick=async()=>{closePulse();await show(prevView);};
+$("pview").addEventListener("click",e=>{const b=e.target.closest("[data-v]");if(!b)return;PU.view=b.dataset.v;PU.anim=true;$("pview").querySelectorAll(".tab").forEach(x=>x.setAttribute("aria-pressed",String(x===b)));moveInd($("pview"));pulseRender();});
+$("psearch").addEventListener("input",e=>{PU.q=e.target.value;PU.anim=false;pulseRender();});
+$("pfilter").addEventListener("click",e=>{const b=e.target.closest("[data-f]");if(!b)return;PU.filter=b.dataset.f;PU.anim=true;$("pfilter").querySelectorAll(".tab").forEach(x=>x.setAttribute("aria-pressed",String(x===b)));moveInd($("pfilter"));pulseRender();});
+document.querySelector(".ptable thead").addEventListener("click",e=>{const th=e.target.closest("th[data-s]");if(!th)return;const k=th.dataset.s;if(PU.sort===k)PU.dir*=-1;else{PU.sort=k;PU.dir=-1;}PU.anim=true;pulseRender();});
 $("modeseg").addEventListener("click",e=>{const b=e.target.closest("button");if(!b||b.disabled)return;setMode(b.dataset.m);});
 $("tabs").addEventListener("click",e=>{const b=e.target.closest(".tab");if(!b||b.disabled)return;W=+b.dataset.w;buildTabs();renderResults();});
 $("all").addEventListener("click",e=>{const row=e.target.closest("tr.pick");if(!row)return;W=+row.dataset.i;buildTabs();renderResults();});
