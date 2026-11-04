@@ -217,6 +217,14 @@ textarea:focus{outline:2px solid var(--acc);outline-offset:1px}
 .psearch input::placeholder{color:var(--mute)}
 #pcount{font-size:12px;color:var(--mute);white-space:nowrap}
 .pempty{padding:22px;text-align:center;color:var(--mute)}
+.ptip{font-size:13px;color:var(--mute);font-variant-numeric:tabular-nums}
+.pcwrap{position:relative;padding:8px 14px 0}
+#pc_svg{width:100%;height:260px;display:block;touch-action:pan-y;cursor:crosshair}
+#pc_empty{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:0}
+.pclegend{display:flex;flex-wrap:wrap;gap:6px 18px;padding:2px 20px 4px;font-size:12px;color:var(--mute)}
+.pclegend i{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:7px;vertical-align:-1px}
+.pclegend .lg1{background:var(--acc);width:14px;height:3px;border-radius:2px;vertical-align:3px}.pclegend .lg2{background:rgba(111,227,207,.45);border:1px solid var(--acc)}
+.pcsum{padding:2px 20px 16px;font-size:13px;color:var(--mute);line-height:1.5}
 .pb{display:inline-block;margin-left:8px;padding:2px 8px;border-radius:999px;border:1px solid rgba(111,227,207,.4);color:var(--acc);font-size:11px;letter-spacing:.04em}
 .pos{color:#7ee8c9}.neg{color:var(--err)}
 .pduo{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
@@ -446,6 +454,12 @@ textarea:focus{outline:2px solid var(--acc);outline-offset:1px}
     <div class="card pk"><span class="ct">HYPE buyback · Assistance Fund</span><b id="b_hold">—</b><small id="b_s1"></small><small id="b_s2"></small></div>
     <div class="card pk"><span class="ct">HLP vault</span><b id="h_tvl">—</b><small id="h_s1"></small><small id="h_s2"></small></div>
   </div>
+  <section class="card" id="pchart">
+    <div class="card-head"><h2 class="ct">HYPE price &amp; buyback · 48h</h2><span class="ptip" id="pc_tip">Hover or touch the chart</span></div>
+    <div class="pcwrap"><svg id="pc_svg" viewBox="0 0 800 260" role="img" aria-label="HYPE price over 48 hours with Assistance Fund buyback"></svg><p class="pempty" id="pc_empty">Loading the chart…</p></div>
+    <div class="pclegend"><span><i class="lg1"></i>HYPE price</span><span><i class="lg2"></i>Assistance Fund buys (bubble size = HYPE bought that hour)</span></div>
+    <p class="pcsum" id="pc_sum"></p>
+  </section>
   <section class="card">
     <div class="card-head"><div class="seg" id="pview" role="group"><i class="ind"></i><button class="tab" data-v="mk" aria-pressed="true">Markets</button><button class="tab" data-v="hi" aria-pressed="false">High funding</button><button class="tab" data-v="lo" aria-pressed="false">Low funding</button><button class="tab" data-v="cx" aria-pressed="false">vs CEX</button></div><div class="seg" id="pfilter" role="group"><i class="ind"></i><button class="tab" data-f="all" aria-pressed="true">All</button><button class="tab" data-f="core" aria-pressed="false">Core</button><button class="tab" data-f="hip" aria-pressed="false">HIP-3</button></div></div>
     <div class="psearch"><svg viewBox="0 0 20 20" width="16" height="16" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5.5" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="M13 13l4 4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg><input id="psearch" type="search" placeholder="Search (BTC, TSLA…)" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Search a market"><span id="pcount"></span></div>
@@ -1005,6 +1019,66 @@ function protoRender(){
     }
   }catch(e){}
 }
+async function chartLoad(){
+  if(PU.cbusy)return;PU.cbusy=true;
+  const n=Date.now(),c=p=>p.catch(()=>null);
+  try{
+    const cand=await c(hlPost({type:"candleSnapshot",req:{coin:"HYPE",interval:"1h",startTime:n-48*3600000,endTime:n}}));
+    if(Array.isArray(cand)&&cand.length)PU.cand=cand;
+    // buyback fills: first load = 48h (paged), then incremental
+    const B=PU.buys||(PU.buys={h:{},t:n-48*3600000});
+    let t=B.t,pages=0;
+    while(pages<12){
+      const d=await c(hlPost({type:"userFillsByTime",user:AF,startTime:t}));
+      if(!Array.isArray(d))break;pages++;
+      d.forEach(f=>{if(f.coin==="@107"&&f.dir==="Buy"&&f.tid!=null){const k=f.tid+"_"+f.time;if(B.seen&&B.seen[k])return;(B.seen||(B.seen={}))[k]=1;const h=Math.floor(f.time/3600000),sz=parseFloat(f.sz),px=parseFloat(f.px);const e=B.h[h]||(B.h[h]={sz:0,usd:0});e.sz+=sz;e.usd+=sz*px;}});
+      if(d.length<2000){if(d.length)B.t=d[d.length-1].time+1;else B.t=Math.max(B.t,n-3600000);break;}
+      t=d[d.length-1].time+1;B.t=t;
+    }
+    // HLP net HYPE position across sub-vaults
+    const vd=(PU.proto&&PU.proto.vd)||null;
+    const kids=vd&&vd.relationship&&vd.relationship.data&&vd.relationship.data.childAddresses||[];
+    if(kids.length){
+      const st=await Promise.all([HLP,...kids.slice(0,10)].map(a=>c(hlPost({type:"clearinghouseState",user:a}))));
+      let net=0,lg=0,sh=0,ok=0;
+      st.forEach(x=>{if(!x||!Array.isArray(x.assetPositions))return;ok++;x.assetPositions.forEach(ap=>{const q=ap.position;if(q&&q.coin==="HYPE"){const z=parseFloat(q.szi)||0;net+=z;if(z>0)lg+=z;else sh+=-z;}});});
+      if(ok)PU.hlpHype={net,lg,sh};
+    }
+  }catch(e){}
+  PU.cbusy=false;chartRender();
+}
+function chartRender(){
+  const C=PU.cand,B=PU.buys,svg=$("pc_svg");
+  if(!C||!C.length){$("pc_empty").style.display="";return;}
+  $("pc_empty").style.display="none";
+  const W=Math.max(280,Math.round(svg.getBoundingClientRect().width)||800),H=260,pl=8,pr=8,pt=14,pb=34,iw=W-pl-pr,ih=H-pt-pb;svg.setAttribute("viewBox","0 0 "+W+" "+H);
+  const px=C.map(k=>parseFloat(k.c)),lo=Math.min(...C.map(k=>parseFloat(k.l))),hi=Math.max(...C.map(k=>parseFloat(k.h)));
+  const rng=(hi-lo)||1,y=v=>pt+ih-(v-lo)/rng*ih*0.86-ih*0.04,x=i=>pl+(C.length>1?i/(C.length-1):0)*iw;
+  const hrs=C.map(k=>Math.floor(k.t/3600000)),bh=hrs.map(h=>(B&&B.h[h])?B.h[h].sz:0),mx=Math.max(1,...bh);
+  let line="M"+px.map((v,i)=>x(i).toFixed(1)+","+y(v).toFixed(1)).join(" L");
+  const area=line+" L"+x(C.length-1).toFixed(1)+","+(pt+ih)+" L"+x(0).toFixed(1)+","+(pt+ih)+" Z";
+  let g='<defs><linearGradient id="pcg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#6fe3cf" stop-opacity=".28"/><stop offset="1" stop-color="#6fe3cf" stop-opacity="0"/></linearGradient></defs>';
+  for(let k=0;k<4;k++){const yy=pt+ih*k/3;g+=`<line x1="${pl}" x2="${W-pr}" y1="${yy}" y2="${yy}" stroke="rgba(255,255,255,.07)"/>`;}
+  g+=`<path d="${area}" fill="url(#pcg)"/><path d="${line}" fill="none" stroke="#6fe3cf" stroke-width="2" vector-effect="non-scaling-stroke" stroke-linejoin="round"/>`;
+  bh.forEach((v,i)=>{if(v>0){const r=2.5+7*Math.sqrt(v/mx);g+=`<circle cx="${x(i).toFixed(1)}" cy="${y(px[i]).toFixed(1)}" r="${r.toFixed(1)}" fill="rgba(111,227,207,.38)" stroke="#6fe3cf" stroke-width="1.2" vector-effect="non-scaling-stroke"/>`;}});
+  const fmtT=ms=>new Date(ms).toLocaleString("en-GB",{day:"numeric",month:"short",hour:"2-digit",minute:"2-digit"});
+  g+=`<text x="${pl}" y="${H-10}" fill="#8aa89f" font-size="12">${fmtT(C[0].t)}</text><text x="${W-pr}" y="${H-10}" fill="#8aa89f" font-size="12" text-anchor="end">${fmtT(C[C.length-1].t)}</text>`;
+  g+=`<text x="${W-pr}" y="${pt+10}" fill="#8aa89f" font-size="12" text-anchor="end">${fmtPx(hi)}</text><text x="${W-pr}" y="${pt+ih-4}" fill="#8aa89f" font-size="12" text-anchor="end">${fmtPx(lo)}</text>`;
+  g+='<line id="pc_g" x1="0" x2="0" y1="'+pt+'" y2="'+(pt+ih)+'" stroke="rgba(255,255,255,.35)" style="display:none"/>';
+  svg.innerHTML=g;PU.cmeta={C,px,bh,B,W,pl,iw};
+  let tot=0,usd=0;hrs.forEach(h=>{if(B&&B.h[h]){tot+=B.h[h].sz;usd+=B.h[h].usd;}});
+  let sm=tot>0?"Over this window the fund bought "+nf(Math.round(tot),0)+" HYPE (≈ "+fmtUSD(usd)+").":"";
+  const hh=PU.hlpHype;if(hh)sm+=" HLP net position on HYPE right now: "+(hh.net>=0?"long ":"short ")+nf(Math.abs(hh.net),0)+" HYPE (long "+nf(hh.lg,0)+" / short "+nf(hh.sh,0)+" across its sub-vaults), tiny next to the buyback.";
+  $("pc_sum").textContent=sm;
+}
+(function(){
+  const svg=document.getElementById("pc_svg");if(!svg)return;let rzT;window.addEventListener("resize",()=>{clearTimeout(rzT);rzT=setTimeout(()=>{if(PU.cand)chartRender();},150);});
+  const mv=e=>{const m=PU.cmeta;if(!m)return;const r=svg.getBoundingClientRect(),rx=(e.clientX-r.left)/r.width*m.W;let i=Math.round((rx-m.pl)/m.iw*(m.C.length-1));i=Math.max(0,Math.min(m.C.length-1,i));
+    const gx=m.pl+(m.C.length>1?i/(m.C.length-1):0)*m.iw,g=document.getElementById("pc_g");if(g){g.setAttribute("x1",gx);g.setAttribute("x2",gx);g.style.display="";}
+    const t=new Date(m.C[i].t).toLocaleString("en-GB",{day:"numeric",month:"short",hour:"2-digit",minute:"2-digit"}),b=m.B&&m.B.h[Math.floor(m.C[i].t/3600000)];
+    $("pc_tip").textContent=t+" · "+fmtPx(m.px[i])+(b?" · bought "+nf(Math.round(b.sz),0)+" HYPE (≈ "+fmtUSD(b.usd)+")":" · no buy");};
+  svg.addEventListener("pointermove",mv);svg.addEventListener("pointerdown",mv);
+})();
 function cxRender(){
   const P=PU.proto,tb=$("pxbody");
   const q=PU.q.trim().toLowerCase();
@@ -1067,8 +1141,8 @@ async function openPulse(){
   await show("v-pulse");moveInd($("pfilter"));moveInd($("pview"));
   PU.first=true;if(PU.rows){PU.anim=true;pulseRender();}
   clearInterval(PU.timer);clearInterval(PU.tick);
-  pulseLoad();protoLoad();
-  clearInterval(PU.ptimer);PU.ptimer=setInterval(()=>{if(document.visibilityState==="visible")protoLoad();},120000);
+  pulseLoad();protoLoad().then(chartLoad);
+  clearInterval(PU.ptimer);PU.ptimer=setInterval(()=>{if(document.visibilityState==="visible")protoLoad().then(chartLoad);},120000);
   PU.timer=setInterval(()=>{if(document.visibilityState==="visible")pulseLoad();},30000);
   PU.tick=setInterval(pulseStat,1000);
 }
