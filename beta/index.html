@@ -306,6 +306,8 @@ textarea:focus{outline:2px solid var(--acc);outline-offset:1px}
   .topbar .tb-right{order:3;width:100%}
   .card-head{padding:12px 14px}
   .card-head .seg{width:100%}
+  #pview .tab{flex:1 1 auto;padding:9px 8px;font-size:12.5px;white-space:nowrap;min-width:0}
+  .psearch{margin:12px 14px 4px}
   .tab{flex:1 1 auto;padding:7px 8px;font-size:13px}
   .hero-body{padding:22px 18px 4px}.subwrap{position:static;margin:0 0 12px;display:flex;justify-content:flex-end}.facts{margin:20px -18px 0}.facts div{padding:12px 18px}
   .col{padding:16px 14px}.sbody{padding:14px}
@@ -440,13 +442,18 @@ textarea:focus{outline:2px solid var(--acc);outline-offset:1px}
     <div class="card pk"><span class="ct">HIP-3 share of volume</span><b id="p_hip">—</b><div class="pbar"><i id="p_hipbar" style="width:0"></i></div><small id="p_hip_s"></small></div>
     <div class="card pk"><span class="ct">Markets</span><b id="p_mk">—</b><small id="p_mk_s"></small></div>
   </div>
+  <div class="pduo">
+    <div class="card pk"><span class="ct">HYPE buyback · Assistance Fund</span><b id="b_hold">—</b><small id="b_s1"></small><small id="b_s2"></small></div>
+    <div class="card pk"><span class="ct">HLP vault</span><b id="h_tvl">—</b><small id="h_s1"></small><small id="h_s2"></small></div>
+  </div>
   <section class="card">
-    <div class="card-head"><div class="seg" id="pview" role="group"><i class="ind"></i><button class="tab" data-v="mk" aria-pressed="true">Main markets</button><button class="tab" data-v="hi" aria-pressed="false">Highest funding</button><button class="tab" data-v="lo" aria-pressed="false">Lowest funding</button></div><div class="seg" id="pfilter" role="group"><i class="ind"></i><button class="tab" data-f="all" aria-pressed="true">All</button><button class="tab" data-f="core" aria-pressed="false">Core</button><button class="tab" data-f="hip" aria-pressed="false">HIP-3</button></div></div>
+    <div class="card-head"><div class="seg" id="pview" role="group"><i class="ind"></i><button class="tab" data-v="mk" aria-pressed="true">Markets</button><button class="tab" data-v="hi" aria-pressed="false">High funding</button><button class="tab" data-v="lo" aria-pressed="false">Low funding</button><button class="tab" data-v="cx" aria-pressed="false">vs CEX</button></div><div class="seg" id="pfilter" role="group"><i class="ind"></i><button class="tab" data-f="all" aria-pressed="true">All</button><button class="tab" data-f="core" aria-pressed="false">Core</button><button class="tab" data-f="hip" aria-pressed="false">HIP-3</button></div></div>
     <div class="psearch"><svg viewBox="0 0 20 20" width="16" height="16" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5.5" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="M13 13l4 4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg><input id="psearch" type="search" placeholder="Search (BTC, TSLA…)" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Search a market"><span id="pcount"></span></div>
-    <div class="pscroll"><table class="ptable"><thead><tr><th>Market</th><th data-s="px">Price</th><th data-s="chg">24h</th><th data-s="vol" class="on">Volume</th><th data-s="oi">Open interest</th><th data-s="fr">Funding (APR)</th></tr></thead><tbody id="ptbody"></tbody></table></div>
+    <div class="pscroll" id="pscm"><table class="ptable"><thead><tr><th>Market</th><th data-s="px">Price</th><th data-s="chg">24h</th><th data-s="vol" class="on">Volume</th><th data-s="oi">Open interest</th><th data-s="fr">Funding (APR)</th></tr></thead><tbody id="ptbody"></tbody></table></div>
+    <div class="pscroll" id="pscx" style="display:none"><table class="ptable"><thead><tr><th>Market</th><th>Hyperliquid</th><th>Binance</th><th>Bybit</th><th>HL vs CEX</th></tr></thead><tbody id="pxbody"></tbody></table></div>
     <p class="pempty" id="pempty" style="display:none">No market matches your search.</p>
   </section>
-  <p class="note">Source: Hyperliquid public API (api.hyperliquid.xyz), read live in your browser and refreshed every 30 seconds. Volume is the rolling 24h notional. Funding is annualized from the current hourly rate and only shown for markets with at least $1M of open interest. Informational only, not financial advice.</p>
+  <p class="note">Source: Hyperliquid public API (api.hyperliquid.xyz), read live in your browser (markets every 30 seconds, buyback, HLP and funding comparison every 2 minutes). Buyback = HYPE held by the Assistance Fund system address 0xfefe…fefe, whose HYPE is treated as burned; the 24h figure is the change in that balance and its dollar value uses the current HYPE price. Volume is the rolling 24h notional. Funding is annualized from the current hourly rate and only shown for markets with at least $1M of open interest. Informational only, not financial advice.</p>
  </div>
 </section>
 
@@ -956,11 +963,70 @@ async function pulseLoad(){
     add(res[0],"");names.forEach((n,i)=>add(res[i+1],n));
     if(!rows.length)throw new Error("empty");
     PU.rows=rows;PU.ts=Date.now();
-    pulseRender();
+    pulseRender();protoRender();
   }catch(e){
     $("pstat").textContent=PU.rows?"Couldn't refresh, showing the last data":"Couldn't load the market. Try again in a moment.";
   }
   PU.busy=false;
+}
+const AF="0xfefefefefefefefefefefefefefefefefefefefe",HLP="0xdfc24b077bc1425ad1dea75bcb6f8158e10df303";
+const fmtS=x=>(x>=0?"+":"−")+fmtUSD(Math.abs(x));
+async function protoLoad(){
+  if(PU.pbusy)return;PU.pbusy=true;
+  const n=Date.now(),c=p=>p.catch(()=>null);
+  const [sp,fl,vd,pf]=await Promise.all([c(hlPost({type:"spotClearinghouseState",user:AF})),c(hlPost({type:"userFillsByTime",user:AF,startTime:n-86400000})),c(hlPost({type:"vaultDetails",vaultAddress:HLP})),c(hlPost({type:"predictedFundings"}))]);
+  PU.proto={sp,fl,vd,pf};PU.pbusy=false;protoRender();pulseRender();
+}
+const twOnce=(el,v,f)=>{if(el.dataset.v===String(v))return;el.dataset.v=String(v);tween(el,v,f,900);};
+function protoRender(){
+  const P=PU.proto;if(!P)return;
+  try{
+    const hb=P.sp&&Array.isArray(P.sp.balances)?P.sp.balances.find(b=>b.coin==="HYPE"):null;
+    if(hb){
+      const tot=parseFloat(hb.total),cost=parseFloat(hb.entryNtl);
+      const hp=PU.rows?(PU.rows.find(r=>r.name==="HYPE")||{}).px:0;
+      twOnce($("b_hold"),tot,x=>nf(x/1e6,2)+"M HYPE");
+      $("b_s1").textContent=cost>0?"≈ "+fmtUSD(cost)+" spent in total (cost basis)":"";
+      const f=Array.isArray(P.fl)?P.fl.filter(x=>x.coin==="@107"&&x.dir==="Buy"):[];
+      if(f.length&&f[0].startPosition){
+        const d=tot-parseFloat(f[0].startPosition);
+        $("b_s2").textContent=d>0?"+"+nf(Math.round(d),0)+" HYPE in 24h"+(hp>0?" (≈ "+fmtUSD(d*hp)+")":""):"";
+      }else $("b_s2").textContent="";
+    }
+    const v=P.vd;
+    if(v&&Array.isArray(v.portfolio)){
+      const g=k=>{const e=v.portfolio.find(x=>x[0]===k);return e&&e[1]?e[1]:null;};
+      const last=a=>a&&a.length?parseFloat(a[a.length-1][1]):NaN;
+      const av=g("day");if(av){twOnce($("h_tvl"),last(av.accountValueHistory),fmtUSD);}
+      const pn=k=>{const e=g(k);return e?last(e.pnlHistory):NaN;};
+      const t=k=>{const x=pn(k);return isNaN(x)?"—":fmtS(x);};
+      $("h_s1").textContent="PnL 24h "+t("day")+" · 7d "+t("week")+" · 30d "+t("month");
+      $("h_s2").textContent=isNaN(pn("allTime"))?"":"All-time PnL "+fmtS(pn("allTime"));
+    }
+  }catch(e){}
+}
+function cxRender(){
+  const P=PU.proto,tb=$("pxbody");
+  const q=PU.q.trim().toLowerCase();
+  if(!P||!Array.isArray(P.pf)){tb.innerHTML="";$("pcount").textContent="";$("pempty").style.display="";$("pempty").textContent=P?"Couldn't load the comparison. Try again in a moment.":"Loading…";return;}
+  const apr=o=>o&&o.fundingRate!=null?parseFloat(o.fundingRate)*8760/(o.fundingIntervalHours||1):NaN;
+  let L=[];
+  P.pf.forEach(e=>{
+    const nm=String(e[0]);const m={};(e[1]||[]).forEach(x=>{m[x[0]]=apr(x[1]);});
+    const hl=m.HlPerp,bn=m.BinPerp,by=m.BybitPerp;
+    const ce=[bn,by].filter(x=>!isNaN(x));
+    if(isNaN(hl)||!ce.length)return;
+    const avg=ce.reduce((a,b)=>a+b,0)/ce.length;
+    L.push({nm,hl,bn,by,sp:hl-avg});
+  });
+  if(q)L=L.filter(r=>r.nm.toLowerCase().includes(q));
+  L.sort((a,b)=>Math.abs(b.sp)-Math.abs(a.sp));
+  const total=L.length;L=L.slice(0,q?30:15);
+  $("pcount").textContent=q?(total+" result"+(total===1?"":"s")):"Largest gaps · "+total+" markets";
+  $("pempty").textContent="No market matches your search.";$("pempty").style.display=total?"none":"";
+  const cl=x=>isNaN(x)?"":(x>=0?"pos":"neg"),ft=x=>isNaN(x)?"—":fmtApr(x);
+  tb.classList.toggle("still",!PU.anim);
+  tb.innerHTML=L.map(r=>`<tr><td><b>${r.nm.replace(/[<>&]/g,"")}</b></td><td class="${cl(r.hl)}">${ft(r.hl)}</td><td class="${cl(r.bn)}">${ft(r.bn)}</td><td class="${cl(r.by)}">${ft(r.by)}</td><td class="${cl(r.sp)}">${fmtApr(r.sp)}</td></tr>`).join("");
 }
 function pulseRender(){
   const R=PU.rows;if(!R)return;
@@ -971,6 +1037,9 @@ function pulseRender(){
   tween($("p_hip"),share,x=>nf(x,1)+"%",900);$("p_hipbar").style.width=Math.min(100,share)+"%";$("p_hip_s").textContent=hip.length?"across "+new Set(hip.map(r=>r.dex)).size+" builder-deployed dexs":"";
   tween($("p_mk"),R.length,x=>nf(Math.round(x),0),700);$("p_mk_s").textContent=core.length+" core · "+hip.length+" HIP-3";
   // table
+  $("pscm").style.display=PU.view==="cx"?"none":"";$("pscx").style.display=PU.view==="cx"?"":"none";$("pfilter").style.display=PU.view==="cx"?"none":"";
+  if(PU.view==="cx"){cxRender();PU.first=false;PU.anim=false;pulseStat();return;}
+  $("pempty").textContent="No market matches your search.";
   const q=PU.q.trim().toLowerCase();
   let L=R.filter(r=>(PU.filter==="all"||(PU.filter==="hip")===!!r.dex)&&(!q||r.name.toLowerCase().includes(q)));
   const fv=PU.view!=="mk";
@@ -998,11 +1067,12 @@ async function openPulse(){
   await show("v-pulse");moveInd($("pfilter"));moveInd($("pview"));
   PU.first=true;if(PU.rows){PU.anim=true;pulseRender();}
   clearInterval(PU.timer);clearInterval(PU.tick);
-  pulseLoad();
+  pulseLoad();protoLoad();
+  clearInterval(PU.ptimer);PU.ptimer=setInterval(()=>{if(document.visibilityState==="visible")protoLoad();},120000);
   PU.timer=setInterval(()=>{if(document.visibilityState==="visible")pulseLoad();},30000);
   PU.tick=setInterval(pulseStat,1000);
 }
-function closePulse(){clearInterval(PU.timer);clearInterval(PU.tick);}
+function closePulse(){clearInterval(PU.ptimer);clearInterval(PU.timer);clearInterval(PU.tick);}
 async function openMethod(){
   const cur=document.querySelector(".view.on");if(cur&&cur.id!=="v-method")prevView=cur.id;
   $("m_listen").textContent=listenText();
