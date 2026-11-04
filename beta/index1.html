@@ -1,0 +1,1045 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta name="robots" content="noindex,nofollow">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#00110d">
+<title>Hyperliquid Volume Checker</title>
+<meta name="description" content="Paste a Hyperliquid wallet address to see your rank by trading volume, profit and account size. No connection, no signature. Unofficial tool.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Hyperliquid Volume Checker">
+<meta property="og:title" content="Hyperliquid Volume Checker">
+<meta property="og:description" content="Paste a Hyperliquid wallet address to see your rank by trading volume, profit and account size. No connection, no signature. Unofficial tool.">
+<meta property="og:url" content="https://azarcrz.github.io/hyperliquid-rank/">
+<meta property="og:image" content="https://azarcrz.github.io/hyperliquid-rank/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Hyperliquid Volume Checker: paste a wallet address and see where you rank">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Hyperliquid Volume Checker">
+<meta name="twitter:description" content="Paste a Hyperliquid wallet address to see your rank by trading volume, profit and account size. No connection, no signature. Unofficial tool.">
+<meta name="twitter:image" content="https://azarcrz.github.io/hyperliquid-rank/og-image.png">
+<meta name="twitter:creator" content="@hugocrza">
+<style>
+:root{
+  --ink:#eefaf6;--mute:#9bbbb2;--line:rgba(111,227,207,.32);--acc:#6fe3cf;--accdim:rgba(111,227,207,.14);--err:#ffb4b4;
+  --sans:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+}
+*{box-sizing:border-box}
+html{background:#00110d}
+body{margin:0;color:var(--ink);font:16px/1.5 var(--sans);min-height:100vh;overflow-x:hidden}
+
+/* ---------- animated background ---------- */
+.bg{position:fixed;inset:0;z-index:-1;background:#00110d;overflow:hidden}
+.b{position:absolute;border-radius:50%;filter:blur(70px);will-change:transform}
+.b1{width:70vmax;height:70vmax;left:-22vmax;top:-30vmax;background:radial-gradient(circle at 45% 45%,#00573f 0%,#00352a 50%,transparent 72%);animation:f1 20s ease-in-out infinite alternate}
+.b2{width:62vmax;height:62vmax;right:-24vmax;top:-12vmax;background:radial-gradient(circle,#006a50 0%,#003c2e 52%,transparent 72%);animation:f2 24s ease-in-out infinite alternate}
+.b3{width:58vmax;height:58vmax;left:-8vmax;bottom:-34vmax;background:radial-gradient(circle,#0a8f70 0%,#004d3a 50%,transparent 72%);opacity:.8;animation:f3 22s ease-in-out infinite alternate}
+.b4{width:46vmax;height:46vmax;right:-4vmax;bottom:-30vmax;background:radial-gradient(circle,#006d53 0%,#003a2d 55%,transparent 72%);animation:f4 26s ease-in-out infinite alternate}
+.b5{width:36vmax;height:36vmax;left:36%;top:28%;background:radial-gradient(circle,rgba(46,205,165,.30),transparent 68%);filter:blur(80px);opacity:.85;animation:f5 18s ease-in-out infinite alternate}
+.glow{position:absolute;left:8%;bottom:-22vmax;width:46vmax;height:34vmax;background:radial-gradient(closest-side,rgba(61,240,194,.6),rgba(61,240,194,.14) 62%,transparent);filter:blur(34px);animation:gl 11s ease-in-out infinite alternate}
+.vig{position:absolute;inset:0;background:radial-gradient(120% 90% at 50% 40%,transparent 40%,rgba(0,8,6,.6) 100%)}
+.grain{position:absolute;inset:0;opacity:.07;mix-blend-mode:overlay;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+@keyframes f1{to{transform:translate(20vmax,14vmax) scale(1.2) rotate(28deg)}}
+@keyframes f2{to{transform:translate(-18vmax,16vmax) scale(.88) rotate(-22deg)}}
+@keyframes f3{to{transform:translate(22vmax,-12vmax) scale(1.22) rotate(34deg)}}
+@keyframes f4{to{transform:translate(-20vmax,-10vmax) scale(1.14) rotate(-26deg)}}
+@keyframes gl{to{transform:translate(26vmax,-5vmax) scale(1.3);opacity:.7}}
+@keyframes f5{to{transform:translate(-14vmax,12vmax) scale(1.3);opacity:.55}}
+@media (prefers-reduced-motion:reduce){.b,.glow{animation:none}}
+
+/* ---------- shared ---------- */
+.view{display:none;min-height:100vh}
+.view.on{display:flex;flex-direction:column;animation:fade .6s ease both}
+.view.out{animation:fadeout .26s ease both}
+@keyframes fade{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+@keyframes fadeout{to{opacity:0;transform:translateY(-6px)}}
+@keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+#v-results.on .wrap>*{animation:rise .65s cubic-bezier(.2,.8,.2,1) both}
+#v-results.on .wrap>*:nth-child(2){animation-delay:.06s}
+#v-results.on .wrap>*:nth-child(3){animation-delay:.14s}
+#v-results.on .wrap>*:nth-child(4){animation-delay:.22s}
+#v-results.on .wrap>*:nth-child(n+5){animation-delay:.3s}
+.pill{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:0;border-radius:999px;background:var(--acc);color:#03211c;font:600 15px var(--sans);padding:0 22px;min-height:46px;cursor:pointer;white-space:nowrap}
+.pill svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.pill.ghost{background:rgba(0,0,0,.2);color:var(--acc);border:1px solid rgba(111,227,207,.75)}
+.pill.sm{min-height:38px;font-size:13.5px;padding:0 16px}
+.pill:disabled{opacity:.6;cursor:default}
+.kicker{display:inline-flex;align-items:center;gap:7px;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--acc);background:rgba(0,0,0,.22);border:1px solid var(--line);border-radius:999px;padding:5px 13px}
+a{color:var(--acc)}
+.err{color:var(--err);font-size:14px;min-height:20px;margin-top:12px;text-align:center}
+button.link{background:none;border:0;padding:0;color:var(--acc);font:14px var(--sans);cursor:pointer;text-decoration:underline;text-underline-offset:3px}
+.brand{display:flex;align-items:center;gap:10px;font:600 14px var(--sans);letter-spacing:.02em}
+
+/* ---------- landing ---------- */
+#v-landing{align-items:center;justify-content:space-between;padding:22px 20px 20px}
+.ltop{width:100%;max-width:1180px;display:flex;justify-content:space-between;align-items:center}
+.hero{width:100%;max-width:860px;text-align:center;display:flex;flex-direction:column;align-items:center;padding:24px 0}
+.hero h1{font:700 clamp(34px,6vw,68px)/1.08 var(--sans);margin:18px 0 16px;letter-spacing:-.03em;text-wrap:balance}
+.hero p.lead{margin:0 0 30px;color:#cfe5de;font-size:clamp(15px,2vw,18px);max-width:520px}
+.bigfield{display:flex;gap:10px;align-items:center;width:100%;max-width:700px;padding:8px 8px 8px 20px;background:rgba(2,24,19,.72);border:1px solid rgba(111,227,207,.5);border-radius:999px;backdrop-filter:blur(14px);box-shadow:0 20px 60px rgba(0,0,0,.35)}
+.bigfield:focus-within{border-color:var(--acc);box-shadow:0 0 0 3px rgba(111,227,207,.18),0 20px 60px rgba(0,0,0,.35)}
+.bigfield svg{width:20px;height:20px;stroke:var(--mute);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0}
+.bigfield input{flex:1;min-width:0;background:transparent;border:0;outline:0;color:var(--ink);font:16px ui-monospace,SFMono-Regular,Menlo,monospace;padding:12px 0}
+.bigfield input::placeholder{color:#6f9187}
+.bigfield .pill{min-height:50px}
+.mini{margin:16px 0 0;color:var(--mute);font-size:13px}
+#manual{display:none;margin-top:14px;width:100%;max-width:700px}
+.lfoot{font-size:12.5px;color:var(--mute);text-align:center}
+@media(max-width:560px){
+  .bigfield{flex-wrap:wrap;border-radius:26px;padding:12px}
+  .bigfield svg{display:none}
+  .bigfield input{flex:1 1 100%;padding:10px 6px}
+  .bigfield .pill{flex:1 1 100%}
+}
+
+/* ---------- loading ---------- */
+#v-loading{align-items:center;justify-content:center;text-align:center;gap:26px}
+.bar{width:220px;height:3px;border-radius:2px;background:rgba(111,227,207,.18);overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:var(--acc);border-radius:2px}
+#v-loading p{font:500 18px var(--sans);margin:0;color:#dff3ed;min-height:27px}
+
+/* ---------- results ---------- */
+#v-results{align-items:center;padding:20px 20px 40px}
+.wrap{width:100%;max-width:1120px;display:flex;flex-direction:column;gap:16px}
+.topbar{display:flex;align-items:center;gap:10px 12px;flex-wrap:wrap}
+.topbar .brand{margin-right:auto}
+.tb-right{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.addr{display:inline-flex;align-items:center;gap:8px;padding:8px 14px;border:1px solid var(--line);border-radius:999px;background:rgba(0,0,0,.25);font:13px ui-monospace,SFMono-Regular,Menlo,monospace;color:#d9efe8}
+.card{background:rgba(4,27,21,.74);border:1px solid rgba(111,227,207,.42);box-shadow:inset 0 1px 0 rgba(255,255,255,.07),0 12px 44px rgba(0,0,0,.28);border-radius:20px;backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);overflow:hidden}
+.card-head{display:flex;justify-content:space-between;align-items:center;gap:10px 20px;flex-wrap:wrap;padding:12px 20px;border-bottom:1px solid rgba(111,227,207,.26)}
+.ct{font:600 11px var(--sans);letter-spacing:.14em;text-transform:uppercase;color:var(--mute);margin:0}
+.ct.acc{color:var(--acc)}
+.seg{display:inline-flex;background:rgba(0,0,0,.32);border:1px solid var(--line);border-radius:999px;padding:3px;gap:2px;max-width:100%}
+.tab{border:0;background:transparent;color:var(--mute);padding:7px 15px;border-radius:999px;font:500 13.5px var(--sans);cursor:pointer;white-space:nowrap}
+.tab:hover{color:var(--ink)}
+.tab[aria-pressed=true]{background:var(--acc);color:#03211c;font-weight:600}
+/* main card */
+.hero-body{padding:28px 32px 8px}
+.bigtop{font:700 clamp(54px,7.5vw,88px)/1 var(--sans);letter-spacing:-.035em;margin:0 0 6px;background:linear-gradient(180deg,#fff 20%,#8ff3dc 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
+.sub{color:#cfe5de;font-size:15px;margin:0}
+.meter{margin-top:50px}
+.track{position:relative;height:10px;border-radius:6px;background:rgba(255,255,255,.1)}
+.fill,.dot{transition:left .7s cubic-bezier(.2,.8,.2,1)}
+.fill{position:absolute;top:0;bottom:0;right:0;border-radius:0 6px 6px 0;background:linear-gradient(90deg,#6fe3cf,rgba(111,227,207,.22))}
+.dot{position:absolute;top:50%;width:24px;height:24px;margin:-12px 0 0 -12px;border-radius:50%;background:#fff;border:4px solid var(--acc);box-shadow:0 0 0 7px rgba(111,227,207,.18)}
+.dot span{position:absolute;bottom:36px;left:50%;transform:translateX(-50%);font:700 12px var(--sans);letter-spacing:.14em;color:var(--acc)}
+.mscale{display:flex;justify-content:space-between;font-size:12px;color:var(--mute);margin-top:10px}
+.facts{margin:24px -32px 0;display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid rgba(111,227,207,.26)}
+.facts div{display:flex;flex-direction:column;gap:4px;padding:16px 32px;border-left:1px solid rgba(111,227,207,.26)}
+.facts div:first-child{border-left:0}
+.facts dt{color:var(--mute);font-size:12px;letter-spacing:.06em;text-transform:uppercase}
+.facts dd{margin:0;font-weight:600;font-size:18px;font-variant-numeric:tabular-nums}
+@media(max-width:820px){
+  .facts{grid-template-columns:1fr 1fr}
+  .facts div{padding:14px 32px;border-left:0;border-top:1px solid rgba(111,227,207,.2)}
+  .facts div:nth-child(-n+2){border-top:0}
+  .facts div:nth-child(even){border-left:1px solid rgba(111,227,207,.26)}
+}
+/* distribution / thresholds / periods */
+.trio{display:grid}
+.col{padding:18px 20px;min-width:0;display:flex;flex-direction:column}
+.col+.col{border-top:1px solid rgba(111,227,207,.26)}
+@media(min-width:960px){
+  .trio{grid-template-columns:minmax(0,1.3fr) minmax(0,.8fr) minmax(0,1.05fr)}
+  .col+.col{border-top:0;border-left:1px solid rgba(111,227,207,.26)}
+}
+.col .ct{margin-bottom:8px}
+svg.chart{width:100%;height:auto;display:block;margin:auto 0}
+.ladder{display:none;grid-template-columns:repeat(7,1fr);border-top:1px solid rgba(111,227,207,.26)}
+.lad{padding:8px 6px;text-align:center;border-left:1px solid rgba(111,227,207,.18)}
+.lad:first-child{border-left:0}
+.lad .le{font-size:18px;line-height:1}
+.lad .ln{font-weight:600;font-size:12px;margin-top:3px}
+.lad .lv{font-size:11px;color:var(--mute);font-variant-numeric:tabular-nums;margin-top:1px}
+.lad.sel{background:var(--accdim)}
+.lad.sel .ln,.lad.sel .lv{color:var(--acc)}
+@media(max-width:700px){
+  .ladder{grid-template-columns:repeat(4,1fr)}
+  .lad:nth-child(4n+1){border-left:0}
+  .lad:nth-child(n+5){border-top:1px solid rgba(111,227,207,.18)}
+}
+.tier{margin-top:auto;padding-top:10px;border-top:1px solid rgba(111,227,207,.24);display:flex;align-items:center;gap:12px}
+.ticon{font-size:26px;line-height:1}
+.tier .ct{margin:0 0 2px}
+.tname{font-weight:700;font-size:15px;line-height:1.2}
+.tnext{font-size:11.5px;color:var(--mute);margin-top:1px}
+table{width:100%;border-collapse:collapse;font-size:14px}
+td,th{padding:7px 6px;text-align:left;font-weight:400;white-space:nowrap;border-bottom:1px solid rgba(111,227,207,.18)}
+tr:last-child td{border-bottom:0}
+th{color:var(--mute);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase}
+td:nth-child(2),th:nth-child(2){text-align:right;font-variant-numeric:tabular-nums}
+td:last-child,th:last-child{text-align:right;font-variant-numeric:tabular-nums}
+#thr td:last-child{text-align:right}
+tr.sel td{background:var(--accdim);color:var(--acc);font-weight:600}
+tr.sel td:first-child{border-radius:8px 0 0 8px}tr.sel td:last-child{border-radius:0 8px 8px 0}
+tr.pick{cursor:pointer}
+/* share */
+.sbody{display:grid;gap:18px;padding:18px 20px}
+@media(min-width:860px){.sbody{grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);align-items:center}}
+#cardimg{width:100%;height:auto;border-radius:14px;border:1px solid var(--line);display:block}
+textarea{width:100%;height:84px;resize:none;font:15px var(--sans);padding:12px 14px;border:1px solid var(--line);border-radius:14px;background:rgba(0,0,0,.28);color:var(--ink)}
+textarea:focus{outline:2px solid var(--acc);outline-offset:1px}
+.sbtns{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+.sbtns .full{grid-column:1/3}
+.sbtns .pill{padding:0 12px}
+.hint{font-size:12.5px;color:var(--mute);margin:12px 0 0}
+.note{font-size:12.5px;color:var(--mute);text-align:center;margin:0 auto;max-width:860px}
+.mlink{margin-left:auto}
+.ltop{gap:10px}
+#v-pulse{align-items:center;padding:20px 20px 48px}
+#v-pulse .wrap{animation:rise .6s cubic-bezier(.2,.8,.2,1) both}
+.phead{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:10px 20px;margin:6px 4px 0}
+.ptitle{margin:0;font:700 clamp(40px,6vw,64px)/1 var(--sans);letter-spacing:-.035em;background:linear-gradient(180deg,#fff 20%,#8ff3dc 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
+.psub{margin:10px 0 0;color:#cfe5de;font-size:14px;display:flex;align-items:center;gap:9px}
+.live{display:inline-block;width:9px;height:9px;border-radius:50%;background:var(--acc);animation:ping 1.9s ease-out infinite}
+@keyframes ping{0%{box-shadow:0 0 0 0 rgba(111,227,207,.65)}80%,100%{box-shadow:0 0 0 11px rgba(111,227,207,0)}}
+.pkpi{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
+.pk{padding:18px 22px;display:flex;flex-direction:column;gap:6px;min-width:0}
+.pk b{font:700 clamp(24px,3.2vw,34px)/1.1 var(--sans);letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.pk small{color:var(--mute);font-size:12.5px;min-height:17px}
+.pbar{display:flex;height:8px;border-radius:4px;overflow:hidden;background:rgba(255,255,255,.1);margin-top:2px}
+.pbar i{display:block;height:100%;background:var(--acc);transition:width 1s cubic-bezier(.2,.8,.2,1)}
+.pscroll{overflow-x:auto}
+.ptable{min-width:680px}
+.ptable td,.ptable th{text-align:right;padding:11px 14px;font-variant-numeric:tabular-nums}
+.ptable td:first-child,.ptable th:first-child{text-align:left}
+.ptable th[data-s]{cursor:pointer;user-select:none}
+.ptable th[data-s]:hover{color:var(--ink)}
+.ptable th.on{color:var(--acc)}
+.ptable tbody tr{animation:rowin .45s cubic-bezier(.2,.8,.2,1) both}
+.ptable tbody.still tr{animation:none}
+.ptable tbody tr:hover td{background:rgba(111,227,207,.06)}
+.pb{display:inline-block;margin-left:8px;padding:2px 8px;border-radius:999px;border:1px solid rgba(111,227,207,.4);color:var(--acc);font-size:11px;letter-spacing:.04em}
+.pos{color:#7ee8c9}.neg{color:var(--err)}
+.pduo{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.pf{display:flex;justify-content:space-between;gap:12px;padding:11px 20px;border-bottom:1px solid rgba(111,227,207,.14);font-variant-numeric:tabular-nums}
+.pf:last-child{border-bottom:0}
+.pf small{display:block;color:var(--mute);font-size:12px}
+@media(max-width:820px){.pkpi{grid-template-columns:repeat(2,minmax(0,1fr))}.pduo{grid-template-columns:1fr}}
+@media(max-width:640px){#v-pulse{padding:16px 14px 36px}}
+.rwrap{padding:64px 48px 78px}
+.rtrack{position:relative;height:8px;border-radius:4px;background:rgba(255,255,255,.12)}
+.rfill{position:absolute;left:0;top:0;bottom:0;width:0;border-radius:4px;background:var(--acc);transition:width 1.1s cubic-bezier(.2,.8,.2,1)}
+.rpin{position:absolute;top:50%;left:0;width:22px;height:22px;margin:-11px 0 0 -11px;border-radius:50%;background:#fff;border:4px solid var(--acc);box-shadow:0 0 0 7px rgba(111,227,207,.18);transition:left 1.1s cubic-bezier(.2,.8,.2,1);z-index:2}
+.rpin span{position:absolute;bottom:32px;left:50%;transform:translateX(-50%);font:700 12px var(--sans);letter-spacing:.12em;color:var(--acc);white-space:nowrap}
+.stn{position:absolute;top:-4px;width:0;animation:fadein .6s ease both}
+.stn:nth-child(2){animation-delay:.08s}.stn:nth-child(3){animation-delay:.16s}.stn:nth-child(4){animation-delay:.24s}.stn:nth-child(5){animation-delay:.32s}
+.stn .tk{position:absolute;left:-1px;top:0;width:2px;height:16px;background:#cfe5de;opacity:.6}
+.stn.pass .tk{background:var(--acc);opacity:1}
+.stn .sl{position:absolute;top:24px;left:0;transform:translateX(-50%);text-align:center;white-space:nowrap}
+.stn .sl span{display:block;font-size:12px;color:var(--mute)}
+.stn .sl b{font-size:14px;font-weight:600}
+.stn.nx .tk{background:var(--acc);opacity:1;height:22px;top:-3px}
+.stn.nx .sl b{color:var(--acc)}
+@media(max-width:640px){
+  .rwrap{padding:62px 34px 100px}
+  .stn:nth-child(even) .tk{height:50px}
+  .stn:nth-child(even) .sl{top:56px}
+  .stn .sl span{font-size:11px}.stn .sl b{font-size:13px}
+}
+/* ---- motion ---- */
+.seg{position:relative}
+.seg .ind{position:absolute;top:3px;bottom:3px;left:0;width:0;border-radius:999px;background:var(--acc);transition:transform .4s cubic-bezier(.3,.8,.2,1),width .4s cubic-bezier(.3,.8,.2,1);z-index:0;pointer-events:none}
+.tab{position:relative;z-index:1;transition:color .25s}
+.seg.ready .tab[aria-pressed=true]{background:transparent}
+.pill{transition:transform .18s ease,box-shadow .3s ease,background .25s ease,color .25s ease,opacity .2s}
+.pill:hover:not(:disabled){transform:translateY(-1px);box-shadow:0 8px 26px rgba(111,227,207,.22)}
+.pill:active:not(:disabled){transform:scale(.97);box-shadow:none}
+.bigfield{transition:border-color .25s,box-shadow .3s}
+#v-landing.on .hero>*{animation:rise .85s cubic-bezier(.2,.8,.2,1) both}
+#v-landing.on .hero>*:nth-child(2){animation-delay:.07s}#v-landing.on .hero>*:nth-child(3){animation-delay:.14s}
+#v-landing.on .hero>*:nth-child(4){animation-delay:.22s}#v-landing.on .hero>*:nth-child(n+5){animation-delay:.3s}
+.chart .ln{stroke-dasharray:1;stroke-dashoffset:1;animation:draw 1.15s cubic-bezier(.3,.7,.2,1) .05s forwards}
+.chart .ar{animation:fadein .9s ease .45s both}
+.chart line.mk{animation:fadein .5s ease .85s both}
+.chart circle.mk{transform-box:fill-box;transform-origin:center;animation:dotpop .55s cubic-bezier(.3,1.7,.5,1) .95s both}
+@keyframes draw{to{stroke-dashoffset:0}}
+@keyframes fadein{from{opacity:0}to{opacity:1}}
+@keyframes dotpop{from{transform:scale(0)}to{transform:scale(1)}}
+#thr tr,#all tr,#lad tr{animation:rowin .5s cubic-bezier(.2,.8,.2,1) both}
+#thr tr:nth-child(2),#all tr:nth-child(2),#lad tr:nth-child(2){animation-delay:.05s}
+#thr tr:nth-child(3),#all tr:nth-child(3),#lad tr:nth-child(3){animation-delay:.1s}
+#thr tr:nth-child(4),#all tr:nth-child(4),#lad tr:nth-child(4){animation-delay:.15s}
+#thr tr:nth-child(5),#all tr:nth-child(5),#lad tr:nth-child(5){animation-delay:.2s}
+#thr tr:nth-child(n+6),#all tr:nth-child(n+6),#lad tr:nth-child(n+6){animation-delay:.25s}
+#ladstrip .lad{animation:rowin .55s cubic-bezier(.2,.8,.2,1) both}
+#ladstrip .lad:nth-child(2){animation-delay:.05s}#ladstrip .lad:nth-child(3){animation-delay:.1s}#ladstrip .lad:nth-child(4){animation-delay:.15s}
+#ladstrip .lad:nth-child(5){animation-delay:.2s}#ladstrip .lad:nth-child(6){animation-delay:.25s}#ladstrip .lad:nth-child(7){animation-delay:.3s}
+@keyframes rowin{from{opacity:0;transform:translateX(-10px)}to{opacity:1;transform:none}}
+.ticon.pop{display:inline-block;animation:tpop .75s cubic-bezier(.3,1.5,.5,1) both}
+.ticon.glow{animation:tpop .75s cubic-bezier(.3,1.5,.5,1) both,tglow 2.4s ease-in-out .8s 3}
+@keyframes tpop{0%{transform:scale(.3) rotate(-16deg);opacity:0}60%{transform:scale(1.2) rotate(5deg);opacity:1}100%{transform:none;opacity:1}}
+@keyframes tglow{50%{filter:drop-shadow(0 0 12px rgba(111,227,207,.95))}}
+#more,#share,#ruler{opacity:0;transform:translateY(26px);transition:opacity .8s ease,transform .8s cubic-bezier(.2,.8,.2,1)}
+#more.in,#share.in,#ruler.in{opacity:1;transform:none}
+#v-results.on .wrap>#more,#v-results.on .wrap>#share,#v-results.on .wrap>#ruler{animation:none}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.001ms!important;animation-delay:0s!important;animation-iteration-count:1!important;transition-duration:.001ms!important}
+  #more,#share,#ruler{opacity:1;transform:none}
+}
+.tab:disabled{opacity:.35;cursor:default}
+.pill.ghost.on{background:var(--acc);color:#03211c}
+.more .facts{margin:0;border-top:0}
+.hip{padding:13px 32px;border-top:1px solid rgba(111,227,207,.26);font-size:14px;color:#cfe5de}
+.hip b{color:var(--ink);font-weight:600}
+@media(max-width:640px){.hip{padding:12px 18px}}
+.facts dd.s{font-weight:500;font-size:13px;color:var(--acc);min-height:17px}
+.facts dd.pos{color:#7ee8c9}.facts dd.neg{color:var(--err)}
+#v-method{align-items:center;padding:20px 20px 40px}
+#v-method .wrap{animation:rise .6s cubic-bezier(.2,.8,.2,1) both}
+.steps{list-style:none;margin:0;padding:6px 22px 10px;counter-reset:s}
+.steps li{counter-increment:s;position:relative;padding:16px 0 16px 46px;border-bottom:1px solid rgba(111,227,207,.16);font-size:15px;line-height:1.55;color:#cfe5de}
+.steps li:last-child{border-bottom:0}
+.steps li::before{content:counter(s);position:absolute;left:0;top:15px;width:28px;height:28px;border-radius:50%;border:1px solid rgba(111,227,207,.6);color:var(--acc);font:600 13px/26px var(--sans);text-align:center}
+.steps b{display:block;color:var(--ink);font-weight:600;margin-bottom:2px}
+@media(max-width:640px){
+  #v-method{padding:16px 14px 32px}.steps{padding:4px 16px 8px}
+  #v-results{padding:16px 14px 32px}
+  .topbar .tb-right{order:3;width:100%}
+  .card-head{padding:12px 14px}
+  .card-head .seg{width:100%}
+  .tab{flex:1 1 auto;padding:7px 8px;font-size:13px}
+  .hero-body{padding:22px 18px 4px}.facts{margin:20px -18px 0}.facts div{padding:12px 18px}
+  .col{padding:16px 14px}.sbody{padding:14px}
+}
+</style>
+</head>
+<body>
+<div class="bg" aria-hidden="true"><i class="b b1"></i><i class="b b2"></i><i class="b b3"></i><i class="b b4"></i><i class="b b5"></i><i class="glow"></i><i class="vig"></i><i class="grain"></i></div>
+
+<!-- ============ 1. LANDING ============ -->
+<section class="view on" id="v-landing">
+  <div class="ltop"><button class="pill ghost sm mlink" data-pulse>Pulse</button><button class="pill ghost sm" data-method>How it works</button></div>
+  <div class="hero">
+    <span class="kicker">Unofficial tool</span>
+    <h1>Hyperliquid Volume Checker</h1>
+    <p class="lead">Paste a wallet address to see your rank by trading volume.</p>
+    <div class="bigfield">
+      <svg viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="13" rx="3"/><path d="M3 10h18"/><circle cx="16.5" cy="14.5" r="1"/></svg>
+      <input id="addr" type="text" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Wallet address" placeholder="0x…">
+      <button class="pill" id="go">See my rank</button>
+    </div>
+    <div class="err" id="err" role="alert"></div>
+    <button class="link" id="mtoggle">Enter volume manually</button>
+    <div id="manual">
+      <div class="bigfield"><input id="mvol" type="number" inputmode="decimal" min="0" step="any" placeholder="Volume in $, e.g. 250000" aria-label="Volume in dollars"><button class="pill" id="mgo">Check</button></div>
+    </div>
+    <p class="mini">No connection. No signature.</p>
+  </div>
+  <div class="lfoot">Independent tool, not affiliated with Hyperliquid. · Made by <a href="https://x.com/hugocrza" target="_blank" rel="noopener">@hugocrza</a></div>
+</section>
+
+<!-- ============ 2. LOADING ============ -->
+<section class="view" id="v-loading">
+  <p id="loadtxt">Reading wallet…</p>
+  <div class="bar"><i id="bari"></i></div>
+</section>
+
+<!-- ============ 3. RESULTS ============ -->
+<section class="view" id="v-results">
+ <div class="wrap">
+  <header class="topbar">
+    <div class="brand"><span>Hyperliquid Volume Checker</span></div>
+    <div class="tb-right">
+      <span class="addr"><span id="who"></span></span>
+      <button class="pill ghost sm" id="subbtn">Include sub-accounts</button>
+      <button class="pill ghost sm" data-pulse>Pulse</button>
+      <button class="pill ghost sm" data-method>How it works</button>
+      <button class="pill ghost sm" id="back">Change address</button>
+    </div>
+  </header>
+
+  <section class="card">
+    <div class="card-head"><h2 class="ct">Your rank</h2><div class="seg" id="modeseg" role="group" style="display:none"><i class="ind"></i><button class="tab" data-m="all" aria-pressed="true">All volume</button><button class="tab" data-m="hip" aria-pressed="false">HIP-3 only</button></div><div class="seg" id="tabs" role="group"></div></div>
+    <div class="hero-body">
+      <div class="bigtop" id="top"></div>
+      <p class="sub" id="sub"></p>
+      <p class="note" id="subnote" style="text-align:left;margin:8px 0 0;min-height:0"></p>
+      <div class="meter">
+        <div class="track"><i class="fill" id="mfill"></i><i class="dot" id="mdot"><span>YOU</span></i></div>
+        <div class="mscale"><span>Top 0%</span><span>Top 50%</span><span>Top 100%</span></div>
+      </div>
+      <dl class="facts">
+        <div><dt id="k_vol">Your volume</dt><dd id="vol"></dd></div>
+        <div><dt>Median trader</dt><dd id="med"></dd></div>
+        <div><dt>Next milestone</dt><dd id="next"></dd></div>
+        <div><dt>Volume to add</dt><dd id="gap"></dd></div>
+      </dl>
+    </div>
+  </section>
+
+  <section class="card">
+    <div class="trio">
+      <div class="col"><h2 class="ct">Distribution (log)</h2><svg class="chart" id="chart" viewBox="0 0 600 300" role="img"></svg></div>
+      <div class="col"><h2 class="ct acc">Thresholds</h2><table><tbody id="thr"></tbody></table>
+        <div class="tier"><span class="ticon" id="ticon"></span><div><div class="ct">Your tier</div><div class="tname" id="tname"></div><div class="tnext" id="tnext"></div></div></div>
+      </div>
+      <div class="col" id="allwrap"><h2 class="ct acc">All periods</h2><table><tbody id="all"></tbody></table></div>
+      <div class="col" id="ladwrap" style="display:none"><h2 class="ct acc">Tiers</h2><table><tbody id="lad"></tbody></table></div>
+    </div>
+    <div class="ladder" id="ladstrip"></div>
+  </section>
+
+  <section class="card" id="ruler">
+    <div class="card-head"><h2 class="ct acc">Your place on the ladder</h2></div>
+    <div class="rwrap"><div class="rtrack"><i class="rfill" id="rfill"></i><i class="rpin" id="rpin"><span id="rpinl">YOU</span></i><div id="rst"></div></div></div>
+  </section>
+
+  <section class="card more" id="more">
+    <div class="card-head"><h2 class="ct">More on this wallet</h2></div>
+    <dl class="facts">
+      <div><dt id="k_pnl">Profit</dt><dd id="m_pnl">—</dd><dd class="s" id="s_pnl"></dd></div>
+      <div><dt>Account value</dt><dd id="m_av">—</dd><dd class="s" id="s_av"></dd></div>
+      <div><dt id="k_first">First trade</dt><dd id="m_first">—</dd><dd class="s" id="s_first"></dd></div>
+      <div><dt>Fees paid</dt><dd id="m_fees">—</dd><dd class="s" id="s_fees"></dd></div>
+    </dl>
+    <div class="hip" id="hip" style="display:none"></div>
+  </section>
+
+  <section class="card" id="share">
+    <div class="card-head"><h2 class="ct">Share</h2></div>
+    <div class="sbody">
+      <img id="cardimg" alt="">
+      <div>
+        <textarea id="ttext" maxlength="200" aria-label="Post text"></textarea>
+        <div class="sbtns">
+          <button class="pill full" id="xshare"><svg viewBox="0 0 24 24"><path d="M7 17L17 7M9 7h8v8"/></svg>Share on X</button>
+          <button class="pill ghost" id="cardsave"><svg viewBox="0 0 24 24"><path d="M12 4v11M7 11l5 5 5-5M5 20h14"/></svg><span id="t_save">Save image</span></button>
+          <button class="pill ghost" id="copytxt"><svg viewBox="0 0 24 24"><rect x="8" y="8" width="12" height="12" rx="2.5"/><path d="M16 8V6.5A2.5 2.5 0 0013.5 4h-7A2.5 2.5 0 004 6.5v7A2.5 2.5 0 006.5 16H8"/></svg><span id="t_copy">Copy text</span></button>
+        </div>
+        <p class="hint">Attach the saved image to your post.</p>
+      </div>
+    </div>
+  </section>
+
+  <p class="note" id="foot"></p>
+  <p class="note">Independent tool, not affiliated with Hyperliquid. · Made by <a href="https://x.com/hugocrza" target="_blank" rel="noopener">@hugocrza</a></p>
+  <p class="note" id="refline" style="display:none"></p>
+ </div>
+</section>
+
+<!-- ============ 5. PULSE ============ -->
+<section class="view" id="v-pulse">
+ <div class="wrap">
+  <header class="topbar">
+    <div class="brand"><span>Hyperliquid Volume Checker</span></div>
+    <div class="tb-right"><button class="pill ghost sm" id="pback">Back</button></div>
+  </header>
+  <div class="phead"><div><h1 class="ptitle">Pulse</h1><p class="psub"><i class="live"></i><span id="pstat">Loading the market…</span></p></div></div>
+  <div class="pkpi">
+    <div class="card pk"><span class="ct">24h perp volume</span><b id="p_vol">—</b><small id="p_vol_s"></small></div>
+    <div class="card pk"><span class="ct">Open interest</span><b id="p_oi">—</b><small id="p_oi_s"></small></div>
+    <div class="card pk"><span class="ct">HIP-3 share of volume</span><b id="p_hip">—</b><div class="pbar"><i id="p_hipbar" style="width:0"></i></div><small id="p_hip_s"></small></div>
+    <div class="card pk"><span class="ct">Markets</span><b id="p_mk">—</b><small id="p_mk_s"></small></div>
+  </div>
+  <section class="card">
+    <div class="card-head"><h2 class="ct">Markets</h2><div class="seg" id="pfilter" role="group"><i class="ind"></i><button class="tab" data-f="all" aria-pressed="true">All</button><button class="tab" data-f="core" aria-pressed="false">Core</button><button class="tab" data-f="hip" aria-pressed="false">HIP-3</button></div></div>
+    <div class="pscroll"><table class="ptable"><thead><tr><th>Market</th><th data-s="px">Price</th><th data-s="chg">24h</th><th data-s="vol" class="on">Volume</th><th data-s="oi">Open interest</th><th data-s="fr">Funding (APR)</th></tr></thead><tbody id="ptbody"></tbody></table></div>
+  </section>
+  <div class="pduo">
+    <section class="card"><div class="card-head"><h2 class="ct acc">Highest funding · longs pay</h2></div><div id="fh"></div></section>
+    <section class="card"><div class="card-head"><h2 class="ct acc">Lowest funding · shorts pay</h2></div><div id="fl"></div></section>
+  </div>
+  <p class="note">Live data from Hyperliquid's public API, refreshed every 30 seconds. Funding is annualized from the current hourly rate and only shown for markets with at least $1M of open interest. Informational only, not financial advice.</p>
+ </div>
+</section>
+
+<!-- ============ 4. HOW IT WORKS ============ -->
+<section class="view" id="v-method">
+ <div class="wrap">
+  <header class="topbar">
+    <div class="brand"><span>Hyperliquid Volume Checker</span></div>
+    <div class="tb-right"><button class="pill ghost sm" id="mback">Back</button></div>
+  </header>
+  <section class="card">
+    <div class="card-head"><h2 class="ct">How it works</h2></div>
+    <ol class="steps">
+      <li><b>Your volume</b>When you paste an address, the page reads its volume from Hyperliquid's public API: perps + spot, for 24h, 7d, 30d and all time. No wallet connection, no signature, nothing stored. You can optionally add your sub-accounts: their figures are summed, which compares your combined activity with single wallets, so the rank is slightly flattering.</li>
+      <li><b>Who you are compared with</b>Hyperliquid publishes no ranking of all wallets, and its leaderboard only lists the largest accounts. So we measured a random sample: we listened to live trades for <span id="m_listen"></span>, saw <span id="m_seen"></span> distinct active wallets, drew <span id="m_sample"></span> of them at random and read each one's volume for every period.</li>
+      <li><b>Thresholds</b>From that sample we computed, for each period, the volume needed to beat 1%, 2%, … 99% of active traders. These are the thresholds shown in your results.</li>
+      <li><b>Your rank</b>Your volume is placed between the two closest thresholds (log scale) to get a percentile. "Top 10%" means you out-traded about 90% of active traders.</li>
+      <li><b>Profit and account size</b>Same sample, same method. Your profit (PnL) for the selected period and your current account value come from the same API call as your volume, and are ranked against the sampled wallets that traded in that period.</li>
+      <li><b>First trade and fees</b>Read from your own trade history. Hyperliquid may only expose part of a very long history; when that happens, fees are shown as a minimum ("≥") for the fills we could read, and the start date comes from your account history instead ("Active since"). Fees in other tokens are converted at the fill price. The same fills show how much of your volume is on HIP-3 markets (stocks, commodities and other builder-deployed perps), but this is not ranked.</li>
+      <li id="m_hip" style="display:none"><b>HIP-3 view</b>Ranks your HIP-3 volume (read from your own trades, over 24h, 7d or 30d) against HIP-3 traders: wallets seen trading on HIP-3 markets over <span id="m_hl"></span>, of which <span id="m_hs"></span> were sampled and measured from their trades. Wallets with no HIP-3 volume in a period are not counted. Stocks, commodities and other builder-deployed perps all count together.</li>
+      <li><b>What "active" means</b>Wallets that traded during the listening window. Dormant addresses are not counted, so your rank is stricter than a comparison with every address ever created.</li>
+      <li><b>Accuracy</b>About ±1 point. Less precise at the extremes (very top, very low volumes), and the 24h figure moves the most. The sample is refreshed periodically; its date is shown at the bottom of your results.</li>
+    </ol>
+  </section>
+  <p class="note">Independent tool, not affiliated with Hyperliquid. · Made by <a href="https://x.com/hugocrza" target="_blank" rel="noopener">@hugocrza</a></p>
+ </div>
+</section>
+
+<script>
+const REFERRAL="";  // optional: your referral link (shown and labelled as such). Empty = disabled.
+const D={"generated":"2026-11-02","hours":20,"sessions":2,"seen":71313,"sample":37160,"q":[0.001,0.005,0.01,0.02,0.03,0.04,0.05,0.06,0.07,0.08,0.09,0.1,0.11,0.12,0.13,0.14,0.15,0.16,0.17,0.18,0.19,0.2,0.21,0.22,0.23,0.24,0.25,0.26,0.27,0.28,0.29,0.3,0.31,0.32,0.33,0.34,0.35,0.36,0.37,0.38,0.39,0.4,0.41,0.42,0.43,0.44,0.45,0.46,0.47,0.48,0.49,0.5,0.51,0.52,0.53,0.54,0.55,0.56,0.57,0.58,0.59,0.6,0.61,0.62,0.63,0.64,0.65,0.66,0.67,0.68,0.69,0.7,0.71,0.72,0.73,0.74,0.75,0.76,0.77,0.78,0.79,0.8,0.81,0.82,0.83,0.84,0.85,0.86,0.87,0.88,0.89,0.9,0.91,0.92,0.93,0.94,0.95,0.96,0.97,0.98,0.99,0.995,0.999],"t":{"day":[5.09,10.51,11.95,14.97,20.26,24.36,29.41,35.2,40.62,47.35,53.79,61.28,70.01,78.04,87.35,96.88,103.79,115.9,128.87,142.13,154.01,170.22,186.88,199.97,216.65,236.67,255.01,277.49,299.56,323.96,350.54,378.3,403.69,436.46,469.65,499.45,528.22,568.79,606.56,651.01,701.08,748.03,799.48,865.06,933.6,998.5,1059.7,1145.51,1227.43,1329.55,1443.08,1541.14,1661.94,1806.23,1945.78,2068.59,2220.95,2400.67,2588.58,2812.23,3021.71,3305.41,3584.43,3888.74,4165.35,4545.88,4933.13,5319.0,5804.2,6320.46,6930.92,7646.52,8385.69,9205.46,10008.67,10845.86,11993.96,13374.64,15024.21,16816.08,18982.3,20721.83,23221.39,25997.66,29412.53,33388.81,38119.44,44197.25,51015.92,60102.77,72335.96,87250.74,106632.87,136036.89,174029.55,235984.03,323512.42,480521.98,767820.49,1399191.49,3796563.18,8737451.7,48060298.01],"week":[10.02,14.91,22.38,34.23,49.12,66.75,87.46,109.61,136.19,165.51,197.3,229.87,265.89,309.84,358.96,406.43,457.03,512.68,571.48,637.06,703.92,770.71,845.24,923.22,999.32,1081.07,1171.24,1267.29,1370.4,1491.25,1608.55,1741.4,1888.3,2017.99,2193.12,2377.97,2573.04,2768.48,2985.15,3207.43,3437.77,3679.79,3957.48,4243.33,4576.79,4892.49,5236.43,5698.66,6119.21,6602.78,7065.47,7591.22,8189.82,8782.58,9420.29,10082.37,10837.27,11711.75,12618.26,13749.52,14995.79,16232.45,17731.8,19284.75,20849.99,22910.86,24996.12,26878.04,29431.51,32006.79,35035.83,38372.19,41867.32,45774.28,50020.86,55267.34,61047.7,68036.27,75554.36,83295.14,93526.44,106182.2,119962.97,135749.19,154190.19,175943.32,202573.03,232982.92,270940.59,315319.42,377879.79,450901.33,542299.5,663752.49,841426.51,1113632.24,1549525.92,2288558.2,3676229.68,6905573.3,18745303.32,49914568.44,290602313.05],"month":[10.77,20.46,30.34,59.12,91.91,130.89,178.33,230.19,295.2,369.84,446.0,532.01,626.06,736.39,849.37,976.68,1101.59,1247.24,1417.81,1590.82,1789.04,1990.76,2201.95,2443.42,2698.75,2974.04,3246.27,3538.46,3833.65,4116.5,4449.28,4833.14,5185.51,5606.34,6115.3,6558.32,7097.62,7674.68,8336.05,8991.03,9717.25,10466.44,11316.78,12138.35,13228.73,14288.48,15536.13,16736.95,18070.6,19611.18,21295.27,23220.45,25298.62,27330.98,29435.84,31632.6,34320.91,37264.11,40223.45,43436.39,47149.34,51344.68,55814.8,60925.81,66218.64,71774.1,78212.1,84747.65,92165.17,100755.52,110043.25,120032.74,131982.37,145966.4,160958.82,179275.53,197728.9,218226.32,243716.41,272894.27,306917.11,346910.87,388130.96,439774.75,495891.4,561788.85,641718.99,739843.35,860216.66,1000349.35,1194325.87,1440948.86,1769908.41,2193646.37,2849087.29,3785581.11,5141537.78,7501012.6,11716343.48,22991484.42,64134847.98,177982356.18,1019525837.98],"allTime":[13.23,28.41,43.86,89.24,149.51,219.19,316.3,433.68,567.88,723.58,895.07,1070.18,1329.4,1595.74,1861.91,2176.05,2497.34,2884.95,3286.42,3735.41,4179.27,4705.04,5280.99,5904.11,6601.95,7386.89,8236.89,9195.01,10191.91,11352.25,12594.74,14020.24,15607.71,17267.99,19151.93,21090.11,23425.94,25908.67,28463.18,31385.59,34672.89,38367.42,42140.35,46053.41,50233.68,55520.24,60735.3,66479.23,72503.09,79304.68,85786.42,93014.71,101224.22,111069.84,121106.3,133501.05,147344.03,161240.65,179208.51,196639.41,217416.3,239365.62,265316.65,291389.72,321524.01,355376.93,392117.79,434568.92,478277.09,527106.48,583921.87,643825.97,714588.52,802128.41,897745.24,1003237.66,1126294.99,1265808.28,1413526.43,1593004.89,1798930.85,2046709.5,2345831.6,2693240.25,3112652.21,3623782.0,4193579.75,4954674.57,5890972.19,7082770.09,8557424.07,10411075.38,13329400.05,17023314.88,22029568.17,29069760.83,41022413.66,62485937.73,103435027.62,205580460.01,649167688.14,1808111436.81,12066186200.88]},"p":{"day":[-223464.89,-35329.11,-13411.43,-5648.85,-2978.71,-1831.48,-1239.84,-859.43,-621.76,-480.51,-376.61,-292.24,-238.75,-192.38,-158.76,-133.2,-110.84,-93.45,-79.18,-66.92,-57.73,-51.13,-44.02,-37.82,-32.78,-28.23,-24.97,-21.9,-18.93,-16.59,-14.47,-12.59,-11.05,-9.64,-8.42,-7.43,-6.52,-5.79,-5.15,-4.51,-3.96,-3.45,-3.03,-2.67,-2.37,-2.05,-1.76,-1.52,-1.33,-1.15,-0.98,-0.85,-0.71,-0.6,-0.5,-0.41,-0.33,-0.26,-0.2,-0.14,-0.09,-0.06,-0.02,0.01,0.06,0.13,0.2,0.29,0.38,0.51,0.65,0.83,1.04,1.32,1.67,2.06,2.54,3.1,3.81,4.63,5.64,6.94,8.55,10.51,13.21,16.22,20.31,25.74,32.6,41.71,53.25,67.62,88.62,117.38,161.73,227.9,331.4,510.32,988.29,2123.23,7066.35,18611.41,151736.68],"week":[-226376.06,-44272.75,-18556.33,-7745.17,-4369.2,-2745.87,-1856.67,-1347.95,-1005.1,-783.33,-628.29,-518.44,-422.07,-343.03,-284.73,-238.07,-201.55,-172.44,-148.5,-124.71,-108.63,-94.41,-82.34,-71.06,-61.88,-54.25,-47.22,-41.38,-36.33,-31.99,-28.61,-25.15,-22.1,-19.66,-17.57,-15.75,-13.95,-12.42,-11.02,-9.67,-8.52,-7.51,-6.67,-5.81,-5.07,-4.43,-3.85,-3.32,-2.89,-2.47,-2.1,-1.75,-1.43,-1.15,-0.93,-0.72,-0.54,-0.4,-0.26,-0.14,-0.06,0.02,0.14,0.32,0.56,0.85,1.21,1.68,2.25,2.98,3.89,4.89,6.18,7.85,9.8,12.34,15.77,19.65,24.12,29.52,36.75,45.45,56.1,69.29,85.46,106.46,129.68,164.53,204.31,266.27,339.57,448.82,606.27,817.58,1139.89,1594.04,2470.07,3765.76,6388.61,13285.63,40949.12,102181.99,610221.18],"month":[-972039.05,-171203.27,-78863.81,-31053.92,-17247.75,-11164.6,-7848.71,-5782.23,-4440.22,-3406.55,-2749.53,-2231.53,-1839.08,-1519.39,-1262.24,-1078.98,-923.14,-804.41,-687.9,-602.3,-522.64,-459.77,-404.79,-356.78,-312.99,-276.55,-244.44,-215.79,-190.94,-168.75,-148.81,-132.36,-118.48,-105.46,-93.08,-83.63,-74.97,-67.42,-60.68,-54.4,-49.41,-44.41,-39.67,-35.5,-31.86,-28.59,-25.31,-22.72,-20.24,-18.13,-16.01,-14.11,-12.45,-11.06,-9.71,-8.46,-7.42,-6.42,-5.53,-4.74,-4.06,-3.42,-2.82,-2.29,-1.83,-1.42,-1.09,-0.77,-0.52,-0.31,-0.13,-0.02,0.13,0.41,0.86,1.5,2.37,3.46,4.91,7.04,9.85,13.04,17.75,24.03,32.34,44.31,60.19,81.09,106.84,142.94,192.79,267.88,389.8,568.62,831.34,1304.78,2062.93,3339.11,6248.71,14507.75,58084.81,192819.16,1725243.82],"allTime":[-2315757.99,-377818.54,-158603.7,-57748.33,-31320.79,-19806.9,-13738.34,-9872.89,-7712.85,-6018.34,-4831.86,-3958.1,-3202.41,-2649.46,-2186.6,-1866.32,-1547.95,-1322.57,-1131.87,-969.24,-833.41,-711.61,-611.14,-529.72,-465.4,-404.84,-351.63,-310.01,-270.73,-233.8,-204.43,-179.25,-157.66,-138.35,-121.86,-109.12,-96.62,-86.39,-76.2,-67.2,-58.97,-52.4,-46.69,-41.41,-36.4,-31.97,-28.11,-24.58,-21.62,-18.94,-16.49,-14.38,-12.24,-10.55,-8.94,-7.65,-6.48,-5.35,-4.4,-3.56,-2.83,-2.17,-1.61,-1.16,-0.73,-0.42,-0.16,-0.02,0.18,0.67,1.47,2.58,4.23,6.55,9.98,14.21,20.66,28.88,42.04,59.46,81.14,109.98,146.89,208.79,277.88,376.21,506.67,679.69,943.37,1333.97,1801.18,2569.61,3763.61,5500.67,8453.11,13385.39,22741.13,38794.64,73561.92,162628.42,473796.53,1215314.96,7212329.03]},"pp":{"day":0.382,"week":0.402,"month":0.298,"allTime":0.338},"a":[0.0,0.0,0.0,0.0,0.01,0.05,0.45,0.95,1.56,2.25,3.07,3.89,4.66,5.44,6.4,7.44,8.59,9.78,11.21,12.54,14.26,16.14,18.15,19.98,22.46,24.89,27.68,30.79,34.06,37.6,41.27,45.9,49.58,53.59,58.76,64.16,70.1,77.21,83.92,91.26,97.29,102.82,110.59,120.98,133.34,146.48,161.01,178.89,195.55,211.57,232.01,254.01,278.42,303.28,335.25,370.87,404.11,444.03,486.49,521.78,569.18,623.49,692.64,764.08,842.04,925.19,1000.45,1076.73,1176.48,1297.57,1456.46,1620.33,1828.32,2016.33,2240.64,2507.6,2806.44,3146.04,3618.78,4121.37,4682.11,5225.13,5944.07,6857.66,7929.79,9238.19,10241.07,11598.28,13421.85,16061.76,19100.31,22322.25,27620.87,34831.72,45959.41,62464.96,85709.61,120206.44,193386.97,355966.07,983692.87,2186627.16,10097336.0],"h":{"day":[4.49,10.76,14.32,19.41,24.26,29.89,34.81,41.61,48.84,56.58,65.23,75.42,84.96,97.59,106.51,118.63,134.0,149.5,165.32,183.89,198.81,212.57,230.1,247.82,271.19,289.14,307.02,338.49,366.11,395.1,424.09,465.44,496.99,524.05,568.46,604.67,648.65,696.41,752.55,818.42,884.76,945.7,999.55,1058.74,1143.51,1224.88,1349.95,1474.0,1583.56,1716.97,1892.42,1999.6,2137.01,2329.33,2523.89,2755.94,2945.51,3120.91,3386.74,3700.96,3999.41,4283.86,4591.03,4962.97,5244.55,5686.56,6103.4,6760.13,7261.58,7958.6,8710.28,9565.73,10224.42,11146.16,12190.18,13634.83,15086.57,16574.06,18353.31,20166.51,22462.88,25163.7,28158.42,32059.78,35718.2,40600.56,47144.28,53872.1,62648.04,74877.94,89771.87,107454.39,131619.15,169451.98,212030.42,280638.43,392276.83,529494.04,906568.79,1759757.92,4101649.21,8775731.24,37945814.41],"week":[8.12,15.4,24.57,33.89,45.67,62.77,81.91,100.76,122.49,148.98,177.77,202.05,240.4,276.91,319.68,353.24,382.63,416.26,452.22,499.59,559.03,616.9,697.68,776.68,858.6,941.27,1002.76,1091.84,1182.94,1290.18,1396.49,1493.11,1629.36,1763.77,1902.88,2035.02,2210.98,2392.04,2575.31,2785.36,3009.03,3252.33,3543.86,3845.58,4141.78,4543.57,4877.76,5145.82,5672.65,6062.84,6608.62,7049.83,7664.62,8277.8,9044.79,9795.1,10538.83,11290.28,12451.35,13474.44,14421.09,15880.39,17368.58,18854.63,20394.75,22485.83,24738.78,26934.47,29504.47,32778.92,35502.34,39077.58,41991.83,45802.16,49456.05,53210.64,58591.87,64713.16,73615.65,82489.49,92313.0,103668.19,116924.5,134797.91,150418.88,173456.64,196823.36,226921.72,261418.77,315201.17,367821.72,435095.86,532998.74,668080.37,847500.0,1078201.7,1452530.49,2083847.03,3265663.72,5717428.65,13872593.61,22367023.88,62204155.28],"month":[10.98,22.08,29.7,44.09,68.75,99.15,135.07,178.02,211.99,272.47,329.8,372.82,415.18,466.64,534.08,620.96,721.3,815.93,936.95,1054.32,1184.61,1354.46,1522.13,1686.74,1867.05,2052.18,2242.62,2486.64,2708.25,2974.62,3243.43,3571.52,3876.66,4246.14,4630.54,5028.94,5505.18,6006.32,6555.45,7056.59,7651.06,8186.37,8937.23,9806.56,10594.07,11565.43,12491.08,13680.29,14715.59,15842.9,16930.97,18437.43,20088.52,22044.4,24027.2,25917.63,28101.25,30759.14,33641.81,36943.84,39911.23,43266.81,47839.02,52404.54,57155.31,62999.81,68736.97,74382.23,80803.2,89160.53,96576.49,104211.93,114490.86,125390.57,140150.24,156186.56,174205.67,194673.63,217587.02,243816.62,276262.09,308613.5,354316.38,397593.5,444608.65,496994.1,573335.59,645833.45,746124.12,882496.96,1042410.53,1210088.89,1422301.28,1783661.54,2219123.66,2856215.01,3898032.71,5248412.23,8248825.94,13385524.32,27645344.6,50172226.34,109304739.47]},"hs":12040,"hw":20956,"hh":10};
+const QS=D.q, T=D.t, WK=["day","week","month","allTime"];
+const SANS='system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif';
+let MODE="all",hipVols=null,hipCov=null,subMsg="";
+const HW=["day","week","month"];
+const S={
+  tabs:["24h","7d","30d","All time"],
+  vol:["24h volume","7-day volume","30-day volume","All-time volume"],
+  card:["24H","7 DAYS","30 DAYS","ALL TIME"],
+  cardh:["HIP-3 · 24H","HIP-3 · 7D","HIP-3 · 30D"],
+  volh:["24h HIP-3 volume","7-day HIP-3 volume","30-day HIP-3 volume"],
+  bad:"Invalid address (0x + 40 characters).",
+  api:"Couldn't read this wallet. Try again or enter your volume manually.",
+  none:"No volume found for this wallet.",novol:"Enter a volume above 0.",
+  manualwho:"Manual volume"
+};
+let W=3, vols=null, manual=false, manualVol=null, last=null, addrShown="";
+const $=id=>document.getElementById(id);
+const siteUrl=()=>location.protocol.startsWith("http")?location.href.split("#")[0].split("?")[0]:"";
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+async function show(id){
+  const cur=document.querySelector(".view.on");
+  if(cur&&cur.id!==id){cur.classList.add("out");await sleep(260);cur.classList.remove("on","out");}
+  $(id).classList.add("on");window.scrollTo(0,0);
+}
+let lastTp=0,lastTopVal=0,lastEdge=false,lastTopText="";
+function startProgress(){
+  const i=$("bari");i.style.transition="none";i.style.width="0";$("loadtxt").textContent="Reading wallet…";void i.offsetWidth;
+  i.style.transition="width 1.6s cubic-bezier(.2,.7,.2,1)";i.style.width="86%";
+  setTimeout(()=>{if($("v-loading").classList.contains("on"))$("loadtxt").textContent="Computing rank…";},800);
+}
+async function finishProgress(){const i=$("bari");i.style.transition="width .3s ease";i.style.width="100%";await sleep(380);}
+function resetProgress(){const i=$("bari");i.style.transition="none";i.style.width="0";}
+function intro(){
+  introRan=true;const g=++introGen;moveInd($("tabs"));moveInd($("modeseg"));armReveal();
+  const rp=$("rpin"),rf=$("rfill");void rp.offsetWidth;rp.style.left=lastRpos+"%";rf.style.width=lastRpos+"%";
+  const dot=$("mdot"),fill=$("mfill");
+  dot.style.transition=fill.style.transition="none";dot.style.left=fill.style.left="100%";void dot.offsetWidth;
+  dot.style.transition=fill.style.transition="left 1.1s cubic-bezier(.2,.8,.2,1)";dot.style.left=fill.style.left=lastTp+"%";
+  if(lastEdge)return;
+  const t0=performance.now(),dur=1000,from=100,to=lastTopVal;
+  (function step(now){const k=Math.min(1,(now-t0)/dur),e=1-Math.pow(1-k,3);
+    if(g!==introGen)return;
+    if(k<1){$("top").textContent="Top "+fmtPct(from+(to-from)*e)+"%";requestAnimationFrame(step);}else{$("top").textContent=lastTopText;$("top")._v=lastTopVal;}})(t0);
+}
+const TIERS=[{n:"Shrimp",e:"🦐",top:100},{n:"Crab",e:"🦀",top:50},{n:"Fish",e:"🐟",top:25},{n:"Dolphin",e:"🐬",top:10},{n:"Shark",e:"🦈",top:5},{n:"Whale",e:"🐋",top:1},{n:"Leviathan",e:"🐉",top:0.1}];
+function tierOf(topPct){let k=0;for(let i=0;i<TIERS.length;i++){if(topPct<=TIERS[i].top)k=i;}return k;}
+function volAtTop(t,top){const q=1-top/100,i=QS.findIndex(x=>Math.abs(x-q)<1e-9);return i<0?null:t[i];}
+
+const nf=(x,max)=>x.toLocaleString("en-US",{maximumFractionDigits:max});
+function fmtUSD(x){
+  if(x>=1e9)return "$"+nf(x/1e9,2)+"B";
+  if(x>=1e6)return "$"+nf(x/1e6,2)+"M";
+  if(x>=1e3)return "$"+nf(x/1e3,1)+"k";
+  return "$"+nf(x,0);
+}
+function tickLabel(e){const x=Math.pow(10,e);if(x>=1e9)return (x/1e9)+"B";if(x>=1e6)return (x/1e6)+"M";if(x>=1e3)return (x/1e3)+"k";return String(x);}
+const fmtPct=p=>nf(p,p<1?2:1);
+const REDUCE=!!(window.matchMedia&&matchMedia("(prefers-reduced-motion: reduce)").matches);
+let introRan=false,introGen=0,lastTier=-1,revealIO=null;
+function tween(el,to,fmt,dur,f0){
+  if(el._raf)cancelAnimationFrame(el._raf);
+  if(REDUCE||!isFinite(to)){el.textContent=fmt(to);el._v=to;return;}
+  const from=isFinite(el._v)?el._v:(f0===undefined?0:f0);
+  if(from===to){el.textContent=fmt(to);el._v=to;return;}
+  const t0=performance.now();
+  (function step(now){
+    const k=Math.min(1,(now-t0)/dur),e=1-Math.pow(1-k,3),v=k<1?from+(to-from)*e:to;
+    el.textContent=fmt(v);el._v=v;
+    if(k<1)el._raf=requestAnimationFrame(step);
+  })(t0);
+}
+function retrig(el,c){el.classList.remove(c);void el.offsetWidth;el.classList.add(c);}
+function moveInd(box){
+  requestAnimationFrame(()=>{
+    const ind=box.querySelector(".ind"),b=box.querySelector('.tab[aria-pressed="true"]');
+    if(!ind||!b||!b.offsetWidth)return;
+    const first=!box.classList.contains("ready");
+    if(first)ind.style.transition="none";
+    ind.style.width=b.offsetWidth+"px";ind.style.transform="translateX("+b.offsetLeft+"px)";
+    if(first){void ind.offsetWidth;ind.style.transition="";box.classList.add("ready");}
+  });
+}
+function armReveal(){
+  const els=[$("ruler"),$("more"),$("share")];
+  if(revealIO){revealIO.disconnect();revealIO=null;}
+  if(REDUCE||!("IntersectionObserver" in window)){els.forEach(e=>e.classList.add("in"));return;}
+  els.forEach(e=>e.classList.remove("in"));
+  revealIO=new IntersectionObserver(es=>{es.forEach(en=>{if(en.isIntersecting){en.target.classList.add("in");revealIO.unobserve(en.target);}});},{threshold:.12});
+  els.forEach(e=>revealIO.observe(e));
+}
+window.addEventListener("resize",()=>{moveInd($("tabs"));moveInd($("modeseg"));});
+let lastRpos=0;
+function renderRuler(v,t){
+  const qs=[0.5,0.75,0.9,0.95,0.99],vals=qs.map(q=>t[QS.indexOf(q)]);
+  const L=Math.log10(Math.min(vals[0],v)),R=Math.log10(Math.max(vals[vals.length-1],v));
+  const P=x=>R>L?(Math.log10(x)-L)/(R-L)*100:50;
+  const pos=Math.min(100,Math.max(0,P(v))),nxt=vals.findIndex(x=>x>v);
+  lastRpos=pos;
+  $("rst").innerHTML=qs.map((q,i)=>`<div class="stn${v>=vals[i]?" pass":""}${i===nxt?" nx":""}" style="left:${P(vals[i]).toFixed(2)}%"><i class="tk"></i><div class="sl"><span>Top ${nf((1-q)*100,0)}%</span><b>${fmtUSD(vals[i])}</b></div></div>`).join("");
+  $("rpinl").textContent="YOU · "+fmtUSD(v);
+  if(introRan){$("rpin").style.left=pos+"%";$("rfill").style.width=pos+"%";}
+  else{$("rpin").style.left="0%";$("rfill").style.width="0%";}
+}
+function THR(w){return MODE==="hip"?D.h[WK[w]]:T[WK[w]];}
+const POP=()=>MODE==="hip"?"HIP-3 traders":"active traders";
+const volLabel=w=>MODE==="hip"?S.volh[w]:S.vol[w];
+const lc=x=>x.toLowerCase().replace("hip-3","HIP-3");
+function quantileOf(v,w){
+  const t=THR(w),n=t.length;
+  if(v<=t[0])return {q:QS[0],edge:"low"};
+  if(v>=t[n-1])return {q:QS[n-1],edge:"high"};
+  let lo=0,hi=n-1;
+  while(hi-lo>1){const m=(lo+hi)>>1;if(t[m]<=v)lo=m;else hi=m;}
+  const f=(Math.log(v)-Math.log(t[lo]))/(Math.log(t[hi])-Math.log(t[lo]));
+  return {q:QS[lo]+f*(QS[hi]-QS[lo]),edge:null};
+}
+function topText(r){
+  if(r.edge==="low")return "Top > 99.9%";
+  if(r.edge==="high")return "Top < 0.1%";
+  return "Top "+fmtPct((1-r.q)*100)+"%";
+}
+function currentVolume(){if(MODE==="hip")return hipVols?hipVols[W]:null;return manual?manualVol:(vols?vols[W]:null);}
+
+function chart(v,r){
+  const t=THR(W),n=t.length,xmin=Math.log10(t[0]),xmax=Math.log10(t[n-1]);
+  const A=64,B=590,BASE=250,X=l=>A+(l-xmin)/(xmax-xmin)*(B-A),Y=p=>BASE-p*230;
+  let d="";t.forEach((x,i)=>{d+=(i?"L":"M")+X(Math.log10(x)).toFixed(1)+" "+Y(QS[i]).toFixed(1);});
+  const lv=Math.min(xmax,Math.max(xmin,Math.log10(Math.max(v,1))));
+  const px=X(lv),py=Y(r.q);
+  let s=`<defs><clipPath id="cl"><rect x="0" y="0" width="${px}" height="300"/></clipPath></defs>`;
+  [0,.5,1].forEach(p=>{s+=`<line x1="${A}" x2="${B}" y1="${Y(p)}" y2="${Y(p)}" stroke="rgba(111,227,207,.3)" stroke-width="1.5" ${p===0?"":'stroke-dasharray="3 6"'}/><text x="${A-8}" y="${Y(p)+6}" font-size="18" text-anchor="end" fill="#9bbbb2">${p*100}%</text>`;});
+  for(let e=Math.ceil(xmin);e<=Math.floor(xmax);e++){const lb=tickLabel(e),hw=lb.length*5.4+4,x=X(e);if(x+hw>598||x-hw<A-6)continue;s+=`<text x="${x}" y="284" font-size="18" text-anchor="middle" fill="#9bbbb2">${lb}</text>`;}
+  s+=`<path class="ar" d="${d}L${X(xmax)} ${BASE}L${X(xmin)} ${BASE}Z" fill="rgba(111,227,207,.16)" clip-path="url(#cl)"/>`;
+  s+=`<path class="ln" pathLength="1" d="${d}" fill="none" stroke="#6fe3cf" stroke-width="3" stroke-linejoin="round"/>`;
+  s+=`<line class="mk" x1="${px}" x2="${px}" y1="${py}" y2="${BASE}" stroke="#6fe3cf" stroke-dasharray="4 3"/><line class="mk" x1="${A}" x2="${px}" y1="${py}" y2="${py}" stroke="#6fe3cf" stroke-dasharray="4 3"/><circle class="mk" cx="${px}" cy="${py}" r="8" fill="#6fe3cf" stroke="#06231c" stroke-width="3"/>`;
+  $("chart").innerHTML=s;
+}
+function shareText(){return last?`${last.top} of ${last.hip?"Hyperliquid HIP-3 traders":"active Hyperliquid traders"} · ${lc(last.vol)} ${last.v}${last.subs&&!last.hip?" (incl. sub-accounts)":""}`:"";}
+function renderResults(){
+  const v=currentVolume();
+  if(v===null||v<=0)return false;
+  const r=quantileOf(v,W),t=THR(W),med=t[QS.indexOf(0.5)];
+  $("who").textContent=manual?S.manualwho:addrShown;
+  if(introRan&&!r.edge){introGen++;tween($("top"),(1-r.q)*100,x=>"Top "+fmtPct(x)+"%",750,100);}
+  else{$("top").textContent=topText(r);$("top")._v=r.edge?NaN:(1-r.q)*100;}
+  $("sub").textContent=(r.edge==="low"?"lowest volumes of "+POP():r.edge==="high"?"top of "+POP():"of "+POP())+" · "+lc(volLabel(W));
+  $("k_vol").textContent=MODE==="hip"?"Your HIP-3 volume":"Your volume";
+  const pre=MODE==="hip"&&hipCov&&!hipCov[W]?"≥ ":"";
+  tween($("vol"),v,x=>pre+fmtUSD(x),850);tween($("med"),med,fmtUSD,850);
+  const tp=Math.min(100,Math.max(0,(1-r.q)*100));$("mdot").style.left=tp+"%";$("mfill").style.left=tp+"%";
+  lastTp=tp;lastTopVal=(1-r.q)*100;lastEdge=!!r.edge;lastTopText=topText(r);
+  const tk=tierOf(tp),tr_=TIERS[tk],nt=TIERS[tk+1];
+  $("ticon").textContent=tr_.e;$("tname").textContent=tr_.n;
+  if(tk!==lastTier){lastTier=tk;retrig($("ticon"),"pop");}
+  $("ticon").classList.toggle("glow",tk>=5);
+  $("tnext").textContent=nt?`Next: ${nt.n} · ${fmtUSD(volAtTop(t,nt.top))}`:"Top tier";
+  const nq=[0.5,0.75,0.9,0.95,0.99].find(q=>q>r.q+1e-9);
+  if(nq===undefined){$("next").textContent="Top 1% reached";$("gap").textContent="—";$("gap")._v=NaN;}
+  else{const need=t[QS.indexOf(nq)];$("next").textContent="Top "+nf((1-nq)*100,0)+"% · "+fmtUSD(need);tween($("gap"),Math.max(0,need-v),x=>"+ "+fmtUSD(x),850);}
+  chart(v,r);
+  renderRuler(v,t);
+  $("thr").innerHTML=[0.5,0.75,0.9,0.95,0.99].map(q=>`<tr><td>Top ${nf((1-q)*100,0)}%</td><td>${fmtUSD(t[QS.indexOf(q)])}</td></tr>`).join("");
+  if(vols&&!manual){
+    $("allwrap").style.display="";$("ladwrap").style.display="none";
+    $("ladstrip").style.display="grid";
+    $("ladstrip").innerHTML=TIERS.map((x,i)=>`<div class="lad ${i===tk?"sel":""}"><div class="le">${x.e}</div><div class="ln">${x.n}</div><div class="lv">${i===0?"< "+fmtUSD(volAtTop(t,TIERS[1].top)):fmtUSD(volAtTop(t,x.top))+"+"}</div></div>`).join("");
+    $("all").innerHTML=`<tr><th>Period</th><th>${MODE==="hip"?"HIP-3 volume":"Volume"}</th><th>Rank</th></tr>`+(MODE==="hip"?hipVols:vols).map((x,i)=>{
+      const rr=x>0?quantileOf(x,i):null;
+      return `<tr class="pick ${i===W?"sel":""}" data-i="${i}"><td>${S.tabs[i]}</td><td>${x>0?fmtUSD(x):"—"}</td><td>${rr?topText(rr):"—"}</td></tr>`;}).join("");
+  }else{
+    $("allwrap").style.display="none";$("ladwrap").style.display="";$("ladstrip").style.display="none";
+    $("lad").innerHTML=TIERS.map((x,i)=>{
+      const txt=i===0?"< "+fmtUSD(volAtTop(t,TIERS[1].top)):fmtUSD(volAtTop(t,x.top))+"+";
+      return `<tr class="${i===tk?"sel":""}"><td>${x.e} ${x.n}</td><td>${txt}</td></tr>`;}).join("");
+  }
+  renderMore();
+  $("subbtn").style.display=(vols&&!manual)?"":"none";
+  last={top:topText(r),v:fmtUSD(v),vol:volLabel(W),subs:subsOn,hip:MODE==="hip"};
+  renderNote();
+  $("ttext").value=shareText();
+  cacheCard();
+  return true;
+}
+function listenText(){
+  const d=new Date(D.generated).toLocaleDateString("en-US",{day:"numeric",month:"short",year:"numeric"});
+  return (D.sessions||1)>1?`${D.sessions} sessions (${D.hours}h, last ${d})`:`${D.hours}h (${d})`;
+}
+function buildTabs(){
+  const names=MODE==="hip"?S.tabs.slice(0,3):S.tabs,box=$("tabs");
+  let ind=box.querySelector(".ind");
+  if(!ind){ind=document.createElement("i");ind.className="ind";box.prepend(ind);}
+  box.querySelectorAll(".tab").forEach(b=>b.remove());
+  box.insertAdjacentHTML("beforeend",names.map((n,i)=>`<button class="tab" data-w="${i}" aria-pressed="${i===W}"${MODE==="hip"&&!(hipVols[i]>0&&D.h[HW[i]])?" disabled":""}>${n}</button>`).join(""));
+  moveInd(box);
+}
+function renderNote(){
+  const p=[subMsg];
+  if(MODE==="hip"){if(subsOn)p.push("HIP-3 volume covers the main address only.");if(hipCov&&!hipCov[W])p.push("HIP-3 volume is a minimum: only the most recent trades could be read.");}
+  $("subnote").textContent=p.filter(Boolean).join(" ");
+}
+function renderMode(){
+  const ok=!!(vols&&!manual&&D.h&&F.state==="ok"&&hipVols);
+  $("modeseg").style.display=ok?"":"none";
+  if(!ok)return;
+  const has=hipVols.some((x,i)=>x>0&&D.h[HW[i]]),hb=$("modeseg").querySelector('[data-m="hip"]');
+  hb.disabled=!has;hb.title=has?"":"No HIP-3 volume found for this wallet";
+  for(const b of $("modeseg").querySelectorAll(".tab"))b.setAttribute("aria-pressed",String(b.dataset.m===MODE));
+  moveInd($("modeseg"));
+}
+function setMode(m){
+  if(m===MODE||!hipVols)return;
+  if(m==="hip"){
+    const k=[W<3?W:2,2,1,0].find(i=>hipVols[i]>0&&D.h[HW[i]]);
+    if(k===undefined)return;
+    MODE="hip";W=k;
+  }else{
+    MODE="all";
+    if(!(vols[W]>0)){const k=[3,2,1,0].find(i=>vols[i]>0);if(k!==undefined)W=k;}
+  }
+  buildTabs();if(subsOn)applySubs();else renderResults();
+}
+function setupStatic(){
+  buildTabs();
+  $("foot").textContent=`Random sample of ${D.sample.toLocaleString("en-US")} wallets active over ${listenText()} · perps + spot volume · ±1 pt.`;
+  const rl=$("refline");
+  if(REFERRAL){rl.style.display="block";rl.innerHTML="";rl.append("Author's referral link: ");const a=document.createElement("a");a.href=REFERRAL;a.target="_blank";a.rel="noopener sponsored";a.textContent=REFERRAL.replace(/^https?:\/\//,"");rl.append(a);}
+}
+let X={pnl:[null,null,null,null],av:null,since:null},F={state:"idle"},fillsTok=0;
+function parseP(j){
+  if(!Array.isArray(j))throw new Error("format");
+  const d={},p={};let av=null,since=null;
+  for(const it of j){if(Array.isArray(it)&&it.length===2&&it[1]&&typeof it[1]==="object"){
+    d[it[0]]=parseFloat(it[1].vlm)||0;
+    const ph=it[1].pnlHistory,ah=it[1].accountValueHistory;
+    if(Array.isArray(ph)&&ph.length&&Array.isArray(ph[ph.length-1]))p[it[0]]=parseFloat(ph[ph.length-1][1]);
+    if(it[0]==="day"&&Array.isArray(ah)&&ah.length&&Array.isArray(ah[ah.length-1]))av=parseFloat(ah[ah.length-1][1]);
+    if(it[0]==="allTime"&&Array.isArray(ah)&&ah.length&&Array.isArray(ah[0])&&isFinite(+ah[0][0]))since=+ah[0][0];
+  }}
+  if(!Object.keys(d).length)throw new Error("format");
+  return {v:WK.map(k=>d[k]||0),pnl:WK.map(k=>isFinite(p[k])?p[k]:null),av:isFinite(av)?av:null,since};
+}
+function parsePortfolio(j){
+  const r=parseP(j);
+  X={pnl:r.pnl,av:r.av,since:r.since};
+  mainRes=r;
+  return r.v;
+}
+let mainRes=null,mainAddr="",subsOn=false,subList=null,subData=null;
+/* ---- extra stats: profit, account size, first trade, fees ---- */
+const sl=x=>Math.sign(x)*Math.log10(1+Math.abs(x));
+function quantileSigned(v,t){
+  const n=t.length;
+  if(v<t[0])return {q:QS[0],edge:"low"};
+  if(v>t[n-1])return {q:QS[n-1],edge:"high"};
+  let a=-1,b=-1;for(let i=0;i<n;i++){if(t[i]===v){if(a<0)a=i;b=i;}}
+  if(a>=0)return {q:(QS[a]+QS[b])/2,edge:null};
+  let lo=0,hi=n-1;
+  while(hi-lo>1){const m=(lo+hi)>>1;if(t[m]<=v)lo=m;else hi=m;}
+  const f=(sl(v)-sl(t[lo]))/(sl(t[hi])-sl(t[lo]));
+  return {q:QS[lo]+f*(QS[hi]-QS[lo]),edge:null};
+}
+const fmtSigned=x=>(x<0?"−":"+")+fmtUSD(Math.abs(x));
+const dfmt=ms=>new Date(ms).toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"});
+const STABLE=new Set(["USDC","USDT0","USDH","USDE"]);
+async function hlPost(body){
+  const ctl=new AbortController(),to=setTimeout(()=>ctl.abort(),12000);
+  try{
+    const r=await fetch("https://api.hyperliquid.xyz/info",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body),signal:ctl.signal});
+    if(!r.ok)throw new Error("http "+r.status);
+    return await r.json();
+  }finally{clearTimeout(to);}
+}
+async function fetchFills(addr){
+  const seen=new Map();let start=0,end=null,mode="fwd",complete=false,p0=null;
+  const add=arr=>{let n=0;for(const f of arr){const id=f.tid!=null?String(f.tid):[f.hash,f.time,f.sz,f.px].join("|");if(!seen.has(id)){seen.set(id,f);n++;}}return n;};
+  const span=arr=>{let mn=Infinity,mx=-Infinity;for(const f of arr){if(f.time<mn)mn=f.time;if(f.time>mx)mx=f.time;}return [mn,mx];};
+  for(let page=0;page<12;page++){
+    const body={type:"userFillsByTime",user:addr,startTime:start};if(end!==null)body.endTime=end;
+    let arr;
+    try{arr=await hlPost(body);}catch(e){if(seen.size)break;throw e;}
+    if(!Array.isArray(arr))break;
+    const n=add(arr);
+    if(page===0){if(arr.length<2000){complete=true;break;}p0=span(arr);start=p0[1];continue;}
+    if(page===1&&mode==="fwd"&&n===0){mode="bwd";start=0;end=p0[0];continue;}
+    if(arr.length<2000){complete=true;break;}
+    if(n===0)break;
+    const [mn,mx]=span(arr);
+    if(mode==="fwd")start=mx;else end=mn;
+  }
+  return {list:[...seen.values()],complete};
+}
+async function loadFills(addr){
+  const tok=++fillsTok;F={state:"loading"};renderMore();
+  try{
+    const {list,complete}=await fetchFills(addr);
+    if(tok!==fillsTok)return;
+    let fees=0,first=null,tot=0,hip=0,minT=Infinity;const hm={},now=Date.now(),HMS=[864e5,6048e5,2592e6],hv=[0,0,0];
+    for(const f of list){
+      const fee=parseFloat(f.fee)||0,px=parseFloat(f.px)||0,bf=parseFloat(f.builderFee)||0;
+      const nt=px*(parseFloat(f.sz)||0);tot+=nt;
+      if(typeof f.time==="number"&&f.time<minT)minT=f.time;
+      if(typeof f.coin==="string"&&f.coin.indexOf(":")>0){hip+=nt;hm[f.coin]=(hm[f.coin]||0)+nt;HMS.forEach((ms,i)=>{if(f.time>=now-ms)hv[i]+=nt;});}
+      fees+=(!f.feeToken||STABLE.has(f.feeToken)?fee:fee*px)+bf;
+      if(typeof f.time==="number"&&(first===null||f.time<first))first=f.time;
+    }
+    const top=Object.entries(hm).sort((a,b)=>b[1]-a[1])[0]||null;
+    F={state:"ok",fees,first,n:list.length,capped:!complete||list.length===10000,tot,hip,top};
+    hipVols=hv;hipCov=HMS.map(ms=>(complete&&list.length!==10000)||minT<=now-ms);
+  }catch(e){if(tok!==fillsTok)return;F={state:"err"};}
+  renderMore();
+}
+function combine(m,subs){
+  const sum=a=>a.reduce((x,y)=>x+y,0),nn=a=>a.filter(y=>y!==null);
+  return {
+    v:m.v.map((x,i)=>x+sum(subs.map(s=>s.v[i]))),
+    pnl:m.pnl.map((x,i)=>{const a=nn([x,...subs.map(s=>s.pnl[i])]);return a.length?sum(a):null;}),
+    av:(a=>a.length?sum(a):null)(nn([m.av,...subs.map(s=>s.av)])),
+    since:Math.min(...nn([m.since,...subs.map(s=>s.since)]).concat([Infinity]))
+  };
+}
+function applySubs(){
+  const b=$("subbtn");
+  b.classList.toggle("on",subsOn);
+  b.textContent=subsOn?`Sub-accounts included (${subList.length})`:"Include sub-accounts";
+  subMsg=subsOn?`Combined volume of your address and ${subList.length} sub-account${subList.length>1?"s":""}, compared with single wallets, so the rank is a bit flattering.`:"";
+  renderResults();
+}
+async function toggleSubs(){
+  const b=$("subbtn");
+  if(!mainRes||manual||b.disabled)return;
+  if(subsOn){subsOn=false;vols=mainRes.v.slice();X={pnl:mainRes.pnl,av:mainRes.av,since:mainRes.since};applySubs();return;}
+  b.disabled=true;b.textContent="Loading…";subMsg="";renderNote();
+  try{
+    if(subList===null){
+      const j=await hlPost({type:"subAccounts",user:mainAddr});
+      subList=Array.isArray(j)?j.map(x=>x&&x.subAccountUser).filter(Boolean):[];
+    }
+    if(!subList.length){b.disabled=false;b.textContent="Include sub-accounts";subMsg="No sub-accounts found for this address.";renderNote();return;}
+    if(subData===null){const out=[];for(const a of subList)out.push(parseP(await hlPost({type:"portfolio",user:a})));subData=out;}
+    const c=combine(mainRes,subData);
+    subsOn=true;vols=c.v;X={pnl:c.pnl,av:c.av,since:isFinite(c.since)?c.since:null};
+    b.disabled=false;applySubs();
+  }catch(e){
+    subList=null;subData=null;b.disabled=false;b.textContent="Include sub-accounts";subMsg="Couldn't load sub-accounts. Try again in a moment.";renderNote();
+  }
+}
+function renderMore(){
+  renderMode();
+  const on=!!(vols&&!manual&&D.p&&D.a);
+  $("more").style.display=on?"":"none";
+  if(!on)return;
+  $("k_pnl").textContent="Profit · "+S.tabs[W];
+  const p=X.pnl[W],act=vols[W]>0,mp=$("m_pnl");
+  if(p===null||!act){mp.textContent="—";mp._v=NaN;mp.className="";$("s_pnl").textContent=act?"":"No activity";}
+  else{const r=quantileSigned(p,D.p[WK[W]]);tween(mp,p,fmtSigned,800);mp.className=p<0?"neg":"pos";$("s_pnl").textContent=topText(r)+" by profit";}
+  if(X.av>0){const r=quantileSigned(X.av,D.a);tween($("m_av"),X.av,fmtUSD,900);$("s_av").textContent=topText(r)+" by size";}
+  else{$("m_av").textContent="—";$("m_av")._v=NaN;$("s_av").textContent="";}
+  const kf=$("k_first"),mf=$("m_first"),sf=$("s_first"),me=$("m_fees"),se=$("s_fees"),hl=$("hip");
+  if(F.state==="ok"&&F.tot>0){
+    const scope=F.capped?`your last ${F.n.toLocaleString("en-US")} fills`:"your full history";
+    hl.style.display="";
+    hl.innerHTML=F.hip>0
+      ?`HIP-3 markets: <b>${nf(F.hip/F.tot*100,F.hip/F.tot<.1?1:0)}%</b> of the volume in ${scope} · most traded: <b>${F.top[0].replace(/[<>&]/g,"")}</b> (${fmtUSD(F.top[1])})${subsOn?" · main address":""}`
+      :`HIP-3 markets: none in ${scope}${subsOn?" · main address":""}`;
+  }else hl.style.display="none";
+  if(F.state==="loading"||F.state==="idle"){kf.textContent="First trade";mf.textContent="…";sf.textContent="";me.textContent="…";me._v=NaN;se.textContent="";return;}
+  const mainOnly=subsOn?" · main address":"";
+  if(F.state==="ok"&&!F.capped&&F.first){kf.textContent="First trade";mf.textContent=dfmt(F.first);sf.textContent=subsOn?"main address":"";}
+  else if(X.since){kf.textContent="Active since";mf.textContent=dfmt(X.since);sf.textContent="account history";}
+  else{kf.textContent="First trade";mf.textContent="—";sf.textContent="";}
+  if(F.state==="ok"){tween(me,F.fees,f=>(F.capped?"≥ ":"")+(f<0?"+"+fmtUSD(-f):fmtUSD(f)),1000);se.textContent=(F.fees<0?"net rebates · ":"")+(F.capped?"last "+F.n.toLocaleString("en-US")+" fills only":"all-time")+mainOnly;}
+  else{me.textContent="—";me._v=NaN;se.textContent="unavailable";}
+}
+async function lookup(){
+  const raw=$("addr").value.trim().toLowerCase();$("err").textContent="";
+  if(!/^0x[0-9a-f]{40}$/.test(raw)){$("err").textContent=S.bad;return;}
+  manual=false;
+  const t0=performance.now();await show("v-loading");startProgress();
+  let res=null,failed=false;
+  try{
+    const ctl=new AbortController();const to=setTimeout(()=>ctl.abort(),15000);
+    const r=await fetch("https://api.hyperliquid.xyz/info",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({type:"portfolio",user:raw}),signal:ctl.signal});
+    clearTimeout(to);
+    if(!r.ok)throw new Error("http "+r.status);
+    res=parsePortfolio(await r.json());
+  }catch(e){failed=true;}
+  await sleep(Math.max(0,1600-(performance.now()-t0)));
+  if(failed){resetProgress();await show("v-landing");$("err").textContent=S.api;$("manual").style.display="block";return;}
+  vols=res;addrShown=raw.slice(0,6)+"…"+raw.slice(-4);
+  if(!(vols[W]>0)){const k=[3,2,1,0].find(i=>vols[i]>0);if(k!==undefined)W=k;}
+  if(vols.every(x=>!(x>0))){resetProgress();await show("v-landing");$("err").textContent=S.none;return;}
+  fillsTok++;F={state:"loading"};mainAddr=raw;subsOn=false;subList=null;subData=null;subMsg="";MODE="all";hipVols=null;hipCov=null;$("subnote").textContent="";introRan=false;lastTier=-1;$("subbtn").classList.remove("on");$("subbtn").disabled=false;$("subbtn").textContent="Include sub-accounts";
+  buildTabs();renderResults();await finishProgress();await show("v-results");intro();
+  loadFills(raw);
+}
+async function manualGo(){
+  const x=parseFloat($("mvol").value);$("err").textContent="";
+  if(!isFinite(x)||x<=0){$("err").textContent=S.novol;return;}
+  manual=true;manualVol=x;vols=null;fillsTok++;subsOn=false;subMsg="";MODE="all";hipVols=null;hipCov=null;$("subnote").textContent="";introRan=false;lastTier=-1;buildTabs();renderResults();await show("v-results");intro();
+}
+
+// ---------- share card (canvas 1200x675) ----------
+function rr(g,x,y,w,h,r){g.beginPath();g.moveTo(x+r,y);g.arcTo(x+w,y,x+w,y+h,r);g.arcTo(x+w,y+h,x,y+h,r);g.arcTo(x,y+h,x,y,r);g.arcTo(x,y,x+w,y,r);g.closePath();}
+function blob(g,x,y,rad,c0,c1){const gr=g.createRadialGradient(x,y,0,x,y,rad);gr.addColorStop(0,c0);gr.addColorStop(1,c1);g.fillStyle=gr;g.fillRect(0,0,1200,675);}
+function drawCard(){
+  const v=currentVolume(),r=quantileOf(v,W),t=THR(W),med=t[QS.indexOf(0.5)];
+  const c=document.createElement("canvas");c.width=1200;c.height=675;const g=c.getContext("2d");
+  const ACC="#6fe3cf";
+  g.fillStyle="#00110d";g.fillRect(0,0,1200,675);
+  blob(g,160,40,720,"rgba(0,92,68,0.95)","rgba(0,92,68,0)");
+  blob(g,1080,120,620,"rgba(0,112,85,0.85)","rgba(0,112,85,0)");
+  blob(g,1180,700,520,"rgba(0,120,92,0.65)","rgba(0,120,92,0)");
+  blob(g,260,760,560,"rgba(61,240,194,0.55)","rgba(61,240,194,0)");
+  const vg=g.createRadialGradient(600,300,260,600,300,820);vg.addColorStop(0,"rgba(0,8,6,0)");vg.addColorStop(1,"rgba(0,8,6,0.55)");g.fillStyle=vg;g.fillRect(0,0,1200,675);
+  rr(g,16,16,1168,643,34);g.strokeStyle="rgba(111,227,207,0.3)";g.lineWidth=2;g.stroke();
+  g.textBaseline="alphabetic";g.textAlign="left";
+  g.font="700 22px "+SANS;g.fillStyle=ACC;g.fillText("HYPERLIQUID VOLUME CHECKER",72,94);
+  const chip=(MODE==="hip"?S.cardh:S.card)[W];g.font="700 22px "+SANS;const cw=g.measureText(chip).width+36;
+  g.fillStyle="rgba(0,0,0,0.32)";rr(g,1128-cw,62,cw,46,23);g.fill();g.strokeStyle="rgba(111,227,207,0.5)";g.lineWidth=1.5;g.stroke();
+  g.fillStyle=ACC;g.fillText(chip,1128-cw+18,93);
+  const tk=tierOf(Math.min(100,Math.max(0,(1-r.q)*100))),ttxt=TIERS[tk].e+" "+TIERS[tk].n;
+  const tw=g.measureText(ttxt).width+36,tx=1128-cw-12-tw;
+  g.fillStyle="rgba(0,0,0,0.32)";rr(g,tx,62,tw,46,23);g.fill();g.strokeStyle="rgba(111,227,207,0.5)";g.lineWidth=1.5;g.stroke();
+  g.fillStyle=ACC;g.fillText(ttxt,tx+18,93);
+  const big=topText(r);let fs=214;g.font="700 "+fs+"px "+SANS;
+  while(g.measureText(big).width>1056&&fs>80){fs-=8;g.font="700 "+fs+"px "+SANS;}
+  const tg=g.createLinearGradient(0,170,0,330);tg.addColorStop(0,"#ffffff");tg.addColorStop(1,"#8ff3dc");
+  g.fillStyle=tg;g.fillText(big,66,330);
+  g.font="500 34px "+SANS;g.fillStyle="#d3e9e2";
+  g.fillText(r.edge==="low"?"Among the smallest volumes of "+POP():r.edge==="high"?"At the very top of "+POP():`More volume than ${fmtPct(r.q*100)}% of ${POP()}`,72,418);
+  const x0=72,x1=1128,by=478,bh=14,top=Math.min(100,Math.max(0,(1-r.q)*100)),mx=x0+top/100*(x1-x0);
+  rr(g,x0,by,x1-x0,bh,7);g.fillStyle="rgba(255,255,255,0.13)";g.fill();
+  const fg=g.createLinearGradient(mx,0,x1,0);fg.addColorStop(0,"#6fe3cf");fg.addColorStop(1,"rgba(111,227,207,0.25)");
+  g.save();rr(g,x0,by,x1-x0,bh,7);g.clip();g.fillStyle=fg;g.fillRect(mx,by,x1-mx,bh);g.restore();
+  g.beginPath();g.arc(mx,by+bh/2,17,0,Math.PI*2);g.fillStyle="rgba(111,227,207,0.25)";g.fill();
+  g.beginPath();g.arc(mx,by+bh/2,11,0,Math.PI*2);g.fillStyle="#ffffff";g.fill();g.lineWidth=4;g.strokeStyle="#6fe3cf";g.stroke();
+  g.textAlign=mx<110?"left":mx>1090?"right":"center";g.font="700 20px "+SANS;g.fillStyle=ACC;g.fillText("YOU",mx,by-24);
+  g.textAlign="left";g.font="500 20px "+SANS;g.fillStyle="#8fb2a8";g.fillText("Top 0%",x0,by+48);g.textAlign="right";g.fillText("Top 100%",x1,by+48);
+  g.textAlign="left";g.font="500 24px "+SANS;g.fillStyle="#8fb2a8";g.fillText(volLabel(W),72,584);g.fillText("Median",420,584);
+  g.font="700 44px "+SANS;g.fillStyle="#f1fbf8";g.fillText(fmtUSD(v),72,632);g.fillText(fmtUSD(med),420,632);
+  const u=(siteUrl()||"hyperliquid-volume-checker").replace(/^https?:\/\//,"").replace(/\/$/,"");
+  g.textAlign="right";g.font="600 24px "+SANS;g.fillStyle="#cfe5de";g.fillText(u,1128,632);
+  return c;
+}
+async function cardBlob(c){return await new Promise(res=>c.toBlob(res,"image/png"));}
+
+// ---------- events ----------
+$("go").onclick=lookup;
+$("addr").addEventListener("keydown",e=>{if(e.key==="Enter")lookup();});
+$("mtoggle").onclick=()=>{const m=$("manual");m.style.display=m.style.display==="block"?"none":"block";if(m.style.display==="block")$("mvol").focus();};
+$("mgo").onclick=manualGo;
+$("mvol").addEventListener("keydown",e=>{if(e.key==="Enter")manualGo();});
+$("back").onclick=async()=>{await show("v-landing");$("addr").focus();};
+let prevView="v-landing";
+/* ---------------- Pulse: live market ---------------- */
+const PU={timer:null,tick:null,rows:null,hip:0,core:0,ts:0,filter:"all",sort:"vol",dir:-1,first:true,busy:false};
+function fmtPx(x){return "$"+(x>=1000?nf(x,0):x>=100?nf(x,1):x>=1?nf(x,3):nf(x,5));}
+function fmtApr(a){const v=a*100;return (v>=0?"+":"−")+nf(Math.abs(v),Math.abs(v)<10?2:1)+"%";}
+async function pulseLoad(){
+  if(PU.busy)return;PU.busy=true;
+  try{
+    let names=[];
+    try{const d=await hlPost({type:"perpDexs"});if(Array.isArray(d))names=d.filter(x=>x&&x.name).map(x=>x.name);}catch(e){}
+    const res=await Promise.all([hlPost({type:"metaAndAssetCtxs"}),...names.map(n=>hlPost({type:"metaAndAssetCtxs",dex:n}).catch(()=>null))]);
+    const rows=[];
+    const add=(r,dex)=>{
+      if(!Array.isArray(r)||r.length<2||!r[0]||!Array.isArray(r[0].universe)||!Array.isArray(r[1]))return;
+      r[0].universe.forEach((m,i)=>{
+        const x=r[1][i];if(!x||m.isDelisted)return;
+        const px=parseFloat(x.markPx)||parseFloat(x.midPx)||parseFloat(x.oraclePx);if(!(px>0))return;
+        const prev=parseFloat(x.prevDayPx);
+        const nm=String(m.name);
+        rows.push({name:dex&&nm.indexOf(":")<0?dex+":"+nm:nm,dex:dex||"",px,chg:prev>0?px/prev-1:0,vol:parseFloat(x.dayNtlVlm)||0,oi:(parseFloat(x.openInterest)||0)*px,fr:(parseFloat(x.funding)||0)*24*365});
+      });
+    };
+    add(res[0],"");names.forEach((n,i)=>add(res[i+1],n));
+    if(!rows.length)throw new Error("empty");
+    PU.rows=rows;PU.ts=Date.now();
+    pulseRender();
+  }catch(e){
+    $("pstat").textContent=PU.rows?"Couldn't refresh, showing the last data":"Couldn't load the market. Try again in a moment.";
+  }
+  PU.busy=false;
+}
+function pulseRender(){
+  const R=PU.rows;if(!R)return;
+  const core=R.filter(r=>!r.dex),hip=R.filter(r=>r.dex),sum=(a,k)=>a.reduce((x,r)=>x+r[k],0);
+  const vC=sum(core,"vol"),vH=sum(hip,"vol"),vT=vC+vH,oiT=sum(R,"oi"),share=vT>0?vH/vT*100:0;
+  tween($("p_vol"),vT,fmtUSD,900);$("p_vol_s").textContent=fmtUSD(vC)+" core · "+fmtUSD(vH)+" HIP-3";
+  tween($("p_oi"),oiT,fmtUSD,900);$("p_oi_s").textContent=fmtUSD(sum(core,"oi"))+" core · "+fmtUSD(sum(hip,"oi"))+" HIP-3";
+  tween($("p_hip"),share,x=>nf(x,1)+"%",900);$("p_hipbar").style.width=Math.min(100,share)+"%";$("p_hip_s").textContent=hip.length?"across "+new Set(hip.map(r=>r.dex)).size+" builder-deployed dexs":"";
+  tween($("p_mk"),R.length,x=>nf(Math.round(x),0),700);$("p_mk_s").textContent=core.length+" core · "+hip.length+" HIP-3";
+  // table
+  let L=R.filter(r=>PU.filter==="all"||(PU.filter==="hip")===!!r.dex);
+  const k=PU.sort,d=PU.dir;L=L.slice().sort((a,b)=>(a[k]-b[k])*d).slice(0,15);
+  const tb=$("ptbody");tb.classList.toggle("still",!PU.first&&!PU.anim);
+  tb.innerHTML=L.map(r=>{
+    const nm=r.dex?r.name.slice(r.dex.length+1):r.name;
+    return `<tr><td><b>${nm.replace(/[<>&]/g,"")}</b>${r.dex?`<span class="pb">${r.dex.replace(/[<>&]/g,"")}</span>`:""}</td><td>${fmtPx(r.px)}</td><td class="${r.chg>=0?"pos":"neg"}">${(r.chg>=0?"+":"−")+nf(Math.abs(r.chg*100),2)}%</td><td>${fmtUSD(r.vol)}</td><td>${fmtUSD(r.oi)}</td><td class="${r.fr>=0?"pos":"neg"}">${r.oi>=1e6?fmtApr(r.fr):"—"}</td></tr>`;}).join("");
+  PU.first=false;PU.anim=false;
+  document.querySelectorAll(".ptable th[data-s]").forEach(th=>th.classList.toggle("on",th.dataset.s===PU.sort));
+  // funding extremes
+  const E=R.filter(r=>r.oi>=1e6).slice().sort((a,b)=>b.fr-a.fr);
+  const row=r=>`<div class="pf"><span><b>${r.name.replace(/[<>&]/g,"")}</b><small>OI ${fmtUSD(r.oi)}</small></span><span class="${r.fr>=0?"pos":"neg"}">${fmtApr(r.fr)}</span></div>`;
+  $("fh").innerHTML=E.slice(0,5).map(row).join("");
+  $("fl").innerHTML=E.slice(-5).reverse().map(row).join("");
+  pulseStat();
+}
+function pulseStat(){
+  if(!PU.ts)return;
+  const s=Math.max(0,Math.round((Date.now()-PU.ts)/1000));
+  $("pstat").textContent="Live · updated "+(s<2?"just now":s+"s ago")+" · refreshes every 30s";
+}
+async function openPulse(){
+  const cur=document.querySelector(".view.on");if(cur&&cur.id!=="v-pulse"&&cur.id!=="v-method")prevView=cur.id;
+  await show("v-pulse");moveInd($("pfilter"));
+  PU.first=true;if(PU.rows){PU.anim=true;pulseRender();}
+  clearInterval(PU.timer);clearInterval(PU.tick);
+  pulseLoad();
+  PU.timer=setInterval(()=>{if(document.visibilityState==="visible")pulseLoad();},30000);
+  PU.tick=setInterval(pulseStat,1000);
+}
+function closePulse(){clearInterval(PU.timer);clearInterval(PU.tick);}
+async function openMethod(){
+  const cur=document.querySelector(".view.on");if(cur&&cur.id!=="v-method")prevView=cur.id;
+  $("m_listen").textContent=listenText();
+  if(D.h){$("m_hip").style.display="";$("m_hl").textContent=(D.hh||"?")+"h";$("m_hs").textContent=(D.hs||0).toLocaleString("en-US")+" of "+(D.hw||0).toLocaleString("en-US");}
+  $("m_seen").textContent=D.seen.toLocaleString("en-US");
+  $("m_sample").textContent=D.sample.toLocaleString("en-US");
+  await show("v-method");
+}
+document.querySelectorAll("[data-method]").forEach(b=>b.addEventListener("click",openMethod));
+$("mback").onclick=()=>show(prevView);
+$("subbtn").onclick=toggleSubs;
+document.querySelectorAll("[data-pulse]").forEach(b=>b.addEventListener("click",openPulse));
+$("pback").onclick=async()=>{closePulse();await show(prevView);};
+$("pfilter").addEventListener("click",e=>{const b=e.target.closest("[data-f]");if(!b)return;PU.filter=b.dataset.f;PU.anim=true;$("pfilter").querySelectorAll(".tab").forEach(x=>x.setAttribute("aria-pressed",String(x===b)));moveInd($("pfilter"));pulseRender();});
+document.querySelector(".ptable thead").addEventListener("click",e=>{const th=e.target.closest("th[data-s]");if(!th)return;const k=th.dataset.s;if(PU.sort===k)PU.dir*=-1;else{PU.sort=k;PU.dir=-1;}PU.anim=true;pulseRender();});
+$("modeseg").addEventListener("click",e=>{const b=e.target.closest("button");if(!b||b.disabled)return;setMode(b.dataset.m);});
+$("tabs").addEventListener("click",e=>{const b=e.target.closest(".tab");if(!b||b.disabled)return;W=+b.dataset.w;buildTabs();renderResults();});
+$("all").addEventListener("click",e=>{const row=e.target.closest("tr.pick");if(!row)return;W=+row.dataset.i;buildTabs();renderResults();});
+let cardBlobCached=null;
+function cacheCard(){cardBlobCached=null;const c=drawCard();$("cardimg").src=c.toDataURL("image/png");c.toBlob(bl=>{cardBlobCached=bl;},"image/png");}
+const isMobile=/Android|iPhone|iPad|iPod/i.test(navigator.userAgent)||(navigator.maxTouchPoints>1&&/Mac/.test(navigator.platform));
+$("cardsave").onclick=async()=>{
+  const lab=$("t_save"),orig="Save image";
+  let blob=cardBlobCached;
+  if(!blob)blob=await cardBlob(drawCard());
+  const file=new File([blob],"hyperliquid-volume-checker.png",{type:"image/png"});
+  if(isMobile&&navigator.canShare&&navigator.canShare({files:[file]})){
+    try{await navigator.share({files:[file],text:$("ttext").value});return;}catch(e){if(e&&e.name==="AbortError")return;}
+  }
+  const url=URL.createObjectURL(blob),a=document.createElement("a");
+  a.href=url;a.download="hyperliquid-volume-checker.png";document.body.appendChild(a);a.click();a.remove();
+  setTimeout(()=>URL.revokeObjectURL(url),30000);
+  lab.textContent="Saved ✓";setTimeout(()=>{lab.textContent=orig;},1800);
+};
+$("xshare").onclick=()=>{
+  const q=new URLSearchParams({text:$("ttext").value});q.set("via","hugocrza");const u=siteUrl();if(u)q.set("url",u);
+  window.open("https://twitter.com/intent/tweet?"+q.toString(),"_blank","noopener");
+};
+$("copytxt").onclick=async()=>{
+  const u=siteUrl(),txt=$("ttext").value+(u?" "+u:"");
+  try{await navigator.clipboard.writeText(txt);const b=$("t_copy");b.textContent="Copied ✓";setTimeout(()=>{b.textContent="Copy text";},1800);}catch(e){}
+};
+setupStatic();
+</script>
+<div style="position:fixed;top:10px;right:10px;z-index:99999;background:#f5a524;color:#111;font:700 11px/1 system-ui,sans-serif;letter-spacing:.08em;padding:6px 9px;border-radius:999px;pointer-events:none">BETA</div></body>
+</html>
