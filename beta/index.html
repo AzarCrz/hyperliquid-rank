@@ -211,6 +211,12 @@ textarea:focus{outline:2px solid var(--acc);outline-offset:1px}
 .ptable tbody tr{animation:rowin .45s cubic-bezier(.2,.8,.2,1) both}
 .ptable tbody.still tr{animation:none}
 .ptable tbody tr:hover td{background:rgba(111,227,207,.06)}
+.psearch{display:flex;align-items:center;gap:10px;margin:14px 20px 4px;padding:0 14px;border:1px solid var(--line);border-radius:999px;background:rgba(0,0,0,.28);color:var(--mute);transition:border-color .2s,box-shadow .2s}
+.psearch:focus-within{border-color:rgba(111,227,207,.6);box-shadow:0 0 0 3px rgba(111,227,207,.12);color:var(--acc)}
+.psearch input{flex:1;min-width:0;background:none;border:0;outline:0;color:var(--ink);font:15px var(--sans);padding:11px 0}
+.psearch input::placeholder{color:var(--mute)}
+#pcount{font-size:12px;color:var(--mute);white-space:nowrap}
+.pempty{padding:22px;text-align:center;color:var(--mute)}
 .pb{display:inline-block;margin-left:8px;padding:2px 8px;border-radius:999px;border:1px solid rgba(111,227,207,.4);color:var(--acc);font-size:11px;letter-spacing:.04em}
 .pos{color:#7ee8c9}.neg{color:var(--err)}
 .pduo{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
@@ -435,14 +441,12 @@ textarea:focus{outline:2px solid var(--acc);outline-offset:1px}
     <div class="card pk"><span class="ct">Markets</span><b id="p_mk">—</b><small id="p_mk_s"></small></div>
   </div>
   <section class="card">
-    <div class="card-head"><h2 class="ct">Markets</h2><div class="seg" id="pfilter" role="group"><i class="ind"></i><button class="tab" data-f="all" aria-pressed="true">All</button><button class="tab" data-f="core" aria-pressed="false">Core</button><button class="tab" data-f="hip" aria-pressed="false">HIP-3</button></div></div>
+    <div class="card-head"><div class="seg" id="pview" role="group"><i class="ind"></i><button class="tab" data-v="mk" aria-pressed="true">Main markets</button><button class="tab" data-v="hi" aria-pressed="false">Highest funding</button><button class="tab" data-v="lo" aria-pressed="false">Lowest funding</button></div><div class="seg" id="pfilter" role="group"><i class="ind"></i><button class="tab" data-f="all" aria-pressed="true">All</button><button class="tab" data-f="core" aria-pressed="false">Core</button><button class="tab" data-f="hip" aria-pressed="false">HIP-3</button></div></div>
+    <div class="psearch"><svg viewBox="0 0 20 20" width="16" height="16" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5.5" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="M13 13l4 4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg><input id="psearch" type="search" placeholder="Search (BTC, TSLA…)" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Search a market"><span id="pcount"></span></div>
     <div class="pscroll"><table class="ptable"><thead><tr><th>Market</th><th data-s="px">Price</th><th data-s="chg">24h</th><th data-s="vol" class="on">Volume</th><th data-s="oi">Open interest</th><th data-s="fr">Funding (APR)</th></tr></thead><tbody id="ptbody"></tbody></table></div>
+    <p class="pempty" id="pempty" style="display:none">No market matches your search.</p>
   </section>
-  <div class="pduo">
-    <section class="card"><div class="card-head"><h2 class="ct acc">Highest funding · longs pay</h2></div><div id="fh"></div></section>
-    <section class="card"><div class="card-head"><h2 class="ct acc">Lowest funding · shorts pay</h2></div><div id="fl"></div></section>
-  </div>
-  <p class="note">Live data from Hyperliquid's public API, refreshed every 30 seconds. Funding is annualized from the current hourly rate and only shown for markets with at least $1M of open interest. Informational only, not financial advice.</p>
+  <p class="note">Source: Hyperliquid public API (api.hyperliquid.xyz), read live in your browser and refreshed every 30 seconds. Volume is the rolling 24h notional. Funding is annualized from the current hourly rate and only shown for markets with at least $1M of open interest. Informational only, not financial advice.</p>
  </div>
 </section>
 
@@ -929,7 +933,7 @@ $("mvol").addEventListener("keydown",e=>{if(e.key==="Enter")manualGo();});
 $("back").onclick=async()=>{await show("v-landing");$("addr").focus();};
 let prevView="v-landing";
 /* ---------------- Pulse: live market ---------------- */
-const PU={timer:null,tick:null,rows:null,hip:0,core:0,ts:0,filter:"all",sort:"vol",dir:-1,first:true,busy:false};
+const PU={timer:null,tick:null,rows:null,hip:0,core:0,ts:0,filter:"all",view:"mk",q:"",sort:"vol",dir:-1,first:true,busy:false};
 function fmtPx(x){return "$"+(x>=1000?nf(x,0):x>=100?nf(x,1):x>=1?nf(x,3):nf(x,5));}
 function fmtApr(a){const v=a*100;return (v>=0?"+":"−")+nf(Math.abs(v),Math.abs(v)<10?2:1)+"%";}
 async function pulseLoad(){
@@ -967,19 +971,21 @@ function pulseRender(){
   tween($("p_hip"),share,x=>nf(x,1)+"%",900);$("p_hipbar").style.width=Math.min(100,share)+"%";$("p_hip_s").textContent=hip.length?"across "+new Set(hip.map(r=>r.dex)).size+" builder-deployed dexs":"";
   tween($("p_mk"),R.length,x=>nf(Math.round(x),0),700);$("p_mk_s").textContent=core.length+" core · "+hip.length+" HIP-3";
   // table
-  let L=R.filter(r=>PU.filter==="all"||(PU.filter==="hip")===!!r.dex);
-  const k=PU.sort,d=PU.dir;L=L.slice().sort((a,b)=>(a[k]-b[k])*d).slice(0,15);
+  const q=PU.q.trim().toLowerCase();
+  let L=R.filter(r=>(PU.filter==="all"||(PU.filter==="hip")===!!r.dex)&&(!q||r.name.toLowerCase().includes(q)));
+  const fv=PU.view!=="mk";
+  if(fv)L=L.filter(r=>r.oi>=1e6);
+  const k=fv?"fr":PU.sort,d=fv?(PU.view==="hi"?-1:1):PU.dir;
+  L=L.slice().sort((a,b)=>(a[k]-b[k])*d);
+  const total=L.length,lim=q?30:15;L=L.slice(0,lim);
+  $("pcount").textContent=q?(total+" result"+(total===1?"":"s")):(fv?"OI ≥ $1M":"Top "+Math.min(lim,total)+" of "+total);
+  $("pempty").style.display=total?"none":"";
   const tb=$("ptbody");tb.classList.toggle("still",!PU.first&&!PU.anim);
   tb.innerHTML=L.map(r=>{
     const nm=r.dex?r.name.slice(r.dex.length+1):r.name;
     return `<tr><td><b>${nm.replace(/[<>&]/g,"")}</b>${r.dex?`<span class="pb">${r.dex.replace(/[<>&]/g,"")}</span>`:""}</td><td>${fmtPx(r.px)}</td><td class="${r.chg>=0?"pos":"neg"}">${(r.chg>=0?"+":"−")+nf(Math.abs(r.chg*100),2)}%</td><td>${fmtUSD(r.vol)}</td><td>${fmtUSD(r.oi)}</td><td class="${r.fr>=0?"pos":"neg"}">${r.oi>=1e6?fmtApr(r.fr):"—"}</td></tr>`;}).join("");
   PU.first=false;PU.anim=false;
-  document.querySelectorAll(".ptable th[data-s]").forEach(th=>th.classList.toggle("on",th.dataset.s===PU.sort));
-  // funding extremes
-  const E=R.filter(r=>r.oi>=1e6).slice().sort((a,b)=>b.fr-a.fr);
-  const row=r=>`<div class="pf"><span><b>${r.name.replace(/[<>&]/g,"")}</b><small>OI ${fmtUSD(r.oi)}</small></span><span class="${r.fr>=0?"pos":"neg"}">${fmtApr(r.fr)}</span></div>`;
-  $("fh").innerHTML=E.slice(0,5).map(row).join("");
-  $("fl").innerHTML=E.slice(-5).reverse().map(row).join("");
+  document.querySelectorAll(".ptable th[data-s]").forEach(th=>th.classList.toggle("on",th.dataset.s===(PU.view!=="mk"?"fr":PU.sort)));
   pulseStat();
 }
 function pulseStat(){
@@ -989,7 +995,7 @@ function pulseStat(){
 }
 async function openPulse(){
   const cur=document.querySelector(".view.on");if(cur&&cur.id!=="v-pulse"&&cur.id!=="v-method")prevView=cur.id;
-  await show("v-pulse");moveInd($("pfilter"));
+  await show("v-pulse");moveInd($("pfilter"));moveInd($("pview"));
   PU.first=true;if(PU.rows){PU.anim=true;pulseRender();}
   clearInterval(PU.timer);clearInterval(PU.tick);
   pulseLoad();
@@ -1010,6 +1016,8 @@ $("mback").onclick=()=>show(prevView);
 $("subbtn").onclick=toggleSubs;
 document.querySelectorAll("[data-pulse]").forEach(b=>b.addEventListener("click",openPulse));
 $("pback").onclick=async()=>{closePulse();await show(prevView);};
+$("pview").addEventListener("click",e=>{const b=e.target.closest("[data-v]");if(!b)return;PU.view=b.dataset.v;PU.anim=true;$("pview").querySelectorAll(".tab").forEach(x=>x.setAttribute("aria-pressed",String(x===b)));moveInd($("pview"));pulseRender();});
+$("psearch").addEventListener("input",e=>{PU.q=e.target.value;PU.anim=false;pulseRender();});
 $("pfilter").addEventListener("click",e=>{const b=e.target.closest("[data-f]");if(!b)return;PU.filter=b.dataset.f;PU.anim=true;$("pfilter").querySelectorAll(".tab").forEach(x=>x.setAttribute("aria-pressed",String(x===b)));moveInd($("pfilter"));pulseRender();});
 document.querySelector(".ptable thead").addEventListener("click",e=>{const th=e.target.closest("th[data-s]");if(!th)return;const k=th.dataset.s;if(PU.sort===k)PU.dir*=-1;else{PU.sort=k;PU.dir=-1;}PU.anim=true;pulseRender();});
 $("modeseg").addEventListener("click",e=>{const b=e.target.closest("button");if(!b||b.disabled)return;setMode(b.dataset.m);});
