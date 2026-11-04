@@ -225,6 +225,28 @@ textarea:focus{outline:2px solid var(--acc);outline-offset:1px}
 .pclegend i{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:7px;vertical-align:-1px}
 .pclegend .lg1{background:var(--acc);width:14px;height:3px;border-radius:2px;vertical-align:3px}.pclegend .lg2{background:rgba(111,227,207,.45);border:1px solid var(--acc)}
 .pcsum{padding:2px 20px 16px;font-size:13px;color:var(--mute);line-height:1.5}
+.psec{font:600 12px var(--sans);letter-spacing:.16em;text-transform:uppercase;color:var(--acc);margin:12px 4px -4px;display:flex;align-items:center;gap:12px}
+.psec:after{content:"";flex:1;height:1px;background:linear-gradient(90deg,rgba(111,227,207,.4),transparent)}
+.pstory{margin:0;padding:22px 24px 8px;font:600 clamp(18px,2.3vw,25px)/1.38 var(--sans);letter-spacing:-.012em;max-width:980px}
+.pstory em{font-style:normal;color:var(--acc)}
+.pstats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));margin-top:10px;border-top:1px solid rgba(111,227,207,.2);border-bottom:1px solid rgba(111,227,207,.2)}
+.pstats>div{padding:14px 24px;display:flex;flex-direction:column;gap:4px;border-left:1px solid rgba(111,227,207,.14);min-width:0}
+.pstats>div:first-child{border-left:0}
+.pstats b{font:700 clamp(20px,2.4vw,28px)/1.15 var(--sans);letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.pstats small{color:var(--mute);font-size:12.5px;min-height:17px}.pstats small b{font:600 13px var(--sans);letter-spacing:0}
+.pctl{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px 16px;padding:14px 20px 0}
+.pctl .ptip{flex:1;text-align:center;min-width:180px}
+.lg3{width:46px!important;height:8px!important;border-radius:4px!important;border:0!important;background:linear-gradient(90deg,#6fe3cf,#ffc457)!important;vertical-align:0!important;margin:0 6px!important}
+.lgheat{display:inline-flex;align-items:center}.lgheat em{font-style:normal}
+.pcap{margin:-4px 4px 0;font-size:13px;color:var(--mute);min-height:0}.pcap:empty{display:none}
+.phlpb{padding:16px 22px 18px;display:flex;flex-direction:column;gap:6px}
+.phlpb b{font:700 clamp(24px,3.2vw,34px)/1.1 var(--sans);letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.phlpb small{color:var(--mute);font-size:13px;min-height:17px}.phlpb small b{font:600 13px var(--sans)}
+#h_svg{width:100%;height:70px;display:block;margin:4px 0}
+.pmcols{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 20px;padding:8px 22px 16px}
+.pmcols h3{margin:6px 0 4px;font:600 11px var(--sans);letter-spacing:.12em;text-transform:uppercase;color:var(--mute)}
+.pmr{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.06);font-variant-numeric:tabular-nums}
+.pmr:last-child{border-bottom:0}
 .pb{display:inline-block;margin-left:8px;padding:2px 8px;border-radius:999px;border:1px solid rgba(111,227,207,.4);color:var(--acc);font-size:11px;letter-spacing:.04em}
 .pos{color:#7ee8c9}.neg{color:var(--err)}
 .pduo{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
@@ -314,6 +336,7 @@ textarea:focus{outline:2px solid var(--acc);outline-offset:1px}
   .topbar .tb-right{order:3;width:100%}
   .card-head{padding:12px 14px}
   .card-head .seg{width:100%}
+  .pstats{grid-template-columns:repeat(2,minmax(0,1fr))}.pstats>div{padding:12px 16px}.pstats>div:nth-child(3){border-left:0}.pstats>div:nth-child(n+3){border-top:1px solid rgba(111,227,207,.14)}.pstory{padding:18px 16px 6px}.pctl{padding:12px 14px 0}.pctl .seg{width:auto}.pcwrap{padding:8px 8px 0}.pmcols{padding:6px 16px 14px;gap:0 14px}
   #pview .tab{flex:1 1 auto;padding:9px 8px;font-size:12.5px;white-space:nowrap;min-width:0}
   .psearch{margin:12px 14px 4px}
   .tab{flex:1 1 auto;padding:7px 8px;font-size:13px}
@@ -444,22 +467,45 @@ textarea:focus{outline:2px solid var(--acc);outline-offset:1px}
     <div class="tb-right"><button class="pill ghost sm" id="pback">Back</button></div>
   </header>
   <div class="phead"><div><h1 class="ptitle">Pulse</h1><p class="psub"><i class="live"></i><span id="pstat">Loading the market…</span></p></div></div>
+  <div class="psec">Buyback · the protocol's engine</div>
+  <section class="card" id="pbuy">
+    <p class="pstory" id="pb_head">Reading the Assistance Fund…</p>
+    <div class="pstats">
+      <div><span class="ct">HYPE held</span><b id="b_hold">—</b><small id="b_val">&nbsp;</small></div>
+      <div><span class="ct">Total spent</span><b id="b_spent">—</b><small>cost basis</small></div>
+      <div><span class="ct">Average buy price</span><b id="b_avg">—</b><small id="b_avg_s">&nbsp;</small></div>
+      <div><span class="ct">Bought · 24h</span><b id="b_24">—</b><small id="b_24s">&nbsp;</small></div>
+    </div>
+    <div class="pctl">
+      <div class="seg" id="cmode" role="group"><i class="ind"></i><button class="tab" data-c="px" aria-pressed="true">Price + buys</button><button class="tab" data-c="cum" aria-pressed="false">Cumulative</button></div>
+      <span class="ptip" id="pc_tip">Loading…</span>
+      <div class="seg" id="crange" role="group"><i class="ind"></i><button class="tab" data-r="24" aria-pressed="false">24h</button><button class="tab" data-r="48" aria-pressed="true">48h</button></div>
+    </div>
+    <div class="pcwrap"><svg id="pc_svg" viewBox="0 0 800 280" role="img" aria-label="HYPE price with Assistance Fund buyback"></svg><p class="pempty" id="pc_empty">Loading the chart…</p></div>
+    <div class="pclegend"><span><i class="lg1"></i>HYPE price</span><span><i class="lg2"></i>Fund buys · size and colour = HYPE bought that hour</span><span class="lgheat"><em>less</em><i class="lg3"></i><em>more</em></span></div>
+  </section>
+
+  <div class="psec">Market snapshot</div>
   <div class="pkpi">
     <div class="card pk"><span class="ct">24h perp volume</span><b id="p_vol">—</b><small id="p_vol_s"></small></div>
     <div class="card pk"><span class="ct">Open interest</span><b id="p_oi">—</b><small id="p_oi_s"></small></div>
     <div class="card pk"><span class="ct">HIP-3 share of volume</span><b id="p_hip">—</b><div class="pbar"><i id="p_hipbar" style="width:0"></i></div><small id="p_hip_s"></small></div>
     <div class="card pk"><span class="ct">Markets</span><b id="p_mk">—</b><small id="p_mk_s"></small></div>
   </div>
+  <p class="pcap" id="p_cap"></p>
+
   <div class="pduo">
-    <div class="card pk"><span class="ct">HYPE buyback · Assistance Fund</span><b id="b_hold">—</b><small id="b_s1"></small><small id="b_s2"></small></div>
-    <div class="card pk"><span class="ct">HLP vault</span><b id="h_tvl">—</b><small id="h_s1"></small><small id="h_s2"></small></div>
+    <section class="card phlp">
+      <div class="card-head"><h2 class="ct">HLP vault · liquidity provider</h2><div class="seg" id="hrange" role="group"><i class="ind"></i><button class="tab" data-k="day" aria-pressed="false">24h</button><button class="tab" data-k="week" aria-pressed="true">7d</button><button class="tab" data-k="month" aria-pressed="false">30d</button></div></div>
+      <div class="phlpb"><b id="h_tvl">—</b><small id="h_s1">&nbsp;</small><svg id="h_svg" viewBox="0 0 300 70" role="img" aria-label="HLP profit and loss"></svg><small id="h_s2"></small></div>
+    </section>
+    <section class="card pmov">
+      <div class="card-head"><h2 class="ct">Movers · 24h</h2></div>
+      <div class="pmcols"><div><h3>Gainers</h3><div id="mv_up"></div></div><div><h3>Losers</h3><div id="mv_dn"></div></div></div>
+    </section>
   </div>
-  <section class="card" id="pchart">
-    <div class="card-head"><h2 class="ct">HYPE price &amp; buyback · 48h</h2><span class="ptip" id="pc_tip">Hover or touch the chart</span></div>
-    <div class="pcwrap"><svg id="pc_svg" viewBox="0 0 800 260" role="img" aria-label="HYPE price over 48 hours with Assistance Fund buyback"></svg><p class="pempty" id="pc_empty">Loading the chart…</p></div>
-    <div class="pclegend"><span><i class="lg1"></i>HYPE price</span><span><i class="lg2"></i>Assistance Fund buys (bubble size = HYPE bought that hour)</span></div>
-    <p class="pcsum" id="pc_sum"></p>
-  </section>
+
+  <div class="psec">All markets</div>
   <section class="card">
     <div class="card-head"><div class="seg" id="pview" role="group"><i class="ind"></i><button class="tab" data-v="mk" aria-pressed="true">Markets</button><button class="tab" data-v="hi" aria-pressed="false">High funding</button><button class="tab" data-v="lo" aria-pressed="false">Low funding</button><button class="tab" data-v="cx" aria-pressed="false">vs CEX</button></div><div class="seg" id="pfilter" role="group"><i class="ind"></i><button class="tab" data-f="all" aria-pressed="true">All</button><button class="tab" data-f="core" aria-pressed="false">Core</button><button class="tab" data-f="hip" aria-pressed="false">HIP-3</button></div></div>
     <div class="psearch"><svg viewBox="0 0 20 20" width="16" height="16" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5.5" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="M13 13l4 4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg><input id="psearch" type="search" placeholder="Search (BTC, TSLA…)" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Search a market"><span id="pcount"></span></div>
@@ -977,7 +1023,7 @@ async function pulseLoad(){
     add(res[0],"");names.forEach((n,i)=>add(res[i+1],n));
     if(!rows.length)throw new Error("empty");
     PU.rows=rows;PU.ts=Date.now();
-    pulseRender();protoRender();
+    pulseRender();protoRender();moversRender();
   }catch(e){
     $("pstat").textContent=PU.rows?"Couldn't refresh, showing the last data":"Couldn't load the market. Try again in a moment.";
   }
@@ -985,39 +1031,78 @@ async function pulseLoad(){
 }
 const AF="0xfefefefefefefefefefefefefefefefefefefefe",HLP="0xdfc24b077bc1425ad1dea75bcb6f8158e10df303";
 const fmtS=x=>(x>=0?"+":"−")+fmtUSD(Math.abs(x));
+const twOnce=(el,v,f)=>{if(!el)return;if(el.dataset.v===String(v))return;el.dataset.v=String(v);tween(el,v,f,900);};
+const esc=t=>String(t).replace(/[<>&]/g,"");
 async function protoLoad(){
   if(PU.pbusy)return;PU.pbusy=true;
-  const n=Date.now(),c=p=>p.catch(()=>null);
-  const [sp,fl,vd,pf]=await Promise.all([c(hlPost({type:"spotClearinghouseState",user:AF})),c(hlPost({type:"userFillsByTime",user:AF,startTime:n-86400000})),c(hlPost({type:"vaultDetails",vaultAddress:HLP})),c(hlPost({type:"predictedFundings"}))]);
-  PU.proto={sp,fl,vd,pf};PU.pbusy=false;protoRender();pulseRender();
+  const c=p=>p.catch(()=>null);
+  const [sp,vd,pf,cap]=await Promise.all([c(hlPost({type:"spotClearinghouseState",user:AF})),c(hlPost({type:"vaultDetails",vaultAddress:HLP})),c(hlPost({type:"predictedFundings"})),c(hlPost({type:"perpsAtOpenInterestCap"}))]);
+  PU.proto={sp,vd,pf,cap};PU.pbusy=false;protoRender();pulseRender();
 }
-const twOnce=(el,v,f)=>{if(el.dataset.v===String(v))return;el.dataset.v=String(v);tween(el,v,f,900);};
 function protoRender(){
   const P=PU.proto;if(!P)return;
   try{
-    const hb=P.sp&&Array.isArray(P.sp.balances)?P.sp.balances.find(b=>b.coin==="HYPE"):null;
-    if(hb){
-      const tot=parseFloat(hb.total),cost=parseFloat(hb.entryNtl);
-      const hp=PU.rows?(PU.rows.find(r=>r.name==="HYPE")||{}).px:0;
-      twOnce($("b_hold"),tot,x=>nf(x/1e6,2)+"M HYPE");
-      $("b_s1").textContent=cost>0?"≈ "+fmtUSD(cost)+" spent in total (cost basis)":"";
-      const f=Array.isArray(P.fl)?P.fl.filter(x=>x.coin==="@107"&&x.dir==="Buy"):[];
-      if(f.length&&f[0].startPosition){
-        const d=tot-parseFloat(f[0].startPosition);
-        $("b_s2").textContent=d>0?"+"+nf(Math.round(d),0)+" HYPE in 24h"+(hp>0?" (≈ "+fmtUSD(d*hp)+")":""):"";
-      }else $("b_s2").textContent="";
-    }
-    const v=P.vd;
-    if(v&&Array.isArray(v.portfolio)){
-      const g=k=>{const e=v.portfolio.find(x=>x[0]===k);return e&&e[1]?e[1]:null;};
-      const last=a=>a&&a.length?parseFloat(a[a.length-1][1]):NaN;
-      const av=g("day");if(av){twOnce($("h_tvl"),last(av.accountValueHistory),fmtUSD);}
-      const pn=k=>{const e=g(k);return e?last(e.pnlHistory):NaN;};
-      const t=k=>{const x=pn(k);return isNaN(x)?"—":fmtS(x);};
-      $("h_s1").textContent="PnL 24h "+t("day")+" · 7d "+t("week")+" · 30d "+t("month");
-      $("h_s2").textContent=isNaN(pn("allTime"))?"":"All-time PnL "+fmtS(pn("allTime"));
-    }
+    const cap=Array.isArray(P.cap)?P.cap:[];
+    $("p_cap").innerHTML=cap.length?"At their open-interest cap right now: "+cap.slice(0,12).map(n=>'<span class="pb">'+esc(n)+'</span>').join(" "):"";
+    hlpRender();
   }catch(e){}
+  buyRender();
+}
+function sparkDraw(svg,pts,color){
+  if(!svg)return;
+  const W=Math.max(200,Math.round(svg.getBoundingClientRect().width)||300),H=70;svg.setAttribute("viewBox","0 0 "+W+" "+H);
+  if(pts.length<2){svg.innerHTML="";return;}
+  const xs=pts.map(p=>p[0]),ys=pts.map(p=>p[1]),x0=Math.min(...xs),x1=Math.max(...xs),lo=Math.min(0,...ys),hi=Math.max(0,...ys),r=(hi-lo)||1;
+  const X=t=>4+(t-x0)/((x1-x0)||1)*(W-8),Y=v=>6+(hi-v)/r*(H-12);
+  const d="M"+pts.map(p=>X(p[0]).toFixed(1)+","+Y(p[1]).toFixed(1)).join(" L");
+  const z=Y(0).toFixed(1);
+  svg.innerHTML='<defs><linearGradient id="hg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="'+color+'" stop-opacity=".32"/><stop offset="1" stop-color="'+color+'" stop-opacity="0"/></linearGradient></defs><line x1="4" x2="'+(W-4)+'" y1="'+z+'" y2="'+z+'" stroke="rgba(255,255,255,.2)" stroke-dasharray="3 4"/><path d="'+d+' L'+X(x1).toFixed(1)+','+z+' L'+X(x0).toFixed(1)+','+z+' Z" fill="url(#hg)"/><path d="'+d+'" fill="none" stroke="'+color+'" stroke-width="2" stroke-linejoin="round"/>';
+}
+function hlpRender(){
+  const v=PU.proto&&PU.proto.vd;if(!v||!Array.isArray(v.portfolio))return;
+  const g=k=>{const e=v.portfolio.find(x=>x[0]===k);return e&&e[1]?e[1]:null;};
+  const lastv=a=>a&&a.length?parseFloat(a[a.length-1][1]):NaN;
+  const d=g("day");if(d)twOnce($("h_tvl"),lastv(d.accountValueHistory),fmtUSD);
+  const k=PU.hr||"week",cur=g(k);
+  const pts=cur&&cur.pnlHistory?cur.pnlHistory.map(x=>[+x[0],parseFloat(x[1])]).filter(x=>!isNaN(x[1])):[];
+  const last=pts.length?pts[pts.length-1][1]:NaN;
+  const lab={day:"24h",week:"7d",month:"30d"}[k];
+  $("h_s1").innerHTML=isNaN(last)?"&nbsp;":"PnL "+lab+' <b class="'+(last>=0?"pos":"neg")+'">'+fmtS(last)+"</b>";
+  sparkDraw($("h_svg"),pts,last>=0?"#7ee8c9":"#ffb4b4");
+  const all=g("allTime"),al=all&&all.pnlHistory?lastv(all.pnlHistory):NaN;
+  let t=isNaN(al)?"":"All-time PnL "+fmtS(al);
+  const hh=PU.hlpHype;if(hh)t+=(t?" · ":"")+"HYPE exposure: "+(hh.net>=0?"long ":"short ")+nf(Math.abs(hh.net),0)+" HYPE";
+  $("h_s2").textContent=t;
+}
+function moversRender(){
+  const R=PU.rows;if(!R)return;
+  const L=R.filter(r=>r.oi>=1e6).slice().sort((a,b)=>b.chg-a.chg);
+  const row=r=>{const nm=r.dex?r.name.slice(r.dex.length+1):r.name;return '<div class="pmr"><span><b>'+esc(nm)+"</b>"+(r.dex?'<span class="pb">'+esc(r.dex)+"</span>":"")+'</span><span class="'+(r.chg>=0?"pos":"neg")+'">'+(r.chg>=0?"+":"−")+nf(Math.abs(r.chg*100),1)+"%</span></div>";};
+  $("mv_up").innerHTML=L.filter(r=>r.chg>0).slice(0,4).map(row).join("");
+  $("mv_dn").innerHTML=L.filter(r=>r.chg<0).slice(-4).reverse().map(row).join("");
+}
+function buyRender(){
+  const P=PU.proto,B=PU.buys;
+  const hb=P&&P.sp&&Array.isArray(P.sp.balances)?P.sp.balances.find(b=>b.coin==="HYPE"):null;
+  if(!hb)return;
+  const tot=parseFloat(hb.total),cost=parseFloat(hb.entryNtl);
+  const hr=PU.rows&&PU.rows.find(r=>r.name==="HYPE");
+  const pxN=hr?hr.px:(PU.cand&&PU.cand.length?parseFloat(PU.cand[PU.cand.length-1].c):0);
+  twOnce($("b_hold"),tot,x=>nf(x/1e6,2)+"M");
+  $("b_val").textContent=pxN>0?"≈ "+fmtUSD(tot*pxN)+" at market":" ";
+  twOnce($("b_spent"),cost,fmtUSD);
+  const avg=cost>0&&tot>0?cost/tot:0;
+  twOnce($("b_avg"),avg,x=>"$"+nf(x,2));
+  $("b_avg_s").innerHTML=avg>0&&pxN>0?'HYPE is <b class="'+(pxN>=avg?"pos":"neg")+'">'+(pxN>=avg?"+":"−")+nf(Math.abs(pxN/avg-1)*100,0)+"%</b> vs. this":" ";
+  if(B&&B.f&&B.f.length){
+    const n=Date.now(),d24=n-864e5,d48=n-1728e5;
+    let a=0,au=0,b=0;
+    B.f.forEach(f=>{if(f[0]>=d24){a+=f[1];au+=f[2];}else if(f[0]>=d48){b+=f[1];}});
+    twOnce($("b_24"),Math.round(a),x=>nf(Math.round(x),0));$("b_24s").textContent="HYPE · ≈ "+fmtUSD(au);
+    let pace="";
+    if(b>0){const dl=a/b-1;pace=Math.abs(dl)<0.03?"in line with the 24 hours before":"<em>"+nf(Math.abs(dl)*100,0)+"% "+(dl>0?"above":"below")+"</em> the 24 hours before";}
+    $("pb_head").innerHTML="The Assistance Fund bought <em>"+nf(Math.round(a),0)+" HYPE</em> (≈ <em>"+fmtUSD(au)+"</em>) over the last 24 hours"+(pace?", "+pace:"")+"."+(avg>0&&pxN>0?" It now holds <em>"+nf(tot/1e6,1)+"M HYPE</em>, bought at <em>$"+nf(avg,2)+"</em> on average.":"");
+  }
 }
 async function chartLoad(){
   if(PU.cbusy)return;PU.cbusy=true;
@@ -1025,17 +1110,16 @@ async function chartLoad(){
   try{
     const cand=await c(hlPost({type:"candleSnapshot",req:{coin:"HYPE",interval:"1h",startTime:n-48*3600000,endTime:n}}));
     if(Array.isArray(cand)&&cand.length)PU.cand=cand;
-    // buyback fills: first load = 48h (paged), then incremental
-    const B=PU.buys||(PU.buys={h:{},t:n-48*3600000});
+    const B=PU.buys||(PU.buys={f:[],seen:{},t:n-48*3600000});
     let t=B.t,pages=0;
     while(pages<12){
       const d=await c(hlPost({type:"userFillsByTime",user:AF,startTime:t}));
       if(!Array.isArray(d))break;pages++;
-      d.forEach(f=>{if(f.coin==="@107"&&f.dir==="Buy"&&f.tid!=null){const k=f.tid+"_"+f.time;if(B.seen&&B.seen[k])return;(B.seen||(B.seen={}))[k]=1;const h=Math.floor(f.time/3600000),sz=parseFloat(f.sz),px=parseFloat(f.px);const e=B.h[h]||(B.h[h]={sz:0,usd:0});e.sz+=sz;e.usd+=sz*px;}});
-      if(d.length<2000){if(d.length)B.t=d[d.length-1].time+1;else B.t=Math.max(B.t,n-3600000);break;}
+      d.forEach(f=>{if(f.coin==="@107"&&f.dir==="Buy"&&f.tid!=null){const k=f.tid+"_"+f.time;if(B.seen[k])return;B.seen[k]=1;const sz=parseFloat(f.sz),px=parseFloat(f.px);if(sz>0&&px>0)B.f.push([f.time,sz,sz*px]);}});
+      if(d.length<2000){B.t=d.length?d[d.length-1].time+1:Math.max(B.t,n-3600000);break;}
       t=d[d.length-1].time+1;B.t=t;
     }
-    // HLP net HYPE position across sub-vaults
+    const cut=n-49*3600000;B.f=B.f.filter(f=>f[0]>=cut);
     const vd=(PU.proto&&PU.proto.vd)||null;
     const kids=vd&&vd.relationship&&vd.relationship.data&&vd.relationship.data.childAddresses||[];
     if(kids.length){
@@ -1045,39 +1129,65 @@ async function chartLoad(){
       if(ok)PU.hlpHype={net,lg,sh};
     }
   }catch(e){}
-  PU.cbusy=false;chartRender();
+  PU.cbusy=false;chartRender();buyRender();hlpRender();
 }
+const heatC=t=>{const a=[111,227,207],b=[255,196,87];return a.map((v,i)=>Math.round(v+(b[i]-v)*t));};
+const heatS=(t,al)=>{const c=heatC(t);return "rgba("+c[0]+","+c[1]+","+c[2]+","+al+")";};
 function chartRender(){
-  const C=PU.cand,B=PU.buys,svg=$("pc_svg");
-  if(!C||!C.length){$("pc_empty").style.display="";return;}
+  const all=PU.cand,B=PU.buys,svg=$("pc_svg");
+  if(!all||!all.length){$("pc_empty").style.display="";return;}
   $("pc_empty").style.display="none";
-  const W=Math.max(280,Math.round(svg.getBoundingClientRect().width)||800),H=260,pl=8,pr=8,pt=14,pb=34,iw=W-pl-pr,ih=H-pt-pb;svg.setAttribute("viewBox","0 0 "+W+" "+H);
-  const px=C.map(k=>parseFloat(k.c)),lo=Math.min(...C.map(k=>parseFloat(k.l))),hi=Math.max(...C.map(k=>parseFloat(k.h)));
-  const rng=(hi-lo)||1,y=v=>pt+ih-(v-lo)/rng*ih*0.86-ih*0.04,x=i=>pl+(C.length>1?i/(C.length-1):0)*iw;
-  const hrs=C.map(k=>Math.floor(k.t/3600000)),bh=hrs.map(h=>(B&&B.h[h])?B.h[h].sz:0),mx=Math.max(1,...bh);
-  let line="M"+px.map((v,i)=>x(i).toFixed(1)+","+y(v).toFixed(1)).join(" L");
-  const area=line+" L"+x(C.length-1).toFixed(1)+","+(pt+ih)+" L"+x(0).toFixed(1)+","+(pt+ih)+" Z";
-  let g='<defs><linearGradient id="pcg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#6fe3cf" stop-opacity=".28"/><stop offset="1" stop-color="#6fe3cf" stop-opacity="0"/></linearGradient></defs>';
-  for(let k=0;k<4;k++){const yy=pt+ih*k/3;g+=`<line x1="${pl}" x2="${W-pr}" y1="${yy}" y2="${yy}" stroke="rgba(255,255,255,.07)"/>`;}
-  g+=`<path d="${area}" fill="url(#pcg)"/><path d="${line}" fill="none" stroke="#6fe3cf" stroke-width="2" vector-effect="non-scaling-stroke" stroke-linejoin="round"/>`;
-  bh.forEach((v,i)=>{if(v>0){const r=2.5+7*Math.sqrt(v/mx);g+=`<circle cx="${x(i).toFixed(1)}" cy="${y(px[i]).toFixed(1)}" r="${r.toFixed(1)}" fill="rgba(111,227,207,.38)" stroke="#6fe3cf" stroke-width="1.2" vector-effect="non-scaling-stroke"/>`;}});
+  const R=+PU.crange||48,C=all.slice(-(R+1)),mode=PU.cmode||"px";
+  const W=Math.max(280,Math.round(svg.getBoundingClientRect().width)||800),H=280,pl=8,pr=8,pt=16,pb=50,iw=W-pl-pr,ih=H-pt-pb;
+  svg.setAttribute("viewBox","0 0 "+W+" "+H);
+  const hrs=C.map(k=>Math.floor(k.t/3600000)),hm={};
+  ((B&&B.f)||[]).forEach(f=>{const h=Math.floor(f[0]/3600000),e=hm[h]||(hm[h]={sz:0,usd:0});e.sz+=f[1];e.usd+=f[2];});
+  const bh=hrs.map(h=>hm[h]?hm[h].sz:0),mx=Math.max(1,...bh);
+  const cs=[];bh.reduce((a,v,i)=>(cs[i]=a+v),0);
+  const total=cs[cs.length-1]||0,cumUsd=[];hrs.reduce((a,h,i)=>(cumUsd[i]=a+(hm[h]?hm[h].usd:0)),0);
+  const x=i=>pl+(C.length>1?i/(C.length-1):0)*iw;
+  const px=C.map(k=>parseFloat(k.c)),lo=Math.min(...C.map(k=>parseFloat(k.l))),hi=Math.max(...C.map(k=>parseFloat(k.h))),rng=(hi-lo)||1;
+  const yP=v=>pt+ih-(v-lo)/rng*ih*0.86-ih*0.05,yC=v=>pt+ih-(total>0?v/total:0)*ih*0.9-ih*0.03;
+  const yy=mode==="px"?(i=>yP(px[i])):(i=>yC(cs[i]));
+  const up=px[px.length-1]>=px[0],lc=up?"#6fe3cf":"#ff9b9b";
+  const accent=mode==="px"?lc:"#ffc457";
+  let g='<defs><linearGradient id="pcg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="'+accent+'" stop-opacity=".3"/><stop offset="1" stop-color="'+accent+'" stop-opacity="0"/></linearGradient></defs>';
+  for(let k=0;k<4;k++){const y=pt+ih*k/3;g+='<line x1="'+pl+'" x2="'+(W-pr)+'" y1="'+y+'" y2="'+y+'" stroke="rgba(255,255,255,.07)"/>';}
+  let line;
+  if(mode==="px"){line="M"+px.map((v,i)=>x(i).toFixed(1)+","+yP(v).toFixed(1)).join(" L");}
+  else{let d="M"+x(0).toFixed(1)+","+yC(0).toFixed(1);cs.forEach((v,i)=>{d+=" L"+x(i).toFixed(1)+","+yC(v).toFixed(1);});line=d;}
+  g+='<path d="'+line+' L'+x(C.length-1).toFixed(1)+','+(pt+ih)+' L'+x(0).toFixed(1)+','+(pt+ih)+' Z" fill="url(#pcg)"/><path d="'+line+'" fill="none" stroke="'+accent+'" stroke-width="2.2" stroke-linejoin="round"/>';
+  if(mode==="px"){bh.forEach((v,i)=>{if(v>0){const t=Math.sqrt(v/mx),r=2.5+7.5*t;g+='<circle cx="'+x(i).toFixed(1)+'" cy="'+yP(px[i]).toFixed(1)+'" r="'+r.toFixed(1)+'" fill="'+heatS(t,.5)+'" stroke="'+heatS(t,1)+'" stroke-width="1.2"/>';}});}
+  // heat strip: one cell per hour, same x positions as the chart
+  const sy=pt+ih+10,cw=Math.max(2,iw/C.length-2);
+  bh.forEach((v,i)=>{const t=v>0?Math.sqrt(v/mx):0;g+='<rect x="'+(x(i)-cw/2).toFixed(1)+'" y="'+sy+'" width="'+cw.toFixed(1)+'" height="13" rx="3" fill="'+(v>0?heatS(t,.22+.78*t):"rgba(255,255,255,.06)")+'"/>';});
   const fmtT=ms=>new Date(ms).toLocaleString("en-GB",{day:"numeric",month:"short",hour:"2-digit",minute:"2-digit"});
-  g+=`<text x="${pl}" y="${H-10}" fill="#8aa89f" font-size="12">${fmtT(C[0].t)}</text><text x="${W-pr}" y="${H-10}" fill="#8aa89f" font-size="12" text-anchor="end">${fmtT(C[C.length-1].t)}</text>`;
-  g+=`<text x="${W-pr}" y="${pt+10}" fill="#8aa89f" font-size="12" text-anchor="end">${fmtPx(hi)}</text><text x="${W-pr}" y="${pt+ih-4}" fill="#8aa89f" font-size="12" text-anchor="end">${fmtPx(lo)}</text>`;
-  g+='<line id="pc_g" x1="0" x2="0" y1="'+pt+'" y2="'+(pt+ih)+'" stroke="rgba(255,255,255,.35)" style="display:none"/>';
-  svg.innerHTML=g;PU.cmeta={C,px,bh,B,W,pl,iw};
-  let tot=0,usd=0;hrs.forEach(h=>{if(B&&B.h[h]){tot+=B.h[h].sz;usd+=B.h[h].usd;}});
-  let sm=tot>0?"Over this window the fund bought "+nf(Math.round(tot),0)+" HYPE (≈ "+fmtUSD(usd)+").":"";
-  const hh=PU.hlpHype;if(hh)sm+=" HLP net position on HYPE right now: "+(hh.net>=0?"long ":"short ")+nf(Math.abs(hh.net),0)+" HYPE (long "+nf(hh.lg,0)+" / short "+nf(hh.sh,0)+" across its sub-vaults), tiny next to the buyback.";
-  $("pc_sum").textContent=sm;
+  g+='<text x="'+pl+'" y="'+(H-8)+'" fill="#8aa89f" font-size="12">'+fmtT(C[0].t)+'</text><text x="'+(W-pr)+'" y="'+(H-8)+'" fill="#8aa89f" font-size="12" text-anchor="end">'+fmtT(C[C.length-1].t)+"</text>";
+  if(mode==="px"){g+='<text x="'+(W-pr)+'" y="'+(pt+10)+'" fill="#8aa89f" font-size="12" text-anchor="end">'+fmtPx(hi)+'</text><text x="'+(W-pr)+'" y="'+(pt+ih-4)+'" fill="#8aa89f" font-size="12" text-anchor="end">'+fmtPx(lo)+"</text>";}
+  else{g+='<text x="'+(W-pr)+'" y="'+(pt+10)+'" fill="#ffc457" font-size="12" text-anchor="end">'+nf(Math.round(total),0)+" HYPE</text>";}
+  g+='<line id="pc_g" x1="0" x2="0" y1="'+pt+'" y2="'+(pt+ih+24)+'" stroke="rgba(255,255,255,.35)" style="display:none"/><circle id="pc_d" r="4.5" fill="#fff" stroke="'+accent+'" stroke-width="2" style="display:none"/>';
+  svg.innerHTML=g;
+  PU.cmeta={C,px,bh,cs,cumUsd,hm,mode,W,pl,iw,yy,R,fmtT};
+  const chg=(px[px.length-1]/px[0]-1)*100;
+  $("pc_tip").textContent=mode==="px"?"HYPE "+fmtPx(px[px.length-1])+" · "+(chg>=0?"+":"−")+nf(Math.abs(chg),1)+"% over "+R+"h · hover for details":nf(Math.round(total),0)+" HYPE bought over "+R+"h · hover for details";
 }
 (function(){
-  const svg=document.getElementById("pc_svg");if(!svg)return;let rzT;window.addEventListener("resize",()=>{clearTimeout(rzT);rzT=setTimeout(()=>{if(PU.cand)chartRender();},150);});
-  const mv=e=>{const m=PU.cmeta;if(!m)return;const r=svg.getBoundingClientRect(),rx=(e.clientX-r.left)/r.width*m.W;let i=Math.round((rx-m.pl)/m.iw*(m.C.length-1));i=Math.max(0,Math.min(m.C.length-1,i));
-    const gx=m.pl+(m.C.length>1?i/(m.C.length-1):0)*m.iw,g=document.getElementById("pc_g");if(g){g.setAttribute("x1",gx);g.setAttribute("x2",gx);g.style.display="";}
-    const t=new Date(m.C[i].t).toLocaleString("en-GB",{day:"numeric",month:"short",hour:"2-digit",minute:"2-digit"}),b=m.B&&m.B.h[Math.floor(m.C[i].t/3600000)];
-    $("pc_tip").textContent=t+" · "+fmtPx(m.px[i])+(b?" · bought "+nf(Math.round(b.sz),0)+" HYPE (≈ "+fmtUSD(b.usd)+")":" · no buy");};
+  const svg=document.getElementById("pc_svg");if(!svg)return;
+  let rzT;window.addEventListener("resize",()=>{clearTimeout(rzT);rzT=setTimeout(()=>{if(PU.cand)chartRender();hlpRender();},150);});
+  const mv=e=>{const m=PU.cmeta;if(!m)return;
+    const r=svg.getBoundingClientRect(),rx=(e.clientX-r.left)/r.width*m.W;
+    let i=Math.round((rx-m.pl)/m.iw*(m.C.length-1));i=Math.max(0,Math.min(m.C.length-1,i));
+    const gx=m.pl+(m.C.length>1?i/(m.C.length-1):0)*m.iw,g=document.getElementById("pc_g"),d=document.getElementById("pc_d");
+    if(g){g.setAttribute("x1",gx);g.setAttribute("x2",gx);g.style.display="";}
+    if(d){d.setAttribute("cx",gx);d.setAttribute("cy",m.yy(i));d.style.display="";}
+    const h=m.hm[Math.floor(m.C[i].t/3600000)],t=m.fmtT(m.C[i].t);
+    $("pc_tip").textContent=m.mode==="px"
+      ?t+" · "+fmtPx(m.px[i])+(h?" · bought "+nf(Math.round(h.sz),0)+" HYPE (≈ "+fmtUSD(h.usd)+")":" · no buy")
+      :t+" · "+nf(Math.round(m.cs[i]),0)+" HYPE bought so far (≈ "+fmtUSD(m.cumUsd[i])+")"+(h?" · +"+nf(Math.round(h.sz),0)+" this hour":"");};
   svg.addEventListener("pointermove",mv);svg.addEventListener("pointerdown",mv);
+  svg.addEventListener("pointerleave",()=>{const g=document.getElementById("pc_g"),d=document.getElementById("pc_d");if(g)g.style.display="none";if(d)d.style.display="none";if(PU.cand)chartRender();});
+  const bind=(id,attr,key,after)=>{const el=document.getElementById(id);if(!el)return;el.addEventListener("click",e=>{const b=e.target.closest("["+attr+"]");if(!b)return;PU[key]=b.getAttribute(attr);el.querySelectorAll(".tab").forEach(x=>x.setAttribute("aria-pressed",String(x===b)));moveInd(el);after();});};
+  bind("cmode","data-c","cmode",chartRender);bind("crange","data-r","crange",chartRender);bind("hrange","data-k","hr",hlpRender);
 })();
 function cxRender(){
   const P=PU.proto,tb=$("pxbody");
@@ -1138,7 +1248,7 @@ function pulseStat(){
 }
 async function openPulse(){
   const cur=document.querySelector(".view.on");if(cur&&cur.id!=="v-pulse"&&cur.id!=="v-method")prevView=cur.id;
-  await show("v-pulse");moveInd($("pfilter"));moveInd($("pview"));
+  await show("v-pulse");["pfilter","pview","cmode","crange","hrange"].forEach(i=>moveInd($(i)));
   PU.first=true;if(PU.rows){PU.anim=true;pulseRender();}
   clearInterval(PU.timer);clearInterval(PU.tick);
   pulseLoad();protoLoad().then(chartLoad);
@@ -1195,4 +1305,3 @@ setupStatic();
 </script>
 <div style="position:fixed;top:10px;right:10px;z-index:99999;background:#f5a524;color:#111;font:700 11px/1 system-ui,sans-serif;letter-spacing:.08em;padding:6px 9px;border-radius:999px;pointer-events:none">BETA</div></body>
 </html>
-
