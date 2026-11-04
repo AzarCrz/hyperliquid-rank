@@ -116,7 +116,7 @@ button.link{background:none;border:0;padding:0;color:var(--acc);font:14px var(--
 .tab:hover{color:var(--ink)}
 .tab[aria-pressed=true]{background:var(--acc);color:#03211c;font-weight:600}
 /* main card */
-.hero-body{padding:28px 32px 8px}
+.hero-body{padding:28px 32px 8px;position:relative}.subwrap{position:absolute;top:18px;right:24px;z-index:2}
 .bigtop{font:700 clamp(54px,7.5vw,88px)/1 var(--sans);letter-spacing:-.035em;margin:0 0 6px;background:linear-gradient(180deg,#fff 20%,#8ff3dc 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
 .sub{color:#cfe5de;font-size:15px;margin:0}
 .meter{margin-top:50px}
@@ -301,7 +301,7 @@ textarea:focus{outline:2px solid var(--acc);outline-offset:1px}
   .card-head{padding:12px 14px}
   .card-head .seg{width:100%}
   .tab{flex:1 1 auto;padding:7px 8px;font-size:13px}
-  .hero-body{padding:22px 18px 4px}.facts{margin:20px -18px 0}.facts div{padding:12px 18px}
+  .hero-body{padding:22px 18px 4px}.subwrap{position:static;margin:0 0 12px;display:flex;justify-content:flex-end}.facts{margin:20px -18px 0}.facts div{padding:12px 18px}
   .col{padding:16px 14px}.sbody{padding:14px}
 }
 </style>
@@ -343,17 +343,17 @@ textarea:focus{outline:2px solid var(--acc);outline-offset:1px}
   <header class="topbar">
     <div class="brand"><span>Hyperliquid Volume Checker</span></div>
     <div class="tb-right">
-      <span class="addr"><span id="who"></span></span>
-      <button class="pill ghost sm" id="subbtn">Include sub-accounts</button>
       <button class="pill ghost sm" data-pulse>Pulse</button>
       <button class="pill ghost sm" data-method>How it works</button>
       <button class="pill ghost sm" id="back">Change address</button>
+      <span class="addr"><span id="who"></span></span>
     </div>
   </header>
 
   <section class="card">
     <div class="card-head"><h2 class="ct">Your rank</h2><div class="seg" id="modeseg" role="group" style="display:none"><i class="ind"></i><button class="tab" data-m="all" aria-pressed="true">All volume</button><button class="tab" data-m="hip" aria-pressed="false">HIP-3 only</button></div><div class="seg" id="tabs" role="group"></div></div>
     <div class="hero-body">
+      <div class="subwrap"><button class="pill ghost sm" id="subbtn">Include sub-accounts</button></div>
       <div class="bigtop" id="top"></div>
       <p class="sub" id="sub"></p>
       <p class="note" id="subnote" style="text-align:left;margin:8px 0 0;min-height:0"></p>
