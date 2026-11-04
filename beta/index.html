@@ -242,6 +242,7 @@ textarea:focus{outline:2px solid var(--acc);outline-offset:1px}
 .phlpb{padding:16px 22px 18px;display:flex;flex-direction:column;gap:6px}
 .phlpb b{font:700 clamp(24px,3.2vw,34px)/1.1 var(--sans);letter-spacing:-.02em;font-variant-numeric:tabular-nums}
 .phlpb small{color:var(--mute);font-size:13px;min-height:17px}.phlpb small b{font:600 13px var(--sans)}
+.phlpb .seg{align-self:flex-start;margin:2px 0 2px}
 #h_svg{width:100%;height:70px;display:block;margin:4px 0}
 .pmcols{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 20px;padding:8px 22px 16px}
 .pmcols h3{margin:6px 0 4px;font:600 11px var(--sans);letter-spacing:.12em;text-transform:uppercase;color:var(--mute)}
@@ -496,8 +497,8 @@ textarea:focus{outline:2px solid var(--acc);outline-offset:1px}
 
   <div class="pduo">
     <section class="card phlp">
-      <div class="card-head"><h2 class="ct">HLP vault · liquidity provider</h2><div class="seg" id="hrange" role="group"><i class="ind"></i><button class="tab" data-k="day" aria-pressed="false">24h</button><button class="tab" data-k="week" aria-pressed="true">7d</button><button class="tab" data-k="month" aria-pressed="false">30d</button></div></div>
-      <div class="phlpb"><b id="h_tvl">—</b><small id="h_s1">&nbsp;</small><svg id="h_svg" viewBox="0 0 300 70" role="img" aria-label="HLP profit and loss"></svg><small id="h_s2"></small></div>
+      <div class="card-head"><h2 class="ct">HLP vault · liquidity provider</h2><div class="seg" id="hrange" role="group"><i class="ind"></i><button class="tab" data-k="day" aria-pressed="false">24h</button><button class="tab" data-k="week" aria-pressed="true">7d</button><button class="tab" data-k="month" aria-pressed="false">30d</button><button class="tab" data-k="allTime" aria-pressed="false">All</button></div></div>
+      <div class="phlpb"><b id="h_tvl">—</b><div class="seg" id="hmode" role="group"><i class="ind"></i><button class="tab" data-m="pnl" aria-pressed="true">PnL</button><button class="tab" data-m="val" aria-pressed="false">Value</button></div><small id="h_s1">&nbsp;</small><svg id="h_svg" viewBox="0 0 300 70" role="img" aria-label="HLP profit and loss"></svg><small id="h_s2"></small></div>
     </section>
     <section class="card pmov">
       <div class="card-head"><h2 class="ct">Movers · 24h</h2></div>
@@ -1048,29 +1049,37 @@ function protoRender(){
   }catch(e){}
   buyRender();
 }
-function sparkDraw(svg,pts,color){
+function sparkDraw(svg,pts,color,zero){
+  if(zero===undefined)zero=true;
   if(!svg)return;
   const W=Math.max(200,Math.round(svg.getBoundingClientRect().width)||300),H=70;svg.setAttribute("viewBox","0 0 "+W+" "+H);
   if(pts.length<2){svg.innerHTML="";return;}
-  const xs=pts.map(p=>p[0]),ys=pts.map(p=>p[1]),x0=Math.min(...xs),x1=Math.max(...xs),lo=Math.min(0,...ys),hi=Math.max(0,...ys),r=(hi-lo)||1;
+  const xs=pts.map(p=>p[0]),ys=pts.map(p=>p[1]),x0=Math.min(...xs),x1=Math.max(...xs),lo=zero?Math.min(0,...ys):Math.min(...ys),hi=zero?Math.max(0,...ys):Math.max(...ys),r=(hi-lo)||1;
   const X=t=>4+(t-x0)/((x1-x0)||1)*(W-8),Y=v=>6+(hi-v)/r*(H-12);
   const d="M"+pts.map(p=>X(p[0]).toFixed(1)+","+Y(p[1]).toFixed(1)).join(" L");
-  const z=Y(0).toFixed(1);
-  svg.innerHTML='<defs><linearGradient id="hg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="'+color+'" stop-opacity=".32"/><stop offset="1" stop-color="'+color+'" stop-opacity="0"/></linearGradient></defs><line x1="4" x2="'+(W-4)+'" y1="'+z+'" y2="'+z+'" stroke="rgba(255,255,255,.2)" stroke-dasharray="3 4"/><path d="'+d+' L'+X(x1).toFixed(1)+','+z+' L'+X(x0).toFixed(1)+','+z+' Z" fill="url(#hg)"/><path d="'+d+'" fill="none" stroke="'+color+'" stroke-width="2" stroke-linejoin="round"/>';
+  const z=(zero?Y(0):H-6).toFixed(1);
+  svg.innerHTML='<defs><linearGradient id="hg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="'+color+'" stop-opacity=".32"/><stop offset="1" stop-color="'+color+'" stop-opacity="0"/></linearGradient></defs>'+(zero?'<line x1="4" x2="'+(W-4)+'" y1="'+z+'" y2="'+z+'" stroke="rgba(255,255,255,.2)" stroke-dasharray="3 4"/>':'')+'<path d="'+d+' L'+X(x1).toFixed(1)+','+z+' L'+X(x0).toFixed(1)+','+z+' Z" fill="url(#hg)"/><path d="'+d+'" fill="none" stroke="'+color+'" stroke-width="2" stroke-linejoin="round"/>';
 }
 function hlpRender(){
   const v=PU.proto&&PU.proto.vd;if(!v||!Array.isArray(v.portfolio))return;
   const g=k=>{const e=v.portfolio.find(x=>x[0]===k);return e&&e[1]?e[1]:null;};
   const lastv=a=>a&&a.length?parseFloat(a[a.length-1][1]):NaN;
   const d=g("day");if(d)twOnce($("h_tvl"),lastv(d.accountValueHistory),fmtUSD);
-  const k=PU.hr||"week",cur=g(k);
-  const pts=cur&&cur.pnlHistory?cur.pnlHistory.map(x=>[+x[0],parseFloat(x[1])]).filter(x=>!isNaN(x[1])):[];
-  const last=pts.length?pts[pts.length-1][1]:NaN;
-  const lab={day:"24h",week:"7d",month:"30d"}[k];
-  $("h_s1").innerHTML=isNaN(last)?"&nbsp;":"PnL "+lab+' <b class="'+(last>=0?"pos":"neg")+'">'+fmtS(last)+"</b>";
-  sparkDraw($("h_svg"),pts,last>=0?"#7ee8c9":"#ffb4b4");
+  const k=PU.hr||"week",cur=g(k),vm=PU.hm==="val";
+  const lab={day:"24h",week:"7d",month:"30d",allTime:"all-time"}[k];
+  const ser=cur?(vm?cur.accountValueHistory:cur.pnlHistory):null;
+  const pts=ser?ser.map(x=>[+x[0],parseFloat(x[1])]).filter(x=>!isNaN(x[1])):[];
+  const last=pts.length?pts[pts.length-1][1]:NaN,first=pts.length?pts[0][1]:NaN;
+  if(vm){
+    const dv=last-first,pc=first>0&&k!=="allTime"?" ("+(dv>=0?"+":"−")+nf(Math.abs(dv/first)*100,1)+"%)":"";
+    $("h_s1").innerHTML=isNaN(dv)?"&nbsp;":"Value change "+lab+' <b class="'+(dv>=0?"pos":"neg")+'">'+fmtS(dv)+pc+"</b>";
+    sparkDraw($("h_svg"),pts,"#6fe3cf",false);
+  }else{
+    $("h_s1").innerHTML=isNaN(last)?"&nbsp;":"PnL "+lab+' <b class="'+(last>=0?"pos":"neg")+'">'+fmtS(last)+"</b>";
+    sparkDraw($("h_svg"),pts,last>=0?"#7ee8c9":"#ffb4b4");
+  }
   const all=g("allTime"),al=all&&all.pnlHistory?lastv(all.pnlHistory):NaN;
-  let t=isNaN(al)?"":"All-time PnL "+fmtS(al);
+  let t=isNaN(al)||k==="allTime"?"":"All-time PnL "+fmtS(al);
   const hh=PU.hlpHype;if(hh)t+=(t?" · ":"")+"HYPE exposure: "+(hh.net>=0?"long ":"short ")+nf(Math.abs(hh.net),0)+" HYPE";
   $("h_s2").textContent=t;
 }
@@ -1187,7 +1196,7 @@ function chartRender(){
   svg.addEventListener("pointermove",mv);svg.addEventListener("pointerdown",mv);
   svg.addEventListener("pointerleave",()=>{const g=document.getElementById("pc_g"),d=document.getElementById("pc_d");if(g)g.style.display="none";if(d)d.style.display="none";if(PU.cand)chartRender();});
   const bind=(id,attr,key,after)=>{const el=document.getElementById(id);if(!el)return;el.addEventListener("click",e=>{const b=e.target.closest("["+attr+"]");if(!b)return;PU[key]=b.getAttribute(attr);el.querySelectorAll(".tab").forEach(x=>x.setAttribute("aria-pressed",String(x===b)));moveInd(el);after();});};
-  bind("cmode","data-c","cmode",chartRender);bind("crange","data-r","crange",chartRender);bind("hrange","data-k","hr",hlpRender);
+  bind("cmode","data-c","cmode",chartRender);bind("crange","data-r","crange",chartRender);bind("hrange","data-k","hr",hlpRender);bind("hmode","data-m","hm",hlpRender);
 })();
 function cxRender(){
   const P=PU.proto,tb=$("pxbody");
@@ -1248,7 +1257,7 @@ function pulseStat(){
 }
 async function openPulse(){
   const cur=document.querySelector(".view.on");if(cur&&cur.id!=="v-pulse"&&cur.id!=="v-method")prevView=cur.id;
-  await show("v-pulse");["pfilter","pview","cmode","crange","hrange"].forEach(i=>moveInd($(i)));
+  await show("v-pulse");["pfilter","pview","cmode","crange","hrange","hmode"].forEach(i=>moveInd($(i)));
   PU.first=true;if(PU.rows){PU.anim=true;pulseRender();}
   clearInterval(PU.timer);clearInterval(PU.tick);
   pulseLoad();protoLoad().then(chartLoad);
@@ -1305,4 +1314,3 @@ setupStatic();
 </script>
 <div style="position:fixed;top:10px;right:10px;z-index:99999;background:#f5a524;color:#111;font:700 11px/1 system-ui,sans-serif;letter-spacing:.08em;padding:6px 9px;border-radius:999px;pointer-events:none">BETA</div></body>
 </html>
-
