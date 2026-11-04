@@ -225,6 +225,19 @@ textarea:focus{outline:2px solid var(--acc);outline-offset:1px}
 .pclegend i{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:7px;vertical-align:-1px}
 .pclegend .lg1{background:var(--acc);width:14px;height:3px;border-radius:2px;vertical-align:3px}.pclegend .lg2{background:rgba(111,227,207,.45);border:1px solid var(--acc)}
 .pcsum{padding:2px 20px 16px;font-size:13px;color:var(--mute);line-height:1.5}
+.story{margin:10px 0 0;font-size:16.5px;line-height:1.5;color:#cfe6df;max-width:720px}.story em{font-style:normal;color:var(--acc);font-weight:600}.story:empty{display:none}
+.crowd{display:grid;grid-template-columns:minmax(220px,290px) 1fr;gap:12px 40px;padding:24px 28px;align-items:center}
+.cwrap{container-type:inline-size;width:100%}
+.cdots{display:grid;grid-template-columns:repeat(10,1fr);gap:7px;grid-auto-rows:calc((100cqw - 63px)/10)}
+.cdots i{display:block;border-radius:50%;background:rgba(255,255,255,.1);transition:background .55s ease,transform .55s cubic-bezier(.2,.8,.2,1),box-shadow .55s ease;transition-delay:calc(var(--i)*9ms)}
+.cdots i.cb{background:var(--acc);box-shadow:0 0 10px rgba(111,227,207,.35)}
+.cdots i.cy{background:#ffc457;transform:scale(1.35);box-shadow:0 0 0 4px rgba(255,196,87,.25),0 0 18px rgba(255,196,87,.8);position:relative;z-index:1}
+.cbig{margin:0;font:700 clamp(26px,3.6vw,42px)/1.12 var(--sans);letter-spacing:-.02em}.cbig em{font-style:normal;color:var(--acc)}
+.csub{margin:8px 0 0;color:var(--mute);font-size:14.5px;line-height:1.5;max-width:520px}
+.clegend{display:flex;flex-wrap:wrap;gap:6px 18px;margin-top:16px;font-size:12.5px;color:var(--mute)}.clegend i{display:inline-block;width:11px;height:11px;border-radius:50%;margin-right:7px;vertical-align:-1px}
+.clegend .d1{background:rgba(255,255,255,.18)}.clegend .d2{background:#ffc457}.clegend .d3{background:var(--acc)}
+@media(max-width:820px){.crowd{grid-template-columns:1fr;padding:18px 16px;gap:18px}.cwrap{max-width:300px;margin:0 auto}}
+@media(prefers-reduced-motion:reduce){.cdots i{transition:none}}
 .psec{font:600 12px var(--sans);letter-spacing:.16em;text-transform:uppercase;color:var(--acc);margin:12px 4px -4px;display:flex;align-items:center;gap:12px}
 .psec:after{content:"";flex:1;height:1px;background:linear-gradient(90deg,rgba(111,227,207,.4),transparent)}
 .pstory{margin:0;padding:22px 24px 8px;font:600 clamp(18px,2.3vw,25px)/1.38 var(--sans);letter-spacing:-.012em;max-width:980px}
@@ -351,7 +364,7 @@ textarea:focus{outline:2px solid var(--acc);outline-offset:1px}
 
 <!-- ============ 1. LANDING ============ -->
 <section class="view on" id="v-landing">
-  <div class="ltop"><button class="pill ghost sm mlink" data-pulse>Pulse</button><button class="pill ghost sm" data-method>How it works</button></div>
+  <div class="ltop"><button class="pill ghost sm" data-method>How it works</button></div>
   <div class="hero">
     <span class="kicker">Unofficial tool</span>
     <h1>Hyperliquid Volume Checker</h1>
@@ -396,6 +409,7 @@ textarea:focus{outline:2px solid var(--acc);outline-offset:1px}
       <div class="subwrap"><button class="pill ghost sm" id="subbtn">Include sub-accounts</button></div>
       <div class="bigtop" id="top"></div>
       <p class="sub" id="sub"></p>
+      <p class="story" id="story"></p>
       <p class="note" id="subnote" style="text-align:left;margin:8px 0 0;min-height:0"></p>
       <div class="meter">
         <div class="track"><i class="fill" id="mfill"></i><i class="dot" id="mdot"><span>YOU</span></i></div>
@@ -410,6 +424,31 @@ textarea:focus{outline:2px solid var(--acc);outline-offset:1px}
     </div>
   </section>
 
+  <div class="psec">If 100 traders stood in line</div>
+  <section class="card" id="crowd">
+    <div class="crowd">
+      <div class="cwrap"><div class="cdots" id="cdots" aria-hidden="true"></div></div>
+      <div class="ctext">
+        <p class="cbig" id="cbig"></p>
+        <p class="csub" id="csub"></p>
+        <div class="clegend"><span><i class="d1"></i>ahead of you</span><span><i class="d2"></i>you</span><span><i class="d3"></i>behind you</span></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="psec">Your wallet</div>
+  <section class="card more" id="more">
+    <div class="card-head"><h2 class="ct">More on this wallet</h2></div>
+    <dl class="facts">
+      <div><dt id="k_pnl">Profit</dt><dd id="m_pnl">—</dd><dd class="s" id="s_pnl"></dd></div>
+      <div><dt>Account value</dt><dd id="m_av">—</dd><dd class="s" id="s_av"></dd></div>
+      <div><dt id="k_first">First trade</dt><dd id="m_first">—</dd><dd class="s" id="s_first"></dd></div>
+      <div><dt>Fees paid</dt><dd id="m_fees">—</dd><dd class="s" id="s_fees"></dd></div>
+    </dl>
+    <div class="hip" id="hip" style="display:none"></div>
+  </section>
+
+  <div class="psec">Where you stand</div>
   <section class="card">
     <div class="trio">
       <div class="col"><h2 class="ct">Distribution (log)</h2><svg class="chart" id="chart" viewBox="0 0 600 300" role="img"></svg></div>
@@ -427,16 +466,6 @@ textarea:focus{outline:2px solid var(--acc);outline-offset:1px}
     <div class="rwrap"><div class="rtrack"><i class="rfill" id="rfill"></i><i class="rpin" id="rpin"><span id="rpinl">YOU</span></i><div id="rst"></div></div></div>
   </section>
 
-  <section class="card more" id="more">
-    <div class="card-head"><h2 class="ct">More on this wallet</h2></div>
-    <dl class="facts">
-      <div><dt id="k_pnl">Profit</dt><dd id="m_pnl">—</dd><dd class="s" id="s_pnl"></dd></div>
-      <div><dt>Account value</dt><dd id="m_av">—</dd><dd class="s" id="s_av"></dd></div>
-      <div><dt id="k_first">First trade</dt><dd id="m_first">—</dd><dd class="s" id="s_first"></dd></div>
-      <div><dt>Fees paid</dt><dd id="m_fees">—</dd><dd class="s" id="s_fees"></dd></div>
-    </dl>
-    <div class="hip" id="hip" style="display:none"></div>
-  </section>
 
   <section class="card" id="share">
     <div class="card-head"><h2 class="ct">Share</h2></div>
@@ -684,6 +713,21 @@ function chart(v,r){
   $("chart").innerHTML=s;
 }
 function shareText(){return last?`${last.top} of ${last.hip?"Hyperliquid HIP-3 traders":"active Hyperliquid traders"} · ${lc(last.vol)} ${last.v}${last.subs&&!last.hip?" (incl. sub-accounts)":""}`:"";}
+function crowdRender(v,t,r,tp,med){
+  try{
+    const K=Math.max(1,Math.min(100,Math.round(tp))),beat=100-K;
+    const box=$("cdots");
+    if(!box.children.length){box.innerHTML=Array.from({length:100},(_,i)=>'<i style="--i:'+i+'"></i>').join("");}
+    [...box.children].forEach((d,i)=>{d.className=i<K-1?"":(i===K-1?"cy":"cb");});
+    $("cbig").innerHTML="You beat <em>"+beat+"</em> of 100 traders";
+    $("csub").textContent="Active traders on Hyperliquid, by "+lc(volLabel(W))+". Each dot stands for 1% of them, best traders first (top left).";
+    const ratio=med>0?v/med:0;
+    const a=ratio>=1?"You trade <em>"+nf(ratio,ratio<10?1:0)+"×</em> the median trader":"You trade <em>"+nf(ratio*100,0)+"%</em> of the median trader's volume";
+    const nq=[0.5,0.75,0.9,0.95,0.99].find(q=>q>r.q+1e-9);
+    const b=nq===undefined?". You are already in the Top 1%.":". <em>"+fmtUSD(Math.max(0,t[QS.indexOf(nq)]-v))+"</em> more would take you to <em>Top "+nf((1-nq)*100,0)+"%</em>.";
+    $("story").innerHTML=a+b;
+  }catch(e){}
+}
 function renderResults(){
   const v=currentVolume();
   if(v===null||v<=0)return false;
@@ -722,7 +766,9 @@ function renderResults(){
       return `<tr class="${i===tk?"sel":""}"><td>${x.e} ${x.n}</td><td>${txt}</td></tr>`;}).join("");
   }
   renderMore();
+  crowdRender(v,t,r,tp,med);
   $("subbtn").style.display=(vols&&!manual)?"":"none";
+  document.querySelectorAll("#v-results [data-pulse]").forEach(b=>{b.style.display=manual?"none":"";});
   last={top:topText(r),v:fmtUSD(v),vol:volLabel(W),subs:subsOn,hip:MODE==="hip"};
   renderNote();
   $("ttext").value=shareText();
