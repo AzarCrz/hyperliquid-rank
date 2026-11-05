@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta name="robots" content="noindex,nofollow">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#00110d">
@@ -1024,7 +1023,7 @@ function renderMore(){
       +`<div class="fbar">${C.map((c,i)=>sp>0&&pos[i]>0?`<i style="flex:${pos[i]/sp*100} 1 0;background:${c[2]}"></i>`:"").join("")}</div>`
       +`<div class="fl">${C.map((c,i)=>`<div><span class="d" style="background:${c[2]}"></span>${c[0]}<b>${money(F.fb[c[1]])}</b>${sp>0&&pos[i]>0?`<em>${nf(pos[i]/sp*100,pos[i]/sp<.1?1:0)}% of fees</em>`:""}</div>`).join("")}</div>`
       +(EV&&EV.n>0?`<div class="fl fe"><div><span class="d" style="background:transparent;border:1.5px dashed #f472b6"></span>dApps (HyperEVM) · estimate<b>≈ ${fe(EV.lo)}–${fe(EV.hi)}</b><em>${EV.n.toLocaleString("en-US")} transactions · ≈ ${EV.hLo<1?EV.hLo.toFixed(3):nf(EV.hLo,0)}–${EV.hHi<1?EV.hHi.toFixed(3):nf(EV.hHi,0)} HYPE burned · ${EV.avg?"average":"current"} gas ${EV.gwei<1?EV.gwei.toFixed(2):EV.gwei.toFixed(1)} gwei</em></div></div>`:"")
-      +`<div class="fn">Perps, spot and HIP-3 are measured from your fills, including builder fees. The HyperEVM line is an estimate, not part of the bar: transaction count × typical gas × average gas price over your active period, valued at today's HYPE price.</div>`;
+      +`<div class="fn">Perps, spot and HIP-3 are measured from your fills, including builder fees. The HyperEVM line is an estimate, not part of the bar: transaction count × typical gas × average gas price over your active period, valued at today's HYPE price. Wallets that were very active during gas spikes (like August 2025) may have paid more.</div>`;
   }else fk.style.display="none";
   if(F.state==="loading"||F.state==="idle"){kf.textContent="First trade";mf.textContent="…";sf.textContent="";me.textContent="…";me._v=NaN;se.textContent="";return;}
   const mainOnly=subsOn?" · main address":"";
@@ -1427,5 +1426,5 @@ $("copytxt").onclick=async()=>{
 };
 setupStatic();
 </script>
-<div style="position:fixed;top:10px;right:10px;z-index:99999;background:#f97316;color:#fff;font:700 11px/1 system-ui;padding:6px 10px;border-radius:99px;letter-spacing:.08em;pointer-events:none">BETA</div></body>
+</body>
 </html>
