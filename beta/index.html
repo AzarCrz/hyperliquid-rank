@@ -337,6 +337,7 @@ textarea:focus{outline:2px solid var(--acc);outline-offset:1px}
 .fbk .fl b{display:block;font:600 14px/1.3 inherit}
 .fbk .fl em{font-style:normal;opacity:.65}
 .fbk .fl span.d{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px}
+.fbk .fl.fe{grid-template-columns:1fr;margin-top:6px}
 .fbk .fn{font-size:11.5px;opacity:.6;margin-top:8px}
 @media(max-width:520px){.fbk .fl{grid-template-columns:1fr}}
 #more,#share,#ruler{opacity:0;transform:translateY(26px);transition:opacity .8s ease,transform .8s cubic-bezier(.2,.8,.2,1)}
@@ -906,8 +907,20 @@ async function fetchFills(addr){
   }
   return {list:[...seen.values()],complete};
 }
+let EV=null;
+async function evmLoad(addr,tok){
+  EV=null;
+  try{
+    const rpc=(m,pr)=>fetch("https://rpc.hyperliquid.xyz/evm",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({jsonrpc:"2.0",id:1,method:m,params:pr})}).then(r=>r.json()).then(j=>parseInt(j.result,16));
+    const [n,gp,mids]=await Promise.all([rpc("eth_getTransactionCount",[addr,"latest"]),rpc("eth_gasPrice",[]),hlPost({type:"allMids"})]);
+    const px=parseFloat(mids&&mids.HYPE);
+    if(tok!==fillsTok)return;
+    if(isFinite(n)&&isFinite(gp)&&px>0){const c=g=>n*g*gp/1e18*px;EV={n,lo:c(21000),hi:c(150000)};}
+  }catch(e){EV=null;}
+  if(tok===fillsTok)renderMore();
+}
 async function loadFills(addr){
-  const tok=++fillsTok;F={state:"loading"};renderMore();
+  const tok=++fillsTok;F={state:"loading"};renderMore();evmLoad(addr,tok);
   try{
     const {list,complete}=await fetchFills(addr);
     if(tok!==fillsTok)return;
@@ -986,12 +999,14 @@ function renderMore(){
     const C=[["Perps","perp","#4fd1c5"],["Spot","spot","#a78bfa"],["HIP-3","hip","#f6ad55"]];
     const pos=C.map(c=>Math.max(F.fb[c[1]],0)),sp=pos.reduce((a,b)=>a+b,0);
     const fm=v=>Math.abs(v)<1?"$"+Math.abs(v).toFixed(2):fmtUSD(Math.abs(v));
+    const fe=v=>v<.01?"<$0.01":v<10?"$"+v.toFixed(2):fmtUSD(v);
     const money=v=>v<0?"+"+fm(v)+" rebate":fm(v);
     fk.style.display="";
     fk.innerHTML=`<div class="fh"><span>Fees paid by market</span><span>${F.capped?"last "+F.n.toLocaleString("en-US")+" fills":"all-time"}${subsOn?" · main address":""}</span></div>`
       +`<div class="fbar">${C.map((c,i)=>sp>0&&pos[i]>0?`<i style="flex:${pos[i]/sp*100} 1 0;background:${c[2]}"></i>`:"").join("")}</div>`
       +`<div class="fl">${C.map((c,i)=>`<div><span class="d" style="background:${c[2]}"></span>${c[0]}<b>${money(F.fb[c[1]])}</b>${sp>0&&pos[i]>0?`<em>${nf(pos[i]/sp*100,pos[i]/sp<.1?1:0)}% of fees</em>`:""}</div>`).join("")}</div>`
-      +`<div class="fn">Trading fees from your fills, including builder fees. HyperEVM gas (dApps) is not included.</div>`;
+      +(EV&&EV.n>0?`<div class="fl fe"><div><span class="d" style="background:transparent;border:1.5px dashed #f472b6"></span>dApps (HyperEVM) · estimate<b>≈ ${fe(EV.lo)}–${fe(EV.hi)}</b><em>${EV.n.toLocaleString("en-US")} transactions · gas burned</em></div></div>`:"")
+      +`<div class="fn">Perps, spot and HIP-3 are measured from your fills, including builder fees. The HyperEVM line is an estimate (transaction count × typical gas × current gas price), not part of the bar.</div>`;
   }else fk.style.display="none";
   if(F.state==="loading"||F.state==="idle"){kf.textContent="First trade";mf.textContent="…";sf.textContent="";me.textContent="…";me._v=NaN;se.textContent="";return;}
   const mainOnly=subsOn?" · main address":"";
