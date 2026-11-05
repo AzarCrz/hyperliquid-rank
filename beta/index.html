@@ -355,7 +355,7 @@ textarea:focus{outline:2px solid var(--acc);outline-offset:1px}
 @media(max-width:640px){.snav .tab{padding:7px 12px;font-size:13px}}
 
 #psnav{margin-top:2px}
-#sec-p-buy,#sec-p-mkt,#sec-p-hlp,#sec-p-fund,#sec-p-all{scroll-margin-top:74px}
+#sec-p-buy,#sec-p-hlp,#sec-p-fund,#sec-p-all{scroll-margin-top:74px}
 .hxb{padding:6px 24px 4px}
 .hxr{display:grid;grid-template-columns:78px 1fr 88px;gap:10px;align-items:center;padding:7px 0;font-size:13px}
 .hxr .nm{font-weight:600}
@@ -548,7 +548,7 @@ textarea:focus{outline:2px solid var(--acc);outline-offset:1px}
     <div class="tb-right"><button class="pill ghost sm" id="pback">Back</button></div>
   </header>
   <div class="phead"><div><h1 class="ptitle">Pulse</h1><p class="psub"><i class="live"></i><span id="pstat">Loading the market…</span></p></div></div>
-  <nav class="seg snav" id="psnav" role="group" aria-label="Pulse sections"><i class="ind"></i><button class="tab" data-go="sec-p-buy" aria-pressed="true">Buyback</button><button class="tab" data-go="sec-p-mkt" aria-pressed="false">Market</button><button class="tab" data-go="sec-p-hlp" aria-pressed="false">HLP</button><button class="tab" data-go="sec-p-fund" aria-pressed="false">Funding</button><button class="tab" data-go="sec-p-all" aria-pressed="false">Markets</button></nav>
+  <nav class="seg snav" id="psnav" role="group" aria-label="Pulse sections"><i class="ind"></i><button class="tab" data-go="sec-p-buy" aria-pressed="true">Buyback</button><button class="tab" data-go="sec-p-hlp" aria-pressed="false">HLP</button><button class="tab" data-go="sec-p-fund" aria-pressed="false">Funding</button><button class="tab" data-go="sec-p-all" aria-pressed="false">Markets</button></nav>
   <div class="psec" id="sec-p-buy">Buyback · the protocol's engine</div>
   <section class="card" id="pbuy">
     <p class="pstory" id="pb_head">Reading the Assistance Fund…</p>
@@ -568,21 +568,7 @@ textarea:focus{outline:2px solid var(--acc);outline-offset:1px}
     <div class="pclegend"><span><i class="lg1"></i>HYPE price</span><span><i class="lg2"></i>Fund buys · size and colour = HYPE bought that hour</span><span class="lgheat"><em>less</em><i class="lg3"></i><em>more</em></span></div>
   </section>
 
-  <div class="psec" id="sec-p-mkt">Market snapshot</div>
-  <div class="pkpi">
-    <div class="card pk"><span class="ct">24h perp volume</span><b id="p_vol">—</b><small id="p_vol_s"></small></div>
-    <div class="card pk"><span class="ct">Open interest</span><b id="p_oi">—</b><small id="p_oi_s"></small></div>
-    <div class="card pk"><span class="ct">HIP-3 share of volume</span><b id="p_hip">—</b><div class="pbar"><i id="p_hipbar" style="width:0"></i></div><small id="p_hip_s"></small></div>
-    <div class="card pk"><span class="ct">Markets</span><b id="p_mk">—</b><small id="p_mk_s"></small></div>
-  </div>
-  <p class="pcap" id="p_cap"></p>
-  <section class="card pmov">
-      <div class="card-head"><h2 class="ct">Movers · 24h</h2></div>
-      <div class="pmcols"><div><h3>Gainers</h3><div id="mv_up"></div></div><div><h3>Losers</h3><div id="mv_dn"></div></div></div>
-  </section>
-
-
-  <div class="psec" id="sec-p-hlp">HLP vault · positions and movers</div>
+  <div class="psec" id="sec-p-hlp">HLP vault · performance and positions</div>
   <section class="card phlp">
       <div class="card-head"><h2 class="ct">HLP vault · liquidity provider</h2><div class="seg" id="hrange" role="group"><i class="ind"></i><button class="tab" data-k="day" aria-pressed="false">24h</button><button class="tab" data-k="week" aria-pressed="true">7d</button><button class="tab" data-k="month" aria-pressed="false">30d</button><button class="tab" data-k="allTime" aria-pressed="false">All</button></div></div>
       <div class="phlpb"><b id="h_tvl">—</b><div class="seg" id="hmode" role="group"><i class="ind"></i><button class="tab" data-m="pnl" aria-pressed="true">PnL</button><button class="tab" data-m="val" aria-pressed="false">Value</button></div><small id="h_s1">&nbsp;</small><svg id="h_svg" viewBox="0 0 300 70" role="img" aria-label="HLP profit and loss"></svg><small id="h_s2"></small></div>
@@ -604,7 +590,20 @@ textarea:focus{outline:2px solid var(--acc);outline-offset:1px}
     <p class="ptip fpad" id="f_tip">&nbsp;</p>
   </section>
 
-  <div class="psec" id="sec-p-all">All markets</div>
+  <div class="psec" id="sec-p-all">Markets</div>
+  <div class="pkpi">
+    <div class="card pk"><span class="ct">24h perp volume</span><b id="p_vol">—</b><small id="p_vol_s"></small></div>
+    <div class="card pk"><span class="ct">Open interest</span><b id="p_oi">—</b><small id="p_oi_s"></small></div>
+    <div class="card pk"><span class="ct">HIP-3 share of volume</span><b id="p_hip">—</b><div class="pbar"><i id="p_hipbar" style="width:0"></i></div><small id="p_hip_s"></small></div>
+    <div class="card pk"><span class="ct">Markets</span><b id="p_mk">—</b><small id="p_mk_s"></small></div>
+  </div>
+  <p class="pcap" id="p_cap"></p>
+  <section class="card pmov">
+      <div class="card-head"><h2 class="ct">Movers · 24h</h2></div>
+      <div class="pmcols"><div><h3>Gainers</h3><div id="mv_up"></div></div><div><h3>Losers</h3><div id="mv_dn"></div></div></div>
+  </section>
+
+
   <section class="card">
     <div class="card-head"><div class="seg" id="pview" role="group"><i class="ind"></i><button class="tab" data-v="mk" aria-pressed="true">Markets</button><button class="tab" data-v="hi" aria-pressed="false">High funding</button><button class="tab" data-v="lo" aria-pressed="false">Low funding</button><button class="tab" data-v="cx" aria-pressed="false">vs CEX</button></div><div class="seg" id="pfilter" role="group"><i class="ind"></i><button class="tab" data-f="all" aria-pressed="true">All</button><button class="tab" data-f="core" aria-pressed="false">Core</button><button class="tab" data-f="hip" aria-pressed="false">HIP-3</button></div></div>
     <div class="psearch"><svg viewBox="0 0 20 20" width="16" height="16" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5.5" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="M13 13l4 4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg><input id="psearch" type="search" placeholder="Search (BTC, TSLA…)" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Search a market"><span id="pcount"></span></div>
