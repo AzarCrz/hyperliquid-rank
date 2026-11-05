@@ -1223,7 +1223,7 @@ async function lookup(){
   if(vols.every(x=>!(x>0))){resetProgress();await show("v-landing");$("err").textContent=S.none;return;}
   fillsTok++;EV=null;EVaddr="";FT=null;F={state:"loading"};mainAddr=raw;subsOn=false;subList=null;subData=null;subMsg="";MODE="all";hipVols=null;hipCov=null;$("subnote").textContent="";introRan=false;lastTier=-1;$("subbtn").classList.remove("on");$("subbtn").disabled=false;$("subbtn").textContent="Include sub-accounts";
   buildTabs();renderResults();await finishProgress();await show("v-results");intro();
-  loadFills(raw);feeLoad(raw);
+  loadFills(raw).finally(()=>{if(raw===mainAddr)feeLoad(raw);});
 }
 async function manualGo(){
   const x=parseFloat($("mvol").value);$("err").textContent="";
