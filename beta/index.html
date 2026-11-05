@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta name="robots" content="noindex,nofollow">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#00110d">
@@ -351,6 +350,26 @@ textarea:focus{outline:2px solid var(--acc);outline-offset:1px}
 #sec-rank,#more,#fees,#sec-ladder,#share{scroll-margin-top:74px}
 #fees .fbk{border-top:0;padding-top:2px}
 @media(max-width:640px){.snav .tab{padding:7px 12px;font-size:13px}}
+
+#psnav{margin-top:2px}
+#sec-p-buy,#sec-p-mkt,#sec-p-hlp,#sec-p-fund,#sec-p-all{scroll-margin-top:74px}
+.hxb{padding:6px 24px 4px}
+.hxr{display:grid;grid-template-columns:78px 1fr 88px;gap:10px;align-items:center;padding:7px 0;font-size:13px}
+.hxr .nm{font-weight:600}
+.hxr .v{text-align:right;font-variant-numeric:tabular-nums;color:var(--mute)}
+.hxbar{position:relative;height:10px;background:rgba(255,255,255,.06);border-radius:99px;overflow:hidden}
+.hxbar:before{content:"";position:absolute;left:50%;top:0;bottom:0;width:1px;background:rgba(255,255,255,.28);z-index:2}
+.hxbar i{position:absolute;top:0;bottom:0;border-radius:99px}
+.hxbar i.lg{left:50%;background:#4fd1c5}
+.hxbar i.sh{right:50%;background:#f87171}
+.fn2{margin:0;padding:6px 24px 16px;font-size:11.5px;opacity:.6}
+.fsearch{padding:0 24px 6px}
+.fsearch input{width:100%;box-sizing:border-box;background:rgba(0,0,0,.28);border:1px solid var(--line);border-radius:12px;padding:9px 12px;color:var(--ink);font:500 13.5px var(--sans)}
+.fstats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;padding:6px 24px 0}
+.fstats div{font-size:12px;color:var(--mute)}
+.fstats b{display:block;font:600 15px/1.3 var(--sans);color:var(--ink)}
+.fpad{padding:2px 24px 14px;margin:0}
+@media(max-width:640px){.hxb,.fsearch,.fstats,.fpad,.fn2{padding-left:16px;padding-right:16px}.hxr{grid-template-columns:62px 1fr 76px}.fstats{grid-template-columns:repeat(2,1fr)}}
 #more,#fees,#share,#ruler{opacity:0;transform:translateY(26px);transition:opacity .8s ease,transform .8s cubic-bezier(.2,.8,.2,1)}
 #more.in,#fees.in,#share.in,#ruler.in{opacity:1;transform:none}
 #v-results.on .wrap>#more,#v-results.on .wrap>#fees,#v-results.on .wrap>#share,#v-results.on .wrap>#ruler{animation:none}
@@ -526,7 +545,8 @@ textarea:focus{outline:2px solid var(--acc);outline-offset:1px}
     <div class="tb-right"><button class="pill ghost sm" id="pback">Back</button></div>
   </header>
   <div class="phead"><div><h1 class="ptitle">Pulse</h1><p class="psub"><i class="live"></i><span id="pstat">Loading the market…</span></p></div></div>
-  <div class="psec">Buyback · the protocol's engine</div>
+  <nav class="seg snav" id="psnav" role="group" aria-label="Pulse sections"><i class="ind"></i><button class="tab" data-go="sec-p-buy" aria-pressed="true">Buyback</button><button class="tab" data-go="sec-p-mkt" aria-pressed="false">Market</button><button class="tab" data-go="sec-p-hlp" aria-pressed="false">HLP</button><button class="tab" data-go="sec-p-fund" aria-pressed="false">Funding</button><button class="tab" data-go="sec-p-all" aria-pressed="false">Markets</button></nav>
+  <div class="psec" id="sec-p-buy">Buyback · the protocol's engine</div>
   <section class="card" id="pbuy">
     <p class="pstory" id="pb_head">Reading the Assistance Fund…</p>
     <div class="pstats">
@@ -545,7 +565,7 @@ textarea:focus{outline:2px solid var(--acc);outline-offset:1px}
     <div class="pclegend"><span><i class="lg1"></i>HYPE price</span><span><i class="lg2"></i>Fund buys · size and colour = HYPE bought that hour</span><span class="lgheat"><em>less</em><i class="lg3"></i><em>more</em></span></div>
   </section>
 
-  <div class="psec">Market snapshot</div>
+  <div class="psec" id="sec-p-mkt">Market snapshot</div>
   <div class="pkpi">
     <div class="card pk"><span class="ct">24h perp volume</span><b id="p_vol">—</b><small id="p_vol_s"></small></div>
     <div class="card pk"><span class="ct">Open interest</span><b id="p_oi">—</b><small id="p_oi_s"></small></div>
@@ -554,6 +574,7 @@ textarea:focus{outline:2px solid var(--acc);outline-offset:1px}
   </div>
   <p class="pcap" id="p_cap"></p>
 
+  <div class="psec" id="sec-p-hlp">HLP vault · positions and movers</div>
   <div class="pduo">
     <section class="card phlp">
       <div class="card-head"><h2 class="ct">HLP vault · liquidity provider</h2><div class="seg" id="hrange" role="group"><i class="ind"></i><button class="tab" data-k="day" aria-pressed="false">24h</button><button class="tab" data-k="week" aria-pressed="true">7d</button><button class="tab" data-k="month" aria-pressed="false">30d</button><button class="tab" data-k="allTime" aria-pressed="false">All</button></div></div>
@@ -565,7 +586,22 @@ textarea:focus{outline:2px solid var(--acc);outline-offset:1px}
     </section>
   </div>
 
-  <div class="psec">All markets</div>
+  <section class="card" id="phlpx">
+    <div class="card-head"><h2 class="ct">HLP · net exposure by market</h2><span class="ptip" id="hx_s"></span></div>
+    <div class="hxb" id="hx_body"><p class="pempty">Reading the HLP positions…</p></div>
+    <p class="fn2" id="hx_note"></p>
+  </section>
+
+  <div class="psec" id="sec-p-fund">Funding · history</div>
+  <section class="card" id="pfund">
+    <div class="card-head"><div class="seg" id="fcoin" role="group"><i class="ind"></i><button class="tab" data-f="BTC" aria-pressed="true">BTC</button><button class="tab" data-f="ETH" aria-pressed="false">ETH</button><button class="tab" data-f="HYPE" aria-pressed="false">HYPE</button><button class="tab" data-f="SOL" aria-pressed="false">SOL</button></div><div class="seg" id="frange" role="group"><i class="ind"></i><button class="tab" data-r="7" aria-pressed="true">7d</button><button class="tab" data-r="30" aria-pressed="false">30d</button></div></div>
+    <div class="fsearch"><input id="fq" type="search" placeholder="Other market (SOL, DOGE…), then Enter" autocomplete="off" autocapitalize="characters" spellcheck="false" aria-label="Funding history market"></div>
+    <div class="fstats" id="f_stats"></div>
+    <div class="pcwrap"><svg id="f_svg" viewBox="0 0 800 220" role="img" aria-label="Funding rate history"></svg><p class="pempty" id="f_empty">Loading the funding history…</p></div>
+    <p class="ptip fpad" id="f_tip">&nbsp;</p>
+  </section>
+
+  <div class="psec" id="sec-p-all">All markets</div>
   <section class="card">
     <div class="card-head"><div class="seg" id="pview" role="group"><i class="ind"></i><button class="tab" data-v="mk" aria-pressed="true">Markets</button><button class="tab" data-v="hi" aria-pressed="false">High funding</button><button class="tab" data-v="lo" aria-pressed="false">Low funding</button><button class="tab" data-v="cx" aria-pressed="false">vs CEX</button></div><div class="seg" id="pfilter" role="group"><i class="ind"></i><button class="tab" data-f="all" aria-pressed="true">All</button><button class="tab" data-f="core" aria-pressed="false">Core</button><button class="tab" data-f="hip" aria-pressed="false">HIP-3</button></div></div>
     <div class="psearch"><svg viewBox="0 0 20 20" width="16" height="16" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5.5" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="M13 13l4 4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg><input id="psearch" type="search" placeholder="Search (BTC, TSLA…)" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Search a market"><span id="pcount"></span></div>
@@ -697,8 +733,8 @@ function armReveal(){
 }
 window.addEventListener("resize",()=>{moveInd($("tabs"));moveInd($("modeseg"));});
 
-function snavUpdate(){
-  const box=$("snav"),rv=$("v-results");
+function snavSync(boxId,viewId){
+  const box=$(boxId),rv=$(viewId);
   if(!box||!rv||!rv.classList.contains("on"))return;
   const bs=[...box.querySelectorAll(".tab")];let act=null,sig="";
   const vh=window.innerHeight,atEnd=vh+window.scrollY>=document.documentElement.scrollHeight-6;
@@ -708,15 +744,16 @@ function snavUpdate(){
   if(atEnd)act=vis[vis.length-1];
   if(!act)act=vis[0];
   const cur=box.querySelector('.tab[aria-pressed="true"]');
-  if(cur!==act||sig!==box._sig){bs.forEach(b=>b.setAttribute("aria-pressed",b===act?"true":"false"));box._sig=sig;moveInd(box);}
+  if(cur!==act||sig!==box._sig){bs.forEach(x=>x.setAttribute("aria-pressed",x===act?"true":"false"));box._sig=sig;moveInd(box);}
 }
-$("snav").addEventListener("click",e=>{
-  const b=e.target.closest(".tab");if(!b)return;
+function snavUpdate(){snavSync("snav","v-results");snavSync("psnav","v-pulse");}
+document.addEventListener("click",e=>{
+  const b=e.target.closest(".snav .tab");if(!b)return;
   const t=$(b.dataset.go);if(!t)return;
   t.scrollIntoView({behavior:REDUCE?"auto":"smooth",block:"start"});
 });
 window.addEventListener("scroll",()=>{if(!snavUpdate._r){snavUpdate._r=requestAnimationFrame(()=>{snavUpdate._r=0;snavUpdate();});}},{passive:true});
-window.addEventListener("resize",()=>{const b=$("snav");if(b)moveInd(b);snavUpdate();});
+window.addEventListener("resize",()=>{["snav","psnav"].forEach(i=>{const x=$(i);if(x)moveInd(x);});snavUpdate();});
 setInterval(snavUpdate,400);
 let lastRpos=0;
 function renderRuler(v,t){
@@ -853,7 +890,7 @@ function buildTabs(){
 }
 function renderNote(){
   const p=[subMsg];
-  if(MODE==="hip"){if(subsOn)p.push("HIP-3 volume covers the main address only.");if(hipCov&&!hipCov[W])p.push("HIP-3 volume is a minimum: only the most recent trades could be read.");}
+  if(MODE==="hip"){if(hipCov&&!hipCov[W])p.push("HIP-3 volume is a minimum: only the most recent trades could be read.");}
   $("subnote").textContent=p.filter(Boolean).join(" ");
 }
 function renderMode(){
@@ -955,7 +992,7 @@ function evBlockAt(tsSec){
   return Math.round(EVB[k-1]+(EVB[k]-EVB[k-1])*(tsSec-EVT[k-1])/(EVT[k]-EVT[k-1]));
 }
 async function evmLoad(addr,tok,startMs){
-  EV=null;
+  EV=null;EVaddr="";
   try{
     const rpc=(m,pr)=>fetch("https://rpc.hyperliquid.xyz/evm",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({jsonrpc:"2.0",id:1,method:m,params:pr})}).then(r=>r.json()).then(j=>j.result);
     const [nH,gpH,headH,mids]=await Promise.all([rpc("eth_getTransactionCount",[addr,"latest"]),rpc("eth_gasPrice",[]),rpc("eth_blockNumber",[]),hlPost({type:"allMids"})]);
@@ -971,15 +1008,22 @@ async function evmLoad(addr,tok,startMs){
     }
     if(tok!==fillsTok)return;
     const h=g=>n*g*gp/1e18;
-    EV={n,gwei:gp/1e9,avg,hLo:h(21000),hHi:h(150000),lo:h(21000)*px,hi:h(150000)*px};
+    EVaddr=addr;EV={n,gwei:gp/1e9,avg,hLo:h(21000),hHi:h(150000),lo:h(21000)*px,hi:h(150000)*px};
   }catch(e){EV=null;}
   if(tok===fillsTok)renderMore();
 }
 const hexB=x=>"0x"+Math.round(x).toString(16);
-async function loadFills(addr){
+let EVaddr="";
+async function loadFills(addrs){
+  if(!Array.isArray(addrs))addrs=[addrs];
   const tok=++fillsTok;F={state:"loading"};renderMore();
   try{
-    const {list,complete}=await fetchFills(addr);
+    let list=[],complete=true,capAny=false;
+    for(const a of addrs){
+      const r=await fetchFills(a);
+      if(tok!==fillsTok)return;
+      list=list.concat(r.list);if(!r.complete)complete=false;if(!r.complete||r.list.length===10000)capAny=true;
+    }
     if(tok!==fillsTok)return;
     let fees=0,first=null,tot=0,hip=0,minT=Infinity;const fb={spot:0,perp:0,hip:0},hm={},now=Date.now(),HMS=[864e5,6048e5,2592e6],hv=[0,0,0];
     for(const f of list){
@@ -992,11 +1036,11 @@ async function loadFills(addr){
       if(typeof f.time==="number"&&(first===null||f.time<first))first=f.time;
     }
     const top=Object.entries(hm).sort((a,b)=>b[1]-a[1])[0]||null;
-    F={state:"ok",fees,fb,first,n:list.length,capped:!complete||list.length===10000,tot,hip,top};
-    hipVols=hv;hipCov=HMS.map(ms=>(complete&&list.length!==10000)||minT<=now-ms);
-    evmLoad(addr,tok,(!F.capped&&F.first)?F.first:(X&&X.since)?X.since:(isFinite(minT)?minT:0));
+    F={state:"ok",fees,fb,first,n:list.length,capped:capAny,tot,hip,top};
+    hipVols=hv;hipCov=HMS.map(ms=>!capAny||minT<=now-ms);
+    if(EVaddr!==addrs[0])evmLoad(addrs[0],tok,(!F.capped&&F.first)?F.first:(X&&X.since)?X.since:(isFinite(minT)?minT:0));
   }catch(e){if(tok!==fillsTok)return;F={state:"err"};}
-  renderMore();
+  if(MODE==="hip"&&hipVols&&F.state==="ok"){renderResults();}else renderMore();
 }
 function combine(m,subs){
   const sum=a=>a.reduce((x,y)=>x+y,0),nn=a=>a.filter(y=>y!==null);
@@ -1017,7 +1061,7 @@ function applySubs(){
 async function toggleSubs(){
   const b=$("subbtn");
   if(!mainRes||manual||b.disabled)return;
-  if(subsOn){subsOn=false;vols=mainRes.v.slice();X={pnl:mainRes.pnl,av:mainRes.av,since:mainRes.since};applySubs();return;}
+  if(subsOn){subsOn=false;vols=mainRes.v.slice();X={pnl:mainRes.pnl,av:mainRes.av,since:mainRes.since};applySubs();loadFills([mainAddr]);return;}
   b.disabled=true;b.textContent="Loading…";subMsg="";renderNote();
   try{
     if(subList===null){
@@ -1028,7 +1072,7 @@ async function toggleSubs(){
     if(subData===null){const out=[];for(const a of subList)out.push(parseP(await hlPost({type:"portfolio",user:a})));subData=out;}
     const c=combine(mainRes,subData);
     subsOn=true;vols=c.v;X={pnl:c.pnl,av:c.av,since:isFinite(c.since)?c.since:null};
-    b.disabled=false;applySubs();
+    b.disabled=false;applySubs();loadFills([mainAddr,...subList]);
   }catch(e){
     subList=null;subData=null;b.disabled=false;b.textContent="Include sub-accounts";subMsg="Couldn't load sub-accounts. Try again in a moment.";renderNote();
   }
@@ -1050,8 +1094,8 @@ function renderMore(){
     const scope=F.capped?`your last ${F.n.toLocaleString("en-US")} fills`:"your full history";
     hl.style.display="";
     hl.innerHTML=F.hip>0
-      ?`HIP-3 markets: <b>${nf(F.hip/F.tot*100,F.hip/F.tot<.1?1:0)}%</b> of the volume in ${scope} · most traded: <b>${F.top[0].replace(/[<>&]/g,"")}</b> (${fmtUSD(F.top[1])})${subsOn?" · main address":""}`
-      :`HIP-3 markets: none in ${scope}${subsOn?" · main address":""}`;
+      ?`HIP-3 markets: <b>${nf(F.hip/F.tot*100,F.hip/F.tot<.1?1:0)}%</b> of the volume in ${scope} · most traded: <b>${F.top[0].replace(/[<>&]/g,"")}</b> (${fmtUSD(F.top[1])})${subsOn?" · incl. sub-accounts":""}`
+      :`HIP-3 markets: none in ${scope}${subsOn?" · incl. sub-accounts":""}`;
   }else hl.style.display="none";
   const fk=$("fbk");
   if(F.state==="ok"&&F.fb&&(F.fb.spot||F.fb.perp||F.fb.hip)){
@@ -1061,15 +1105,15 @@ function renderMore(){
     const fe=v=>v<.01?"<$0.01":v<10?"$"+v.toFixed(2):fmtUSD(v);
     const money=v=>v<0?"+"+fm(v)+" rebate":fm(v);
     fk.style.display="";$("fees").style.display="";
-    fk.innerHTML=`<div class="fh"><span>Fees paid by market</span><span>${F.capped?"last "+F.n.toLocaleString("en-US")+" fills":"all-time"}${subsOn?" · main address":""}</span></div>`
+    fk.innerHTML=`<div class="fh"><span>Fees paid by market</span><span>${F.capped?"last "+F.n.toLocaleString("en-US")+" fills":"all-time"}${subsOn?" · incl. sub-accounts":""}</span></div>`
       +`<div class="fbar">${C.map((c,i)=>sp>0&&pos[i]>0?`<i style="flex:${pos[i]/sp*100} 1 0;background:${c[2]}"></i>`:"").join("")}</div>`
       +`<div class="fl">${C.map((c,i)=>`<div><span class="d" style="background:${c[2]}"></span>${c[0]}<b>${money(F.fb[c[1]])}</b>${sp>0&&pos[i]>0?`<em>${nf(pos[i]/sp*100,pos[i]/sp<.1?1:0)}% of fees</em>`:""}</div>`).join("")}</div>`
       +(EV&&EV.n>0?`<div class="fl fe"><div><span class="d" style="background:transparent;border:1.5px dashed #f472b6"></span>dApps (HyperEVM) · estimate<b>≈ ${fe(EV.lo)}–${fe(EV.hi)}</b><em>${EV.n.toLocaleString("en-US")} transactions · ≈ ${EV.hLo<1?EV.hLo.toFixed(3):nf(EV.hLo,0)}–${EV.hHi<1?EV.hHi.toFixed(3):nf(EV.hHi,0)} HYPE burned · ${EV.avg?"average":"current"} gas ${EV.gwei<1?EV.gwei.toFixed(2):EV.gwei.toFixed(1)} gwei</em></div></div>`:"")
-      +`<div class="fn">Perps, spot and HIP-3 are measured from your fills, including builder fees. The HyperEVM line is an estimate, not part of the bar: transaction count × typical gas × average gas price over your active period, valued at today's HYPE price. Wallets that were very active during gas spikes (like August 2025) may have paid more.</div>`;
+      +`<div class="fn">Perps, spot and HIP-3 are measured from your fills, including builder fees. The HyperEVM line is an estimate${subsOn?" for the main address only":""}, not part of the bar: transaction count × typical gas × average gas price over your active period, valued at today's HYPE price. Wallets that were very active during gas spikes (like August 2025) may have paid more.</div>`;
   }else{fk.style.display="none";$("fees").style.display="none";}
   if(F.state==="loading"||F.state==="idle"){kf.textContent="First trade";mf.textContent="…";sf.textContent="";me.textContent="…";me._v=NaN;se.textContent="";return;}
-  const mainOnly=subsOn?" · main address":"";
-  if(F.state==="ok"&&!F.capped&&F.first){kf.textContent="First trade";mf.textContent=dfmt(F.first);sf.textContent=subsOn?"main address":"";}
+  const mainOnly=subsOn?" · incl. sub-accounts":"";
+  if(F.state==="ok"&&!F.capped&&F.first){kf.textContent="First trade";mf.textContent=dfmt(F.first);sf.textContent=subsOn?"incl. sub-accounts":"";}
   else if(X.since){kf.textContent="Active since";mf.textContent=dfmt(X.since);sf.textContent="account history";}
   else{kf.textContent="First trade";mf.textContent="—";sf.textContent="";}
   if(F.state==="ok"){tween(me,F.fees,f=>(F.capped?"≥ ":"")+(f<0?"+"+fmtUSD(-f):fmtUSD(f)),1000);se.textContent=(F.fees<0?"net rebates · ":"")+(F.capped?"last "+F.n.toLocaleString("en-US")+" fills only":"all-time")+mainOnly;}
@@ -1093,7 +1137,7 @@ async function lookup(){
   vols=res;addrShown=raw.slice(0,6)+"…"+raw.slice(-4);
   if(!(vols[W]>0)){const k=[3,2,1,0].find(i=>vols[i]>0);if(k!==undefined)W=k;}
   if(vols.every(x=>!(x>0))){resetProgress();await show("v-landing");$("err").textContent=S.none;return;}
-  fillsTok++;F={state:"loading"};mainAddr=raw;subsOn=false;subList=null;subData=null;subMsg="";MODE="all";hipVols=null;hipCov=null;$("subnote").textContent="";introRan=false;lastTier=-1;$("subbtn").classList.remove("on");$("subbtn").disabled=false;$("subbtn").textContent="Include sub-accounts";
+  fillsTok++;EV=null;EVaddr="";F={state:"loading"};mainAddr=raw;subsOn=false;subList=null;subData=null;subMsg="";MODE="all";hipVols=null;hipCov=null;$("subnote").textContent="";introRan=false;lastTier=-1;$("subbtn").classList.remove("on");$("subbtn").disabled=false;$("subbtn").textContent="Include sub-accounts";
   buildTabs();renderResults();await finishProgress();await show("v-results");intro();
   loadFills(raw);
 }
@@ -1306,12 +1350,24 @@ async function chartLoad(){
     const kids=vd&&vd.relationship&&vd.relationship.data&&vd.relationship.data.childAddresses||[];
     if(kids.length){
       const st=await Promise.all([HLP,...kids.slice(0,10)].map(a=>c(hlPost({type:"clearinghouseState",user:a}))));
-      let net=0,lg=0,sh=0,ok=0;
-      st.forEach(x=>{if(!x||!Array.isArray(x.assetPositions))return;ok++;x.assetPositions.forEach(ap=>{const q=ap.position;if(q&&q.coin==="HYPE"){const z=parseFloat(q.szi)||0;net+=z;if(z>0)lg+=z;else sh+=-z;}});});
-      if(ok)PU.hlpHype={net,lg,sh};
+      let net=0,lg=0,sh=0,ok=0;const cm={};
+      st.forEach(x=>{if(!x||!Array.isArray(x.assetPositions))return;ok++;x.assetPositions.forEach(ap=>{const q=ap.position;if(!q)return;const z=parseFloat(q.szi)||0,pv=Math.abs(parseFloat(q.positionValue))||0;if(q.coin==="HYPE"){net+=z;if(z>0)lg+=z;else sh+=-z;}if(pv>0){const c=cm[q.coin]||(cm[q.coin]={net:0,lg:0,sh:0});if(z>=0){c.net+=pv;c.lg+=pv;}else{c.net-=pv;c.sh+=pv;}}});});
+      if(ok){PU.hlpHype={net,lg,sh};PU.hlpPos={cm,ok,n:st.length};}
     }
   }catch(e){}
-  PU.cbusy=false;chartRender();buyRender();hlpRender();
+  PU.cbusy=false;chartRender();buyRender();hlpRender();hlpxRender();
+}
+
+function hlpxRender(){
+  const H=PU.hlpPos,body=$("hx_body");if(!body)return;
+  if(!H){return;}
+  const rows=Object.entries(H.cm).map(([k,v])=>({k,net:v.net,lg:v.lg,sh:v.sh})).filter(r=>Math.abs(r.net)>0).sort((a,b)=>Math.abs(b.net)-Math.abs(a.net)).slice(0,8);
+  let LG=0,SH=0;Object.values(H.cm).forEach(v=>{LG+=v.lg;SH+=v.sh;});
+  if(!rows.length){body.innerHTML='<p class="pempty">No open positions found.</p>';return;}
+  const mx=Math.max(...rows.map(r=>Math.abs(r.net)))||1;
+  body.innerHTML=rows.map(r=>{const w=Math.abs(r.net)/mx*50;return '<div class="hxr"><span class="nm">'+esc(r.k)+'</span><div class="hxbar"><i class="'+(r.net>=0?"lg":"sh")+'" style="width:'+w.toFixed(1)+'%"></i></div><span class="v">'+(r.net>=0?"+":"−")+fmtUSD(Math.abs(r.net))+'</span></div>';}).join("");
+  $("hx_s").textContent="long "+fmtUSD(LG)+" · short "+fmtUSD(SH);
+  $("hx_note").textContent="Net = long minus short, summed across the HLP parent vault and its "+(H.n-1)+" sub-vaults ("+H.ok+" read), core markets only (HIP-3 not included). Teal = net long, red = net short.";
 }
 const heatC=t=>{const a=[111,227,207],b=[255,196,87];return a.map((v,i)=>Math.round(v+(b[i]-v)*t));};
 const heatS=(t,al)=>{const c=heatC(t);return "rgba("+c[0]+","+c[1]+","+c[2]+","+al+")";};
@@ -1369,8 +1425,68 @@ function chartRender(){
   svg.addEventListener("pointermove",mv);svg.addEventListener("pointerdown",mv);
   svg.addEventListener("pointerleave",()=>{const g=document.getElementById("pc_g"),d=document.getElementById("pc_d");if(g)g.style.display="none";if(d)d.style.display="none";if(PU.cand)chartRender();});
   const bind=(id,attr,key,after)=>{const el=document.getElementById(id);if(!el)return;el.addEventListener("click",e=>{const b=e.target.closest("["+attr+"]");if(!b)return;PU[key]=b.getAttribute(attr);el.querySelectorAll(".tab").forEach(x=>x.setAttribute("aria-pressed",String(x===b)));moveInd(el);after();});};
-  bind("cmode","data-c","cmode",chartRender);bind("crange","data-r","crange",chartRender);bind("hrange","data-k","hr",hlpRender);bind("hmode","data-m","hm",hlpRender);
+  bind("cmode","data-c","cmode",chartRender);bind("crange","data-r","crange",chartRender);bind("hrange","data-k","hr",hlpRender);bind("hmode","data-m","hm",hlpRender);bind("frange","data-r","frange",fundLoad);bind("fcoin","data-f","fcoin",fundLoad);
 })();
+
+async function fundLoad(){
+  const coin=(PU.fcoin||"BTC").toUpperCase(),days=+PU.frange||7,key=coin+"_"+days;
+  PU.fkey=key;
+  $("f_empty").style.display="";$("f_empty").textContent="Loading the funding history…";
+  try{
+    const n=Date.now();let t=n-days*864e5,all=[],pages=0;
+    while(pages<8){
+      const d=await hlPost({type:"fundingHistory",coin,startTime:t,endTime:n});
+      if(PU.fkey!==key)return;
+      if(!Array.isArray(d)||!d.length)break;
+      pages++;all=all.concat(d);
+      if(d.length<500)break;
+      t=d[d.length-1].time+1;
+    }
+    if(PU.fkey!==key)return;
+    PU.fund={coin,days,pts:all.map(x=>[x.time,parseFloat(x.fundingRate)*8760*100]).filter(x=>isFinite(x[1]))};
+  }catch(e){if(PU.fkey!==key)return;PU.fund={coin,days,pts:[],err:true};}
+  fundRender();
+}
+function fundRender(){
+  const F0=PU.fund,svg=$("f_svg");if(!F0||!svg)return;
+  const pts=F0.pts;
+  if(pts.length<2){svg.innerHTML="";$("f_stats").innerHTML="";$("f_empty").style.display="";$("f_empty").textContent=F0.err?"Couldn't load the funding history. Try again in a moment.":"No funding history for "+F0.coin+" (HIP-3 markets are not covered).";return;}
+  $("f_empty").style.display="none";
+  const ys=pts.map(p=>p[1]),avg=ys.reduce((a,b)=>a+b,0)/ys.length,last=ys[ys.length-1],mn=Math.min(...ys),mx=Math.max(...ys);
+  const pc=v=>(v>=0?"+":"−")+nf(Math.abs(v),Math.abs(v)<10?1:0)+"%";
+  $("f_stats").innerHTML='<div>Now (APR)<b>'+pc(last)+'</b></div><div>Average<b>'+pc(avg)+'</b></div><div>Low<b>'+pc(mn)+'</b></div><div>High<b>'+pc(mx)+'</b></div>';
+  const W=Math.max(280,Math.round(svg.getBoundingClientRect().width)||800),H=220,pl=44,pr=10,pt=12,pb=22,iw=W-pl-pr,ih=H-pt-pb;
+  svg.setAttribute("viewBox","0 0 "+W+" "+H);
+  const lo=Math.min(0,mn),hi=Math.max(0,mx),r=(hi-lo)||1,x0=pts[0][0],x1=pts[pts.length-1][0];
+  const X=t=>pl+(t-x0)/((x1-x0)||1)*iw,Y=v=>pt+(hi-v)/r*ih;
+  const d="M"+pts.map(p=>X(p[0]).toFixed(1)+","+Y(p[1]).toFixed(1)).join(" L");
+  const z=Y(0).toFixed(1);
+  const lab=(v,y)=>'<text x="'+(pl-6)+'" y="'+(y+4)+'" text-anchor="end" fill="currentColor" opacity=".6" font-size="11">'+(v>=0?"":"−")+nf(Math.abs(v),Math.abs(v)<10?1:0)+'%</text>';
+  const dt=t=>new Date(t).toLocaleDateString("en-GB",{day:"numeric",month:"short"});
+  svg.innerHTML='<defs><linearGradient id="fg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#6fe3cf" stop-opacity=".28"/><stop offset="1" stop-color="#6fe3cf" stop-opacity="0"/></linearGradient></defs>'
+    +'<line x1="'+pl+'" x2="'+(W-pr)+'" y1="'+z+'" y2="'+z+'" stroke="currentColor" stroke-opacity=".3" stroke-dasharray="3 4"/>'
+    +lab(hi,Y(hi))+(lo<0?lab(lo,Y(lo)):"")+lab(0,Y(0))
+    +'<path d="'+d+' L'+X(x1).toFixed(1)+','+z+' L'+X(x0).toFixed(1)+','+z+' Z" fill="url(#fg)"/>'
+    +'<path d="'+d+'" fill="none" stroke="#6fe3cf" stroke-width="1.8" stroke-linejoin="round"/>'
+    +'<text x="'+pl+'" y="'+(H-5)+'" fill="currentColor" opacity=".6" font-size="11">'+dt(x0)+'</text><text x="'+(W-pr)+'" y="'+(H-5)+'" text-anchor="end" fill="currentColor" opacity=".6" font-size="11">'+dt(x1)+'</text>'
+    +'<line id="f_g" y1="'+pt+'" y2="'+(H-pb)+'" stroke="currentColor" stroke-opacity=".4" style="display:none"/><circle id="f_d" r="4" fill="#ffc457" style="display:none"/>';
+  const mv=e=>{
+    const b=svg.getBoundingClientRect(),px=(e.clientX-b.left)*(W/b.width);
+    let bi=0,bd=1e18;pts.forEach((p,i)=>{const dd=Math.abs(X(p[0])-px);if(dd<bd){bd=dd;bi=i;}});
+    const p=pts[bi],g=document.getElementById("f_g"),c=document.getElementById("f_d");
+    if(g){g.setAttribute("x1",X(p[0]));g.setAttribute("x2",X(p[0]));g.style.display="";}
+    if(c){c.setAttribute("cx",X(p[0]));c.setAttribute("cy",Y(p[1]));c.style.display="";}
+    $("f_tip").textContent=new Date(p[0]).toLocaleString("en-GB",{day:"numeric",month:"short",hour:"2-digit",minute:"2-digit"})+" · "+F0.coin+" funding "+pc(p[1])+" APR";
+  };
+  svg.onpointermove=mv;svg.onpointerdown=mv;
+  svg.onpointerleave=()=>{const g=document.getElementById("f_g"),c=document.getElementById("f_d");if(g)g.style.display="none";if(c)c.style.display="none";$("f_tip").innerHTML="&nbsp;";};
+  $("f_tip").innerHTML="&nbsp;";
+}
+$("fq").addEventListener("keydown",e=>{
+  if(e.key!=="Enter")return;
+  const v=e.target.value.trim().toUpperCase().replace(/[^A-Z0-9]/g,"");if(!v)return;
+  PU.fcoin=v;document.querySelectorAll("#fcoin .tab").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.f===v)));moveInd($("fcoin"));fundLoad();
+});
 function cxRender(){
   const P=PU.proto,tb=$("pxbody");
   const q=PU.q.trim().toLowerCase();
@@ -1430,10 +1546,10 @@ function pulseStat(){
 }
 async function openPulse(){
   const cur=document.querySelector(".view.on");if(cur&&cur.id!=="v-pulse"&&cur.id!=="v-method")prevView=cur.id;
-  await show("v-pulse");["pfilter","pview","cmode","crange","hrange","hmode"].forEach(i=>moveInd($(i)));
+  await show("v-pulse");["pfilter","pview","cmode","crange","hrange","hmode","fcoin","frange","psnav"].forEach(i=>moveInd($(i)));
   PU.first=true;if(PU.rows){PU.anim=true;pulseRender();}
   clearInterval(PU.timer);clearInterval(PU.tick);
-  pulseLoad();protoLoad().then(chartLoad);
+  pulseLoad();protoLoad().then(chartLoad);if(!PU.fund||PU.fund.err)fundLoad();
   clearInterval(PU.ptimer);PU.ptimer=setInterval(()=>{if(document.visibilityState==="visible")protoLoad().then(chartLoad);},120000);
   PU.timer=setInterval(()=>{if(document.visibilityState==="visible")pulseLoad();},30000);
   PU.tick=setInterval(pulseStat,1000);
@@ -1485,5 +1601,5 @@ $("copytxt").onclick=async()=>{
 };
 setupStatic();
 </script>
-<div style="position:fixed;top:10px;right:10px;z-index:99999;background:#f97316;color:#fff;font:700 11px/1 system-ui;padding:6px 10px;border-radius:99px;letter-spacing:.08em;pointer-events:none">BETA</div></body>
+</body>
 </html>
