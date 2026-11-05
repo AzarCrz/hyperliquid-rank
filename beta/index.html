@@ -907,20 +907,37 @@ async function fetchFills(addr){
   }
   return {list:[...seen.values()],complete};
 }
+const EVB=[1, 1261292, 2522584, 3783876, 5045169, 6306461, 7567753, 8829046, 10090338, 11351630, 12612923, 13874215, 15135507, 16396799, 17658092, 18919384, 20180676, 21441969, 22703261, 23964553, 25225846, 26487138, 27748430, 29009722, 30271015, 31532307, 32793599, 34054892, 35316184, 36577476, 37838769, 39100061, 40361353, 41622645, 42883938, 44145230, 45406522, 46667815, 47929107, 49190399, 50451692],EVT=[1739849780, 1742291358, 1744733182, 1747175024, 1749204541, 1750448864, 1751690308, 1752933000, 1754176375, 1755417268, 1756658646, 1757899413, 1759140193, 1760380959, 1761621725, 1762862492, 1764103281, 1765344060, 1766584761, 1767825458, 1769066160, 1770306950, 1771547744, 1772788529, 1774029233, 1775269939, 1776510801, 1777751580, 1778992276, 1780233069, 1781473857, 1782714650, 1783955439, 1785196219, 1786436964, 1787677706, 1788918447, 1790159212, 1791399989, 1792640672, 1793881398];
 let EV=null;
-async function evmLoad(addr,tok){
+function evBlockAt(tsSec){
+  const n=EVT.length;if(tsSec<=EVT[0])return EVB[0];if(tsSec>=EVT[n-1])return EVB[n-1];
+  let k=1;while(EVT[k]<tsSec)k++;
+  return Math.round(EVB[k-1]+(EVB[k]-EVB[k-1])*(tsSec-EVT[k-1])/(EVT[k]-EVT[k-1]));
+}
+async function evmLoad(addr,tok,startMs){
   EV=null;
   try{
-    const rpc=(m,pr)=>fetch("https://rpc.hyperliquid.xyz/evm",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({jsonrpc:"2.0",id:1,method:m,params:pr})}).then(r=>r.json()).then(j=>parseInt(j.result,16));
-    const [n,gp,mids]=await Promise.all([rpc("eth_getTransactionCount",[addr,"latest"]),rpc("eth_gasPrice",[]),hlPost({type:"allMids"})]);
-    const px=parseFloat(mids&&mids.HYPE);
+    const rpc=(m,pr)=>fetch("https://rpc.hyperliquid.xyz/evm",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({jsonrpc:"2.0",id:1,method:m,params:pr})}).then(r=>r.json()).then(j=>j.result);
+    const [nH,gpH,headH,mids]=await Promise.all([rpc("eth_getTransactionCount",[addr,"latest"]),rpc("eth_gasPrice",[]),rpc("eth_blockNumber",[]),hlPost({type:"allMids"})]);
+    const n=parseInt(nH,16),gpNow=parseInt(gpH,16),head=parseInt(headH,16),px=parseFloat(mids&&mids.HYPE);
     if(tok!==fillsTok)return;
-    if(isFinite(n)&&isFinite(gp)&&px>0){const c=g=>n*g*gp/1e18*px;EV={n,lo:c(21000),hi:c(150000)};}
+    if(!(n>=0&&gpNow>0&&px>0))return;
+    let gp=gpNow,avg=false;
+    if(n>0){
+      const b0=Math.min(evBlockAt(Math.floor((startMs||0)/1000)),head-1),K=20,jobs=[];
+      for(let i=0;i<K;i++)jobs.push(rpc("eth_feeHistory",["0x1",hexB(Math.round(b0+(head-b0)*i/(K-1))),[]]));
+      const rs=(await Promise.allSettled(jobs)).map(r=>r.status==="fulfilled"&&r.value&&r.value.baseFeePerGas?parseInt(r.value.baseFeePerGas[0],16):NaN).filter(isFinite);
+      if(rs.length>=8){gp=rs.reduce((a,b)=>a+b,0)/rs.length;avg=true;}
+    }
+    if(tok!==fillsTok)return;
+    const h=g=>n*g*gp/1e18;
+    EV={n,gwei:gp/1e9,avg,hLo:h(21000),hHi:h(150000),lo:h(21000)*px,hi:h(150000)*px};
   }catch(e){EV=null;}
   if(tok===fillsTok)renderMore();
 }
+const hexB=x=>"0x"+Math.round(x).toString(16);
 async function loadFills(addr){
-  const tok=++fillsTok;F={state:"loading"};renderMore();evmLoad(addr,tok);
+  const tok=++fillsTok;F={state:"loading"};renderMore();
   try{
     const {list,complete}=await fetchFills(addr);
     if(tok!==fillsTok)return;
@@ -937,6 +954,7 @@ async function loadFills(addr){
     const top=Object.entries(hm).sort((a,b)=>b[1]-a[1])[0]||null;
     F={state:"ok",fees,fb,first,n:list.length,capped:!complete||list.length===10000,tot,hip,top};
     hipVols=hv;hipCov=HMS.map(ms=>(complete&&list.length!==10000)||minT<=now-ms);
+    evmLoad(addr,tok,(!F.capped&&F.first)?F.first:(X&&X.since)?X.since:(isFinite(minT)?minT:0));
   }catch(e){if(tok!==fillsTok)return;F={state:"err"};}
   renderMore();
 }
@@ -1005,8 +1023,8 @@ function renderMore(){
     fk.innerHTML=`<div class="fh"><span>Fees paid by market</span><span>${F.capped?"last "+F.n.toLocaleString("en-US")+" fills":"all-time"}${subsOn?" · main address":""}</span></div>`
       +`<div class="fbar">${C.map((c,i)=>sp>0&&pos[i]>0?`<i style="flex:${pos[i]/sp*100} 1 0;background:${c[2]}"></i>`:"").join("")}</div>`
       +`<div class="fl">${C.map((c,i)=>`<div><span class="d" style="background:${c[2]}"></span>${c[0]}<b>${money(F.fb[c[1]])}</b>${sp>0&&pos[i]>0?`<em>${nf(pos[i]/sp*100,pos[i]/sp<.1?1:0)}% of fees</em>`:""}</div>`).join("")}</div>`
-      +(EV&&EV.n>0?`<div class="fl fe"><div><span class="d" style="background:transparent;border:1.5px dashed #f472b6"></span>dApps (HyperEVM) · estimate<b>≈ ${fe(EV.lo)}–${fe(EV.hi)}</b><em>${EV.n.toLocaleString("en-US")} transactions · gas burned</em></div></div>`:"")
-      +`<div class="fn">Perps, spot and HIP-3 are measured from your fills, including builder fees. The HyperEVM line is an estimate (transaction count × typical gas × current gas price), not part of the bar.</div>`;
+      +(EV&&EV.n>0?`<div class="fl fe"><div><span class="d" style="background:transparent;border:1.5px dashed #f472b6"></span>dApps (HyperEVM) · estimate<b>≈ ${fe(EV.lo)}–${fe(EV.hi)}</b><em>${EV.n.toLocaleString("en-US")} transactions · ≈ ${EV.hLo<1?EV.hLo.toFixed(3):nf(EV.hLo,0)}–${EV.hHi<1?EV.hHi.toFixed(3):nf(EV.hHi,0)} HYPE burned · ${EV.avg?"average":"current"} gas ${EV.gwei<1?EV.gwei.toFixed(2):EV.gwei.toFixed(1)} gwei</em></div></div>`:"")
+      +`<div class="fn">Perps, spot and HIP-3 are measured from your fills, including builder fees. The HyperEVM line is an estimate, not part of the bar: transaction count × typical gas × average gas price over your active period, valued at today's HYPE price.</div>`;
   }else fk.style.display="none";
   if(F.state==="loading"||F.state==="idle"){kf.textContent="First trade";mf.textContent="…";sf.textContent="";me.textContent="…";me._v=NaN;se.textContent="";return;}
   const mainOnly=subsOn?" · main address":"";
