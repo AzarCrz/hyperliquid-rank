@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<meta name="robots" content="noindex,nofollow">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#00110d">
@@ -255,11 +256,13 @@ textarea:focus{outline:2px solid var(--acc);outline-offset:1px}
 .lg3{width:46px!important;height:8px!important;border-radius:4px!important;border:0!important;background:linear-gradient(90deg,#6fe3cf,#ffc457)!important;vertical-align:0!important;margin:0 6px!important}
 .lgheat{display:inline-flex;align-items:center}.lgheat em{font-style:normal}
 .pcap{margin:-4px 4px 0;font-size:13px;color:var(--mute);min-height:0}.pcap:empty{display:none}
+.hxt td{white-space:nowrap}.hxt .lgc{color:#4fd1c5}.hxt .shc{color:#f87171}.hxt .lv{opacity:.6;margin-left:6px;font-weight:500}.hxmore{padding:4px 24px 6px;display:flex}
 .phlpb{padding:16px 22px 18px;display:flex;flex-direction:column;gap:6px}
 .phlpb b{font:700 clamp(24px,3.2vw,34px)/1.1 var(--sans);letter-spacing:-.02em;font-variant-numeric:tabular-nums}
 .phlpb small{color:var(--mute);font-size:13px;min-height:17px}.phlpb small b{font:600 13px var(--sans)}
 .phlpb .seg{align-self:flex-start;margin:2px 0 2px}
-#h_svg{width:100%;height:70px;display:block;margin:4px 0}
+#h_svg{width:100%;height:210px;display:block;margin:4px 0}
+@media(max-width:640px){#h_svg{height:170px}.hxmore{padding-left:16px}}
 .pmcols{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 20px;padding:8px 22px 16px}
 .pmcols h3{margin:6px 0 4px;font:600 11px var(--sans);letter-spacing:.12em;text-transform:uppercase;color:var(--mute)}
 .pmr{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.06);font-variant-numeric:tabular-nums}
@@ -573,22 +576,22 @@ textarea:focus{outline:2px solid var(--acc);outline-offset:1px}
     <div class="card pk"><span class="ct">Markets</span><b id="p_mk">—</b><small id="p_mk_s"></small></div>
   </div>
   <p class="pcap" id="p_cap"></p>
-
-  <div class="psec" id="sec-p-hlp">HLP vault · positions and movers</div>
-  <div class="pduo">
-    <section class="card phlp">
-      <div class="card-head"><h2 class="ct">HLP vault · liquidity provider</h2><div class="seg" id="hrange" role="group"><i class="ind"></i><button class="tab" data-k="day" aria-pressed="false">24h</button><button class="tab" data-k="week" aria-pressed="true">7d</button><button class="tab" data-k="month" aria-pressed="false">30d</button><button class="tab" data-k="allTime" aria-pressed="false">All</button></div></div>
-      <div class="phlpb"><b id="h_tvl">—</b><div class="seg" id="hmode" role="group"><i class="ind"></i><button class="tab" data-m="pnl" aria-pressed="true">PnL</button><button class="tab" data-m="val" aria-pressed="false">Value</button></div><small id="h_s1">&nbsp;</small><svg id="h_svg" viewBox="0 0 300 70" role="img" aria-label="HLP profit and loss"></svg><small id="h_s2"></small></div>
-    </section>
-    <section class="card pmov">
+  <section class="card pmov">
       <div class="card-head"><h2 class="ct">Movers · 24h</h2></div>
       <div class="pmcols"><div><h3>Gainers</h3><div id="mv_up"></div></div><div><h3>Losers</h3><div id="mv_dn"></div></div></div>
-    </section>
-  </div>
+  </section>
+
+
+  <div class="psec" id="sec-p-hlp">HLP vault · positions and movers</div>
+  <section class="card phlp">
+      <div class="card-head"><h2 class="ct">HLP vault · liquidity provider</h2><div class="seg" id="hrange" role="group"><i class="ind"></i><button class="tab" data-k="day" aria-pressed="false">24h</button><button class="tab" data-k="week" aria-pressed="true">7d</button><button class="tab" data-k="month" aria-pressed="false">30d</button><button class="tab" data-k="allTime" aria-pressed="false">All</button></div></div>
+      <div class="phlpb"><b id="h_tvl">—</b><div class="seg" id="hmode" role="group"><i class="ind"></i><button class="tab" data-m="pnl" aria-pressed="true">PnL</button><button class="tab" data-m="val" aria-pressed="false">Value</button></div><small id="h_s1">&nbsp;</small><svg id="h_svg" viewBox="0 0 300 70" role="img" aria-label="HLP profit and loss"></svg><small id="h_s2"></small></div>
+  </section>
 
   <section class="card" id="phlpx">
-    <div class="card-head"><h2 class="ct">HLP · net exposure by market</h2><span class="ptip" id="hx_s"></span></div>
-    <div class="hxb" id="hx_body"><p class="pempty">Reading the HLP positions…</p></div>
+    <div class="card-head"><h2 class="ct">HLP · open positions</h2><span class="ptip" id="hx_s"></span></div>
+    <div class="pscroll"><table class="ptable hxt"><thead><tr><th>Market</th><th>Size</th><th>Position value</th><th>Entry price</th><th>Mark price</th><th>PNL (ROE %)</th><th>Margin</th></tr></thead><tbody id="hx_body"><tr><td colspan="7" class="pempty">Reading the HLP positions…</td></tr></tbody></table></div>
+    <div class="hxmore"><button class="pill ghost sm" id="hx_more" style="display:none">Show all markets</button></div>
     <p class="fn2" id="hx_note"></p>
   </section>
 
@@ -1260,10 +1263,10 @@ function protoRender(){
   }catch(e){}
   buyRender();
 }
-function sparkDraw(svg,pts,color,zero){
+function sparkDraw(svg,pts,color,zero,hh){
   if(zero===undefined)zero=true;
   if(!svg)return;
-  const W=Math.max(200,Math.round(svg.getBoundingClientRect().width)||300),H=70;svg.setAttribute("viewBox","0 0 "+W+" "+H);
+  const W=Math.max(200,Math.round(svg.getBoundingClientRect().width)||300),H=hh||70;svg.setAttribute("viewBox","0 0 "+W+" "+H);
   if(pts.length<2){svg.innerHTML="";return;}
   const xs=pts.map(p=>p[0]),ys=pts.map(p=>p[1]),x0=Math.min(...xs),x1=Math.max(...xs),lo=zero?Math.min(0,...ys):Math.min(...ys),hi=zero?Math.max(0,...ys):Math.max(...ys),r=(hi-lo)||1;
   const X=t=>4+(t-x0)/((x1-x0)||1)*(W-8),Y=v=>6+(hi-v)/r*(H-12);
@@ -1284,10 +1287,10 @@ function hlpRender(){
   if(vm){
     const dv=last-first,pc=first>0&&k!=="allTime"?" ("+(dv>=0?"+":"−")+nf(Math.abs(dv/first)*100,1)+"%)":"";
     $("h_s1").innerHTML=isNaN(dv)?"&nbsp;":"Value change "+lab+' <b class="'+(dv>=0?"pos":"neg")+'">'+fmtS(dv)+pc+"</b>";
-    sparkDraw($("h_svg"),pts,"#6fe3cf",false);
+    sparkDraw($("h_svg"),pts,"#6fe3cf",false,window.innerWidth<=640?170:210);
   }else{
     $("h_s1").innerHTML=isNaN(last)?"&nbsp;":"PnL "+lab+' <b class="'+(last>=0?"pos":"neg")+'">'+fmtS(last)+"</b>";
-    sparkDraw($("h_svg"),pts,last>=0?"#7ee8c9":"#ffb4b4");
+    sparkDraw($("h_svg"),pts,last>=0?"#7ee8c9":"#ffb4b4",true,window.innerWidth<=640?170:210);
   }
   const all=g("allTime"),al=all&&all.pnlHistory?lastv(all.pnlHistory):NaN;
   let t=isNaN(al)||k==="allTime"?"":"All-time PnL "+fmtS(al);
@@ -1351,7 +1354,7 @@ async function chartLoad(){
     if(kids.length){
       const st=await Promise.all([HLP,...kids.slice(0,10)].map(a=>c(hlPost({type:"clearinghouseState",user:a}))));
       let net=0,lg=0,sh=0,ok=0;const cm={};
-      st.forEach(x=>{if(!x||!Array.isArray(x.assetPositions))return;ok++;x.assetPositions.forEach(ap=>{const q=ap.position;if(!q)return;const z=parseFloat(q.szi)||0,pv=Math.abs(parseFloat(q.positionValue))||0;if(q.coin==="HYPE"){net+=z;if(z>0)lg+=z;else sh+=-z;}if(pv>0){const c=cm[q.coin]||(cm[q.coin]={net:0,lg:0,sh:0});if(z>=0){c.net+=pv;c.lg+=pv;}else{c.net-=pv;c.sh+=pv;}}});});
+      st.forEach(x=>{if(!x||!Array.isArray(x.assetPositions))return;ok++;x.assetPositions.forEach(ap=>{const q=ap.position;if(!q)return;const z=parseFloat(q.szi)||0,pv=Math.abs(parseFloat(q.positionValue))||0;if(q.coin==="HYPE"){net+=z;if(z>0)lg+=z;else sh+=-z;}if(!z)return;const c=cm[q.coin]||(cm[q.coin]={sz:0,pv:0,gv:0,gz:0,pn:0,mg:0,legs:[]});c.sz+=z;c.pv+=z>0?pv:-pv;c.gv+=pv;c.gz+=Math.abs(z);c.pn+=parseFloat(q.unrealizedPnl)||0;c.mg+=parseFloat(q.marginUsed)||0;c.legs.push([z,parseFloat(q.entryPx)||0]);});});
       if(ok){PU.hlpHype={net,lg,sh};PU.hlpPos={cm,ok,n:st.length};}
     }
   }catch(e){}
@@ -1359,16 +1362,25 @@ async function chartLoad(){
 }
 
 function hlpxRender(){
-  const H=PU.hlpPos,body=$("hx_body");if(!body)return;
-  if(!H){return;}
-  const rows=Object.entries(H.cm).map(([k,v])=>({k,net:v.net,lg:v.lg,sh:v.sh})).filter(r=>Math.abs(r.net)>0).sort((a,b)=>Math.abs(b.net)-Math.abs(a.net)).slice(0,8);
-  let LG=0,SH=0;Object.values(H.cm).forEach(v=>{LG+=v.lg;SH+=v.sh;});
-  if(!rows.length){body.innerHTML='<p class="pempty">No open positions found.</p>';return;}
-  const mx=Math.max(...rows.map(r=>Math.abs(r.net)))||1;
-  body.innerHTML=rows.map(r=>{const w=Math.abs(r.net)/mx*50;return '<div class="hxr"><span class="nm">'+esc(r.k)+'</span><div class="hxbar"><i class="'+(r.net>=0?"lg":"sh")+'" style="width:'+w.toFixed(1)+'%"></i></div><span class="v">'+(r.net>=0?"+":"−")+fmtUSD(Math.abs(r.net))+'</span></div>';}).join("");
-  $("hx_s").textContent="long "+fmtUSD(LG)+" · short "+fmtUSD(SH);
-  $("hx_note").textContent="Net = long minus short, summed across the HLP parent vault and its "+(H.n-1)+" sub-vaults ("+H.ok+" read), core markets only (HIP-3 not included). Teal = net long, red = net short.";
+  const H=PU.hlpPos,body=$("hx_body");if(!body||!H)return;
+  const all=Object.entries(H.cm).map(([k,c])=>{
+    const long=c.sz>=0,side=c.legs.filter(l=>(l[0]>=0)===long);
+    const sw=side.reduce((a,l)=>a+Math.abs(l[0]),0),entry=sw>0?side.reduce((a,l)=>a+Math.abs(l[0])*l[1],0)/sw:0;
+    return {k,long,sz:c.sz,pv:Math.abs(c.pv),entry,mark:c.gz>0?c.gv/c.gz:0,pn:c.pn,mg:c.mg,lev:c.mg>0?c.gv/c.mg:0};
+  }).sort((a,b)=>b.pv-a.pv);
+  const showAll=!!PU.hxall,rows=showAll?all:all.slice(0,10);
+  if(!all.length){body.innerHTML='<tr><td colspan="7" class="pempty">No open positions found.</td></tr>';$("hx_more").style.display="none";return;}
+  const usd=v=>"$"+nf(Math.abs(v),Math.abs(v)<100?2:0);
+  body.innerHTML=rows.map(r=>{
+    const roe=r.mg>0?r.pn/r.mg*100:null,c=r.long?"lgc":"shc";
+    return '<tr><td><b class="'+c+'">'+esc(r.k)+'</b>'+(r.lev>0?'<span class="lv">'+nf(r.lev,r.lev<10?1:0)+'x</span>':"")+'</td><td class="'+c+'">'+(r.sz<0?"−":"")+nf(Math.abs(r.sz),Math.abs(r.sz)<100?2:0)+" "+esc(r.k)+'</td><td>'+usd(r.pv)+'</td><td>'+(r.entry>0?fmtPx(r.entry):"—")+'</td><td>'+(r.mark>0?fmtPx(r.mark):"—")+'</td><td class="'+(r.pn>=0?"pos":"neg")+'">'+(r.pn>=0?"+":"−")+usd(r.pn)+(roe===null?"":" ("+(roe>=0?"+":"−")+nf(Math.abs(roe),1)+"%)")+'</td><td>'+usd(r.mg)+'</td></tr>';
+  }).join("");
+  const mb=$("hx_more");mb.style.display=all.length>10?"":"none";mb.textContent=showAll?"Show fewer":"Show all "+all.length+" markets";
+  let LG=0,SH=0;all.forEach(r=>{if(r.long)LG+=r.pv;else SH+=r.pv;});
+  $("hx_s").textContent=all.length+" markets · net long "+fmtUSD(LG)+" · net short "+fmtUSD(SH);
+  $("hx_note").textContent="Combined across the HLP parent vault and its "+(H.n-1)+" sub-vaults ("+H.ok+" read), core markets only (HIP-3 not included). Size and value are net; entry is the average of the positions on the net side; x is notional divided by margin used. Liquidation price is not shown because it isn't defined once several vaults are combined.";
 }
+document.getElementById("hx_more").addEventListener("click",()=>{PU.hxall=!PU.hxall;hlpxRender();});
 const heatC=t=>{const a=[111,227,207],b=[255,196,87];return a.map((v,i)=>Math.round(v+(b[i]-v)*t));};
 const heatS=(t,al)=>{const c=heatC(t);return "rgba("+c[0]+","+c[1]+","+c[2]+","+al+")";};
 function chartRender(){
@@ -1601,5 +1613,5 @@ $("copytxt").onclick=async()=>{
 };
 setupStatic();
 </script>
-</body>
+<div style="position:fixed;top:10px;right:10px;z-index:99999;background:#f97316;color:#fff;font:700 11px/1 system-ui;padding:6px 10px;border-radius:99px;letter-spacing:.08em;pointer-events:none">BETA</div></body>
 </html>
