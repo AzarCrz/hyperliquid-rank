@@ -1341,7 +1341,7 @@ function protoRender(){
   }catch(e){}
   buyRender();
 }
-function sparkDraw(svg,pts,color,zero,hh){
+function sparkDraw(svg,pts,color,zero,hh,fv){
   if(zero===undefined)zero=true;
   if(!svg)return;
   const W=Math.max(200,Math.round(svg.getBoundingClientRect().width)||300),H=hh||70;svg.setAttribute("viewBox","0 0 "+W+" "+H);
@@ -1350,7 +1350,20 @@ function sparkDraw(svg,pts,color,zero,hh){
   const X=t=>4+(t-x0)/((x1-x0)||1)*(W-8),Y=v=>6+(hi-v)/r*(H-12);
   const d="M"+pts.map(p=>X(p[0]).toFixed(1)+","+Y(p[1]).toFixed(1)).join(" L");
   const z=(zero?Y(0):H-6).toFixed(1);
-  svg.innerHTML='<defs><linearGradient id="hg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="'+color+'" stop-opacity=".32"/><stop offset="1" stop-color="'+color+'" stop-opacity="0"/></linearGradient></defs>'+(zero?'<line x1="4" x2="'+(W-4)+'" y1="'+z+'" y2="'+z+'" stroke="rgba(255,255,255,.2)" stroke-dasharray="3 4"/>':'')+'<path d="'+d+' L'+X(x1).toFixed(1)+','+z+' L'+X(x0).toFixed(1)+','+z+' Z" fill="url(#hg)"/><path d="'+d+'" fill="none" stroke="'+color+'" stroke-width="2" stroke-linejoin="round"/>';
+  svg.innerHTML='<defs><linearGradient id="hg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="'+color+'" stop-opacity=".32"/><stop offset="1" stop-color="'+color+'" stop-opacity="0"/></linearGradient></defs>'+(zero?'<line x1="4" x2="'+(W-4)+'" y1="'+z+'" y2="'+z+'" stroke="rgba(255,255,255,.2)" stroke-dasharray="3 4"/>':'')+'<path d="'+d+' L'+X(x1).toFixed(1)+','+z+' L'+X(x0).toFixed(1)+','+z+' Z" fill="url(#hg)"/><path d="'+d+'" fill="none" stroke="'+color+'" stroke-width="2" stroke-linejoin="round"/><g class="shv" style="display:none;pointer-events:none"><line y1="4" y2="'+(H-4)+'" stroke="rgba(255,255,255,.4)"/><circle r="4.5" fill="#fff" stroke="'+color+'" stroke-width="2"/><rect rx="6" height="34" fill="rgba(6,24,19,.94)" stroke="rgba(111,227,207,.4)"/><text class="t1" fill="#fff" font-size="12" font-weight="600"></text><text class="t2" fill="#8aa89f" font-size="10.5"></text></g>';
+  const gg=svg.querySelector(".shv"),ln=gg.querySelector("line"),ci=gg.querySelector("circle"),rc=gg.querySelector("rect"),t1=gg.querySelector(".t1"),t2=gg.querySelector(".t2");
+  const fm=fv||(v=>nf(v,2));
+  const mv=e=>{
+    const b=svg.getBoundingClientRect(),mx=(e.clientX-b.left)*(W/b.width);
+    let bi=0,bd=1e18;pts.forEach((q,i)=>{const dd=Math.abs(X(q[0])-mx);if(dd<bd){bd=dd;bi=i;}});
+    const q=pts[bi],cx=X(q[0]),cy=Y(q[1]);
+    t1.textContent=fm(q[1]);t2.textContent=new Date(q[0]).toLocaleString("en-GB",{day:"numeric",month:"short",year:"2-digit",hour:"2-digit",minute:"2-digit"});
+    gg.style.display="";ln.setAttribute("x1",cx);ln.setAttribute("x2",cx);ci.setAttribute("cx",cx);ci.setAttribute("cy",cy);
+    const w=Math.max(t1.getComputedTextLength(),t2.getComputedTextLength())+16;let bx=cx+10;if(bx+w>W-2)bx=cx-10-w;if(bx<2)bx=2;
+    const by=cy>H/2?8:H-42;
+    rc.setAttribute("x",bx);rc.setAttribute("y",by);rc.setAttribute("width",w);t1.setAttribute("x",bx+8);t1.setAttribute("y",by+15);t2.setAttribute("x",bx+8);t2.setAttribute("y",by+28);
+  };
+  svg.style.touchAction="pan-y";svg.onpointermove=mv;svg.onpointerdown=mv;svg.onpointerleave=()=>{gg.style.display="none";};
 }
 function hlpRender(){
   const v=PU.proto&&PU.proto.vd;if(!v||!Array.isArray(v.portfolio))return;
@@ -1365,10 +1378,10 @@ function hlpRender(){
   if(vm){
     const dv=last-first,pc=first>0&&k!=="allTime"?" ("+(dv>=0?"+":"−")+nf(Math.abs(dv/first)*100,1)+"%)":"";
     $("h_s1").innerHTML=isNaN(dv)?"&nbsp;":"Value change "+lab+' <b class="'+(dv>=0?"pos":"neg")+'">'+fmtS(dv)+pc+"</b>";
-    sparkDraw($("h_svg"),pts,"#6fe3cf",false,window.innerWidth<=640?170:210);
+    sparkDraw($("h_svg"),pts,"#6fe3cf",false,window.innerWidth<=640?170:210,fmtUSD);
   }else{
     $("h_s1").innerHTML=isNaN(last)?"&nbsp;":"PnL "+lab+' <b class="'+(last>=0?"pos":"neg")+'">'+fmtS(last)+"</b>";
-    sparkDraw($("h_svg"),pts,last>=0?"#7ee8c9":"#ffb4b4",true,window.innerWidth<=640?170:210);
+    sparkDraw($("h_svg"),pts,last>=0?"#7ee8c9":"#ffb4b4",true,window.innerWidth<=640?170:210,fmtS);
   }
   const all=g("allTime"),al=all&&all.pnlHistory?lastv(all.pnlHistory):NaN;
   let t=isNaN(al)||k==="allTime"?"":"All-time PnL "+fmtS(al);
@@ -1476,8 +1489,8 @@ function acRender(){
   if(pts.length<2){card.style.display="none";return;}
   card.style.display="";
   const lab={day:"24h",week:"7d",month:"30d",allTime:"all-time"}[k],last=pts[pts.length-1][1],first=pts[0][1];
-  if(vm){const dv=last-first;$("ac_s1").innerHTML="Value "+fmtUSD(last)+" · change "+lab+' <b class="'+(dv>=0?"pos":"neg")+'">'+fmtS(dv)+"</b>";sparkDraw($("ac_svg"),pts,"#6fe3cf",false,180);}
-  else{$("ac_s1").innerHTML="PnL "+lab+' <b class="'+(last>=0?"pos":"neg")+'">'+fmtS(last)+"</b>";sparkDraw($("ac_svg"),pts,last>=0?"#7ee8c9":"#ffb4b4",true,180);}
+  if(vm){const dv=last-first;$("ac_s1").innerHTML="Value "+fmtUSD(last)+" · change "+lab+' <b class="'+(dv>=0?"pos":"neg")+'">'+fmtS(dv)+"</b>";sparkDraw($("ac_svg"),pts,"#6fe3cf",false,180,fmtUSD);}
+  else{$("ac_s1").innerHTML="PnL "+lab+' <b class="'+(last>=0?"pos":"neg")+'">'+fmtS(last)+"</b>";sparkDraw($("ac_svg"),pts,last>=0?"#7ee8c9":"#ffb4b4",true,180,fmtS);}
   const dt=t=>new Date(t).toLocaleDateString("en-GB",{day:"numeric",month:"short",year:"numeric"});
   $("ac_s2").textContent=dt(pts[0][0])+" → "+dt(pts[pts.length-1][0])+(subsOn?" · main address":"");
 }
@@ -1493,16 +1506,21 @@ function donut(title,parts,c1,c2){
   const lg=parts.filter(p=>p.v>0).map(p=>'<div class="lr"><i style="background:'+p.c+'"></i><span>'+p.l+'</span><b>'+(p.t||nf(p.v/1e6,1)+"M")+" · "+nf(p.v/tot*100,p.v/tot<.1?1:0)+"%</b></div>").join("");
   return '<div class="sc"><h3>'+title+'</h3><div class="dn"><svg viewBox="0 0 140 140" role="img" aria-label="'+title+'"><circle cx="70" cy="70" r="'+R+'" fill="none" stroke="rgba(255,255,255,.06)" stroke-width="20"/>'+arcs+'<text x="70" y="70" text-anchor="middle" class="ct2">'+c1+'</text><text x="70" y="85" text-anchor="middle" class="cs2">'+c2+'</text></svg><div class="lg">'+lg+'</div></div></div>';
 }
+async function hlPostBig(body,ms){
+  const ctl=new AbortController(),to=setTimeout(()=>ctl.abort(),ms);
+  try{const r=await fetch("https://api.hyperliquid.xyz/info",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body),signal:ctl.signal});if(!r.ok)throw new Error("http "+r.status);return await r.json();}
+  finally{clearTimeout(to);}
+}
 async function supplyLoad2(){
   if(PU.sdBusy||PU.sd)return;PU.sdBusy=true;
   const c=p=>p.catch(()=>null);
-  const [td,vs]=await Promise.all([c(hlPost({type:"tokenDetails",tokenId:"0x0d01dc56dcaaca66ad901c959b4011ec"})),c(hlPost({type:"validatorSummaries"}))]);
+  const [td,vs]=await Promise.all([c(hlPostBig({type:"tokenDetails",tokenId:"0x0d01dc56dcaaca66ad901c959b4011ec"},90000).catch(()=>hlPostBig({type:"tokenDetails",tokenId:"0x0d01dc56dcaaca66ad901c959b4011ec"},90000))),c(hlPost({type:"validatorSummaries"}))]);
   PU.sdBusy=false;PU.sd=td&&parseFloat(td.maxSupply)>0?td:null;PU.sv=Array.isArray(vs)?vs:null;
   supplyRender();
 }
 function supplyRender(){
   const td=PU.sd,vs=PU.sv,g=$("sp_grid");if(!g)return;
-  if(!td){g.innerHTML='<p class="pempty">Couldn\'t load the supply data. Try again in a moment.</p>';return;}
+  if(!td){g.innerHTML='<p class="pempty">Couldn\'t load the supply data. <button class="pill ghost" id="sp_retry" style="margin-left:8px">Retry</button></p>';$("sp_retry").onclick=()=>{g.innerHTML='<p class="pempty">Loading the supply data… (large file, can take a few seconds)</p>';supplyLoad2();};return;}
   const max=parseFloat(td.maxSupply),tot=parseFloat(td.totalSupply),circ=parseFloat(td.circulatingSupply),fe=parseFloat(td.futureEmissions)||0;
   const nc=(Array.isArray(td.nonCirculatingUserBalances)?td.nonCirculatingUserBalances:[]).map(x=>[String(x[0]).toLowerCase(),parseFloat(x[1])||0]);
   const sh=a=>a.slice(0,6)+"…"+a.slice(-4);
