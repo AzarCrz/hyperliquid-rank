@@ -355,7 +355,7 @@ textarea:focus{outline:2px solid var(--acc);outline-offset:1px}
 @media(max-width:640px){.snav .tab{padding:7px 12px;font-size:13px}}
 
 #psnav{margin-top:2px}
-#sec-p-buy,#sec-p-hlp,#sec-p-fund,#sec-p-all{scroll-margin-top:74px}
+#sec-p-buy,#sec-p-sup,#sec-p-hlp,#sec-p-fund,#sec-p-all{scroll-margin-top:74px}
 .hxb{padding:6px 24px 4px}
 .hxr{display:grid;grid-template-columns:78px 1fr 88px;gap:10px;align-items:center;padding:7px 0;font-size:13px}
 .hxr .nm{font-weight:600}
@@ -373,6 +373,34 @@ textarea:focus{outline:2px solid var(--acc);outline-offset:1px}
 .fstats b{display:block;font:600 15px/1.3 var(--sans);color:var(--ink)}
 .fpad{padding:2px 24px 14px;margin:0}
 @media(max-width:640px){.hxb,.fsearch,.fstats,.fpad,.fn2{padding-left:16px;padding-right:16px}.hxr{grid-template-columns:62px 1fr 76px}.fstats{grid-template-columns:repeat(2,1fr)}}
+
+.acctl{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+.acb{padding:10px 22px 16px;display:flex;flex-direction:column;gap:6px}
+.acb small{color:var(--mute);font-size:13px;min-height:17px}.acb small b{font:600 13px var(--sans)}
+#ac_svg{width:100%;height:180px;display:block;margin:4px 0}
+.stl{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1px;background:rgba(111,227,207,.14);border-top:1px solid rgba(111,227,207,.26)}
+.stl>div{background:rgba(4,27,21,.9);padding:16px 22px}
+.stl .k{font:600 11px var(--sans);letter-spacing:.12em;text-transform:uppercase;color:var(--mute)}
+.stl b{display:block;font:700 22px/1.25 var(--sans);margin-top:4px;font-variant-numeric:tabular-nums}
+.stl small{display:block;color:var(--mute);font-size:12.5px;margin-top:2px}
+@media(max-width:820px){.stl{grid-template-columns:repeat(2,minmax(0,1fr))}.stl>div{padding:14px 16px}.acb{padding-left:16px;padding-right:16px}}
+
+.stl .pg{height:6px;border-radius:99px;background:rgba(255,255,255,.08);margin-top:8px;overflow:hidden}
+.stl .pg i{display:block;height:100%;background:#6fe3cf;border-radius:99px}
+
+.sgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1px;background:rgba(111,227,207,.14);border-top:1px solid rgba(111,227,207,.26)}
+.sc{background:rgba(4,27,21,.9);padding:18px 22px}
+.sc h3{margin:0 0 10px;font:600 11px var(--sans);letter-spacing:.12em;text-transform:uppercase;color:var(--mute)}
+.sc .dn{display:flex;gap:16px;align-items:center}
+.sc svg{width:132px;height:132px;flex:none}
+.sc .lg{flex:1;display:flex;flex-direction:column;gap:5px;min-width:0}
+.sc .lr{display:flex;gap:8px;align-items:baseline;font-size:12.5px;line-height:1.35}
+.sc .lr i{width:9px;height:9px;border-radius:50%;flex:none;transform:translateY(1px)}
+.sc .lr span{flex:1;min-width:0}
+.sc .lr b{font-weight:600;font-variant-numeric:tabular-nums;white-space:nowrap}
+.sc .ct2{font:700 15px var(--sans);fill:var(--ink)}
+.sc .cs2{font:500 10px var(--sans);fill:var(--mute)}
+@media(max-width:820px){.sgrid{grid-template-columns:1fr}.sc{padding:16px}.sc .dn{flex-direction:column;align-items:flex-start}}
 #more,#fees,#share,#ruler{opacity:0;transform:translateY(26px);transition:opacity .8s ease,transform .8s cubic-bezier(.2,.8,.2,1)}
 #more.in,#fees.in,#share.in,#ruler.in{opacity:1;transform:none}
 #v-results.on .wrap>#more,#v-results.on .wrap>#fees,#v-results.on .wrap>#share,#v-results.on .wrap>#ruler{animation:none}
@@ -495,9 +523,26 @@ textarea:focus{outline:2px solid var(--acc);outline-offset:1px}
     <div class="hip" id="hip" style="display:none"></div>
   </section>
 
+  <section class="card" id="acct" style="display:none">
+    <div class="card-head"><h2 class="ct">Account history</h2><div class="acctl"><div class="seg" id="acmode" role="group"><i class="ind"></i><button class="tab" data-m="pnl" aria-pressed="true">PnL</button><button class="tab" data-m="val" aria-pressed="false">Value</button></div><div class="seg" id="acrange" role="group"><i class="ind"></i><button class="tab" data-k="day" aria-pressed="false">24h</button><button class="tab" data-k="week" aria-pressed="false">7d</button><button class="tab" data-k="month" aria-pressed="false">30d</button><button class="tab" data-k="allTime" aria-pressed="true">All</button></div></div></div>
+    <div class="acb"><small id="ac_s1">&nbsp;</small><svg id="ac_svg" viewBox="0 0 300 180" role="img" aria-label="Account history"></svg><small id="ac_s2"></small></div>
+  </section>
+
+  <section class="card" id="style" style="display:none">
+    <div class="card-head"><h2 class="ct">Trading style</h2><span class="ptip" id="st_s"></span></div>
+    <div class="stl" id="st_body"></div>
+    <p class="fn2" id="st_note"></p>
+  </section>
+
   <section class="card" id="fees" style="display:none">
     <div class="card-head"><h2 class="ct">Fees</h2></div>
     <div class="fbk" id="fbk" style="display:none"></div>
+  </section>
+
+  <section class="card" id="ftier" style="display:none">
+    <div class="card-head"><h2 class="ct">Your fee tier</h2><span class="ptip" id="ft_s"></span></div>
+    <div class="stl" id="ft_body"></div>
+    <p class="fn2" id="ft_note"></p>
   </section>
 
   <section class="card" id="sec-ladder">
@@ -548,7 +593,7 @@ textarea:focus{outline:2px solid var(--acc);outline-offset:1px}
     <div class="tb-right"><button class="pill ghost sm" id="pback">Back</button></div>
   </header>
   <div class="phead"><div><h1 class="ptitle">Pulse</h1><p class="psub"><i class="live"></i><span id="pstat">Loading the market…</span></p></div></div>
-  <nav class="seg snav" id="psnav" role="group" aria-label="Pulse sections"><i class="ind"></i><button class="tab" data-go="sec-p-buy" aria-pressed="true">Buyback</button><button class="tab" data-go="sec-p-hlp" aria-pressed="false">HLP</button><button class="tab" data-go="sec-p-fund" aria-pressed="false">Funding</button><button class="tab" data-go="sec-p-all" aria-pressed="false">Markets</button></nav>
+  <nav class="seg snav" id="psnav" role="group" aria-label="Pulse sections"><i class="ind"></i><button class="tab" data-go="sec-p-buy" aria-pressed="true">Buyback</button><button class="tab" data-go="sec-p-sup" aria-pressed="false">Supply</button><button class="tab" data-go="sec-p-hlp" aria-pressed="false">HLP</button><button class="tab" data-go="sec-p-fund" aria-pressed="false">Funding</button><button class="tab" data-go="sec-p-all" aria-pressed="false">Markets</button></nav>
   <div class="psec" id="sec-p-buy">Buyback · the protocol's engine</div>
   <section class="card" id="pbuy">
     <p class="pstory" id="pb_head">Reading the Assistance Fund…</p>
@@ -566,6 +611,13 @@ textarea:focus{outline:2px solid var(--acc);outline-offset:1px}
     </div>
     <div class="pcwrap"><svg id="pc_svg" viewBox="0 0 800 280" role="img" aria-label="HYPE price with Assistance Fund buyback"></svg><p class="pempty" id="pc_empty">Loading the chart…</p></div>
     <div class="pclegend"><span><i class="lg1"></i>HYPE price</span><span><i class="lg2"></i>Fund buys · size and colour = HYPE bought that hour</span><span class="lgheat"><em>less</em><i class="lg3"></i><em>more</em></span></div>
+  </section>
+
+  <div class="psec" id="sec-p-sup">HYPE supply · where the tokens are</div>
+  <section class="card" id="psup">
+    <div class="card-head"><h2 class="ct">Supply breakdown</h2><span class="ptip" id="sp_s">Scroll here to load</span></div>
+    <div class="sgrid" id="sp_grid"><p class="pempty">Loading the supply data… (large file, one time only)</p></div>
+    <p class="fn2" id="sp_note"></p>
   </section>
 
   <div class="psec" id="sec-p-hlp">HLP vault · performance and positions</div>
@@ -939,10 +991,10 @@ function parseP(j){
 function parsePortfolio(j){
   const r=parseP(j);
   X={pnl:r.pnl,av:r.av,since:r.since};
-  mainRes=r;
+  mainRes=r;PF=j;
   return r.v;
 }
-let mainRes=null,mainAddr="",subsOn=false,subList=null,subData=null;
+let PF=null,mainRes=null,mainAddr="",subsOn=false,subList=null,subData=null;
 /* ---- extra stats: profit, account size, first trade, fees ---- */
 const sl=x=>Math.sign(x)*Math.log10(1+Math.abs(x));
 function quantileSigned(v,t){
@@ -1027,18 +1079,25 @@ async function loadFills(addrs){
       list=list.concat(r.list);if(!r.complete)complete=false;if(!r.complete||r.list.length===10000)capAny=true;
     }
     if(tok!==fillsTok)return;
-    let fees=0,first=null,tot=0,hip=0,minT=Infinity;const fb={spot:0,perp:0,hip:0},hm={},now=Date.now(),HMS=[864e5,6048e5,2592e6],hv=[0,0,0];
+    let fees=0,first=null,tot=0,hip=0,minT=Infinity;const fb={spot:0,perp:0,hip:0},stt={tk:0,mk:0,wins:0,loss:0,best:null,worst:null,lo:0,sh:0,mc:{}},dset=new Set(),hm={},now=Date.now(),HMS=[864e5,6048e5,2592e6],hv=[0,0,0];
     for(const f of list){
       const fee=parseFloat(f.fee)||0,px=parseFloat(f.px)||0,bf=parseFloat(f.builderFee)||0;
       const nt=px*(parseFloat(f.sz)||0);tot+=nt;
       if(typeof f.time==="number"&&f.time<minT)minT=f.time;
       if(typeof f.coin==="string"&&f.coin.indexOf(":")>0){hip+=nt;hm[f.coin]=(hm[f.coin]||0)+nt;HMS.forEach((ms,i)=>{if(f.time>=now-ms)hv[i]+=nt;});}
       const fu=(!f.feeToken||STABLE.has(f.feeToken)?fee:fee*px)+bf;fees+=fu;
+      if(f.crossed===true)stt.tk+=nt;else if(f.crossed===false)stt.mk+=nt;
+      const cp=parseFloat(f.closedPnl)||0,cc=typeof f.coin==="string"?f.coin:"?";
+      if(cp>0)stt.wins++;else if(cp<0)stt.loss++;
+      if(cp!==0){if(!stt.best||cp>stt.best[0])stt.best=[cp,cc];if(!stt.worst||cp<stt.worst[0])stt.worst=[cp,cc];}
+      if(f.dir==="Open Long")stt.lo+=nt;else if(f.dir==="Open Short")stt.sh+=nt;
+      stt.mc[cc]=(stt.mc[cc]||0)+nt;
+      if(typeof f.time==="number")dset.add(Math.floor(f.time/864e5));
       const cn=typeof f.coin==="string"?f.coin:"";fb[cn.indexOf(":")>0?"hip":(cn[0]==="@"||cn.indexOf("/")>0)?"spot":"perp"]+=fu;
       if(typeof f.time==="number"&&(first===null||f.time<first))first=f.time;
     }
     const top=Object.entries(hm).sort((a,b)=>b[1]-a[1])[0]||null;
-    F={state:"ok",fees,fb,first,n:list.length,capped:capAny,tot,hip,top};
+    stt.days=dset.size;F={state:"ok",fees,fb,st:stt,first,n:list.length,capped:capAny,tot,hip,top};
     hipVols=hv;hipCov=HMS.map(ms=>!capAny||minT<=now-ms);
     if(EVaddr!==addrs[0])evmLoad(addrs[0],tok,(!F.capped&&F.first)?F.first:(X&&X.since)?X.since:(isFinite(minT)?minT:0));
   }catch(e){if(tok!==fillsTok)return;F={state:"err"};}
@@ -1083,7 +1142,7 @@ function renderMore(){
   renderMode();
   const on=!!(vols&&!manual&&D.p&&D.a);
   $("more").style.display=on?"":"none";
-  if(!on)$("fees").style.display="none";
+  if(!on){$("fees").style.display="none";$("style").style.display="none";$("acct").style.display="none";$("ftier").style.display="none";}
   if(!on)return;
   $("k_pnl").textContent="Profit · "+S.tabs[W];
   const p=X.pnl[W],act=vols[W]>0,mp=$("m_pnl");
@@ -1099,6 +1158,26 @@ function renderMore(){
       ?`HIP-3 markets: <b>${nf(F.hip/F.tot*100,F.hip/F.tot<.1?1:0)}%</b> of the volume in ${scope} · most traded: <b>${F.top[0].replace(/[<>&]/g,"")}</b> (${fmtUSD(F.top[1])})${subsOn?" · incl. sub-accounts":""}`
       :`HIP-3 markets: none in ${scope}${subsOn?" · incl. sub-accounts":""}`;
   }else hl.style.display="none";
+  acRender();ftRender();
+  const sb=$("style");
+  if(F.state==="ok"&&F.st&&F.n>0){
+    const T=F.st,usd=v=>(v<0?"−":"+")+fmtUSD(Math.abs(v)),cl=T.wins+T.loss,tv=T.tk+T.mk,ov=T.lo+T.sh;
+    const topc=Object.entries(T.mc).sort((a,b)=>b[1]-a[1])[0],nm=c=>esc(String(c).replace(/^[^:]+:/,""));
+    const tile=(k,v,sub)=>'<div><span class="k">'+k+'</span><b>'+v+'</b><small>'+sub+'</small></div>';
+    const tl=[];
+    if(tv>0)tl.push(tile("Taker share",nf(T.tk/tv*100,0)+"%",nf(T.mk/tv*100,0)+"% maker · by volume"));
+    if(cl>0)tl.push(tile("Win rate",nf(T.wins/cl*100,0)+"%",T.wins.toLocaleString("en-US")+" of "+cl.toLocaleString("en-US")+" closes in profit"));
+    if(T.best&&T.best[0]>0)tl.push(tile("Best close",'<span class="pos">'+usd(T.best[0])+"</span>",nm(T.best[1])));
+    if(T.worst&&T.worst[0]<0)tl.push(tile("Worst close",'<span class="neg">'+usd(T.worst[0])+"</span>",nm(T.worst[1])));
+    if(ov>0)tl.push(tile("Direction",nf(T.lo/ov*100,0)+"% long",nf(T.sh/ov*100,0)+"% short · perp openings"));
+    if(topc&&F.tot>0)tl.push(tile("Top market",nm(topc[0]),nf(topc[1]/F.tot*100,0)+"% of volume"));
+    tl.push(tile("Active days",T.days.toLocaleString("en-US"),"avg fill "+fmtUSD(F.tot/F.n)));
+    tl.push(tile("Fills analysed",F.n.toLocaleString("en-US"),F.capped?"most recent only":"complete history"));
+    sb.style.display="";
+    $("st_body").innerHTML=tl.join("");
+    $("st_s").textContent=(F.capped?"last "+F.n.toLocaleString("en-US")+" fills":"full history")+(subsOn?" · incl. sub-accounts":"");
+    $("st_note").textContent="Win rate counts closing fills with a non-zero realised PnL, not whole positions. Taker share and direction are measured on notional volume.";
+  }else sb.style.display="none";
   const fk=$("fbk");
   if(F.state==="ok"&&F.fb&&(F.fb.spot||F.fb.perp||F.fb.hip)){
     const C=[["Perps","perp","#4fd1c5"],["Spot","spot","#a78bfa"],["HIP-3","hip","#f6ad55"]];
@@ -1139,9 +1218,9 @@ async function lookup(){
   vols=res;addrShown=raw.slice(0,6)+"…"+raw.slice(-4);
   if(!(vols[W]>0)){const k=[3,2,1,0].find(i=>vols[i]>0);if(k!==undefined)W=k;}
   if(vols.every(x=>!(x>0))){resetProgress();await show("v-landing");$("err").textContent=S.none;return;}
-  fillsTok++;EV=null;EVaddr="";F={state:"loading"};mainAddr=raw;subsOn=false;subList=null;subData=null;subMsg="";MODE="all";hipVols=null;hipCov=null;$("subnote").textContent="";introRan=false;lastTier=-1;$("subbtn").classList.remove("on");$("subbtn").disabled=false;$("subbtn").textContent="Include sub-accounts";
+  fillsTok++;EV=null;EVaddr="";FT=null;F={state:"loading"};mainAddr=raw;subsOn=false;subList=null;subData=null;subMsg="";MODE="all";hipVols=null;hipCov=null;$("subnote").textContent="";introRan=false;lastTier=-1;$("subbtn").classList.remove("on");$("subbtn").disabled=false;$("subbtn").textContent="Include sub-accounts";
   buildTabs();renderResults();await finishProgress();await show("v-results");intro();
-  loadFills(raw);
+  loadFills(raw);feeLoad(raw);
 }
 async function manualGo(){
   const x=parseFloat($("mvol").value);$("err").textContent="";
@@ -1360,6 +1439,105 @@ async function chartLoad(){
   PU.cbusy=false;chartRender();buyRender();hlpRender();hlpxRender();
 }
 
+
+
+let FT=null;
+async function feeLoad(addr){
+  FT=null;
+  try{const j=await hlPost({type:"userFees",user:addr});if(addr!==mainAddr)return;if(j&&j.feeSchedule&&j.userCrossRate!==undefined)FT=j;}catch(e){}
+  if(addr===mainAddr)renderMore();
+}
+function ftRender(){
+  const card=$("ftier");
+  if(!FT){card.style.display="none";return;}
+  const sch=FT.feeSchedule,vip=(sch.tiers&&sch.tiers.vip)||[],dv=Array.isArray(FT.dailyUserVlm)?FT.dailyUserVlm.slice(-14):[];
+  const vol=dv.reduce((a,d)=>a+(parseFloat(d.userCross)||0)+(parseFloat(d.userAdd)||0),0);
+  const cur=vip.filter(t=>parseFloat(t.ntlCutoff)<=vol).length,nx=vip[cur]||null;
+  const pc=x=>nf(parseFloat(x)*100,3)+"%",tile=(k,v,sub,extra)=>'<div><span class="k">'+k+'</span><b>'+v+'</b><small>'+sub+'</small>'+(extra||"")+'</div>';
+  const st=FT.activeStakingDiscount||{},stH=(parseFloat(st.bpsOfMaxSupply)||0)*1e5,stD=(parseFloat(st.discount)||0)*100;
+  const tiers=sch.stakingDiscountTiers||[],nxs=tiers.find(t=>(parseFloat(t.bpsOfMaxSupply)||0)*1e5>stH+1e-9);
+  const ref=(parseFloat(FT.activeReferralDiscount)||0)*100;
+  const tl=[];
+  tl.push(tile("Perps",pc(FT.userCrossRate)+" taker",pc(FT.userAddRate)+" maker"));
+  tl.push(tile("Spot",pc(FT.userSpotCrossRate)+" taker",pc(FT.userSpotAddRate)+" maker"));
+  tl.push(tile("14-day volume",fmtUSD(vol),nx?"next tier at "+fmtUSD(parseFloat(nx.ntlCutoff))+" · "+pc(nx.cross)+" taker, "+pc(nx.add)+" maker":"top volume tier reached",nx?'<div class="pg"><i style="width:'+Math.min(100,vol/parseFloat(nx.ntlCutoff)*100).toFixed(1)+'%"></i></div>':""));
+  tl.push(tile("Discounts","Staking "+nf(stD,0)+"%",(nxs?"stake "+nf((parseFloat(nxs.bpsOfMaxSupply)||0)*1e5,0)+" HYPE for "+nf(parseFloat(nxs.discount)*100,0)+"% · ":"")+"referral "+nf(ref,0)+"%"));
+  card.style.display="";
+  $("ft_body").innerHTML=tl.join("");
+  $("ft_s").textContent=(cur>0?"VIP "+cur:"Base tier")+(subsOn?" · main address":"");
+  $("ft_note").textContent="Rates as reported by Hyperliquid for your tier, read live. The staking discount uses "+nf(stH,1)+" HYPE counted by the protocol. Referral and staking discounts are listed separately, not applied to the rates shown.";
+}
+function acRender(){
+  const card=$("acct");setTimeout(()=>{moveInd($("acrange"));moveInd($("acmode"));},60);
+  if(!PF||!Array.isArray(PF)){card.style.display="none";return;}
+  const k=PU.ack||"allTime",vm=PU.acm==="val",e=PF.find(x=>Array.isArray(x)&&x[0]===k),o=e&&e[1];
+  const ser=o?(vm?o.accountValueHistory:o.pnlHistory):null;
+  const pts=ser?ser.map(x=>[+x[0],parseFloat(x[1])]).filter(x=>isFinite(x[0])&&isFinite(x[1])):[];
+  if(pts.length<2){card.style.display="none";return;}
+  card.style.display="";
+  const lab={day:"24h",week:"7d",month:"30d",allTime:"all-time"}[k],last=pts[pts.length-1][1],first=pts[0][1];
+  if(vm){const dv=last-first;$("ac_s1").innerHTML="Value "+fmtUSD(last)+" · change "+lab+' <b class="'+(dv>=0?"pos":"neg")+'">'+fmtS(dv)+"</b>";sparkDraw($("ac_svg"),pts,"#6fe3cf",false,180);}
+  else{$("ac_s1").innerHTML="PnL "+lab+' <b class="'+(last>=0?"pos":"neg")+'">'+fmtS(last)+"</b>";sparkDraw($("ac_svg"),pts,last>=0?"#7ee8c9":"#ffb4b4",true,180);}
+  const dt=t=>new Date(t).toLocaleDateString("en-GB",{day:"numeric",month:"short",year:"numeric"});
+  $("ac_s2").textContent=dt(pts[0][0])+" → "+dt(pts[pts.length-1][0])+(subsOn?" · main address":"");
+}
+(function(){
+  const bind=(id,attr,key)=>{const el=$(id);el.addEventListener("click",e=>{const b=e.target.closest("["+attr+"]");if(!b)return;PU[key]=b.getAttribute(attr);el.querySelectorAll(".tab").forEach(x=>x.setAttribute("aria-pressed",String(x===b)));moveInd(el);acRender();});};
+  bind("acrange","data-k","ack");bind("acmode","data-m","acm");
+})();
+
+const SUPCOL=["#4fd1c5","#a78bfa","#f6ad55","#f472b6","#60a5fa","#fbbf24","#94a3b8","#34d399"];
+function donut(title,parts,c1,c2){
+  const tot=parts.reduce((a,p)=>a+p.v,0)||1,R=52,C=2*Math.PI*R;let off=0;
+  const arcs=parts.filter(p=>p.v>0).map((p,i)=>{const len=p.v/tot*C,a='<circle cx="70" cy="70" r="'+R+'" fill="none" stroke="'+p.c+'" stroke-width="20" stroke-dasharray="'+Math.max(0,len-1).toFixed(2)+' '+(C-Math.max(0,len-1)).toFixed(2)+'" stroke-dashoffset="'+(-off).toFixed(2)+'" transform="rotate(-90 70 70)"/>';off+=len;return a;}).join("");
+  const lg=parts.filter(p=>p.v>0).map(p=>'<div class="lr"><i style="background:'+p.c+'"></i><span>'+p.l+'</span><b>'+(p.t||nf(p.v/1e6,1)+"M")+" · "+nf(p.v/tot*100,p.v/tot<.1?1:0)+"%</b></div>").join("");
+  return '<div class="sc"><h3>'+title+'</h3><div class="dn"><svg viewBox="0 0 140 140" role="img" aria-label="'+title+'"><circle cx="70" cy="70" r="'+R+'" fill="none" stroke="rgba(255,255,255,.06)" stroke-width="20"/>'+arcs+'<text x="70" y="70" text-anchor="middle" class="ct2">'+c1+'</text><text x="70" y="85" text-anchor="middle" class="cs2">'+c2+'</text></svg><div class="lg">'+lg+'</div></div></div>';
+}
+async function supplyLoad2(){
+  if(PU.sdBusy||PU.sd)return;PU.sdBusy=true;
+  const c=p=>p.catch(()=>null);
+  const [td,vs]=await Promise.all([c(hlPost({type:"tokenDetails",tokenId:"0x0d01dc56dcaaca66ad901c959b4011ec"})),c(hlPost({type:"validatorSummaries"}))]);
+  PU.sdBusy=false;PU.sd=td&&parseFloat(td.maxSupply)>0?td:null;PU.sv=Array.isArray(vs)?vs:null;
+  supplyRender();
+}
+function supplyRender(){
+  const td=PU.sd,vs=PU.sv,g=$("sp_grid");if(!g)return;
+  if(!td){g.innerHTML='<p class="pempty">Couldn\'t load the supply data. Try again in a moment.</p>';return;}
+  const max=parseFloat(td.maxSupply),tot=parseFloat(td.totalSupply),circ=parseFloat(td.circulatingSupply),fe=parseFloat(td.futureEmissions)||0;
+  const nc=(Array.isArray(td.nonCirculatingUserBalances)?td.nonCirculatingUserBalances:[]).map(x=>[String(x[0]).toLowerCase(),parseFloat(x[1])||0]);
+  const sh=a=>a.slice(0,6)+"…"+a.slice(-4);
+  const p1=[{l:"Circulating",v:circ,c:SUPCOL[0]},{l:"Not yet emitted (future emissions and community rewards)",v:fe,c:SUPCOL[1]}];
+  let oth=0,k=2;
+  nc.forEach(([a,b])=>{
+    if(a==="0xfefefefefefefefefefefefefefefefefefefefe")p1.push({l:"Assistance Fund",v:b,c:SUPCOL[2]});
+    else if(b/max>=0.005)p1.push({l:"Locked wallet "+sh(a)+" *",v:b,c:SUPCOL[3]});
+    else oth+=b;
+  });
+  if(oth>1e5)p1.push({l:"Other wallets",v:oth,c:SUPCOL[6]});
+  const removed=Math.max(0,max-tot);if(removed>0)p1.push({l:"Removed from supply",v:removed,c:SUPCOL[5],t:nf(removed/1e6,2)+"M"});
+  const existing=circ+nc.reduce((a,x)=>a+x[1],0);
+  const out=[donut("Where the 1B maximum is today",p1,nf(max/1e9,0)+"B","max supply")];
+  let apr="";
+  if(vs&&vs.length){
+    const st=vs.reduce((a,v)=>a+(parseFloat(v.stake)||0),0)/1e8,sorted=vs.slice().sort((a,b)=>(parseFloat(b.stake)||0)-(parseFloat(a.stake)||0));
+    out.push(donut("Staked share of existing HYPE",[{l:"Staked",v:st,c:SUPCOL[0]},{l:"Not staked",v:Math.max(0,existing-st),c:SUPCOL[6]}],nf(st/existing*100,0)+"%","staked"));
+    const top=sorted.slice(0,6).map((v,i)=>({l:esc(v.name||sh(v.validator)),v:(parseFloat(v.stake)||0)/1e8,c:SUPCOL[i]}));
+    const rest=sorted.slice(6).reduce((a,v)=>a+(parseFloat(v.stake)||0)/1e8,0);if(rest>0)top.push({l:"Other "+(sorted.length-6)+" validators",v:rest,c:SUPCOL[6]});
+    out.push(donut("Stake by validator",top,String(vs.length),"validators"));
+    let w=0,sw=0;vs.forEach(v=>{if(!v.isActive||v.isJailed)return;const e=(v.stats||[]).find(x=>x[0]==="week"),a=e&&e[1]?parseFloat(e[1].predictedApr):NaN,sk=parseFloat(v.stake)||0;if(isFinite(a)&&sk>0){w+=a*sk;sw+=sk;}});
+    if(sw>0)apr=" · staking APR ≈ "+nf(w/sw*100,1)+"%";
+  }
+  out.push(donut("Original allocation (Nov 2024)",[
+    {l:"Future emissions and community rewards",v:38.888,c:SUPCOL[1],s:1},{l:"Genesis airdrop",v:31,c:SUPCOL[0],s:1},{l:"Core contributors",v:23.8,c:SUPCOL[3],s:1},{l:"Hyper Foundation budget",v:6,c:SUPCOL[2],s:1},{l:"Community grants",v:0.3,c:SUPCOL[4],s:1},{l:"HIP-2",v:0.012,c:SUPCOL[5],s:1}
+  ],"1B","planned"));
+  g.innerHTML=out.join("");
+  $("sp_s").textContent=nf(circ/1e6,1)+"M circulating · "+nf(existing/1e6,1)+"M minted"+apr;
+  $("sp_note").textContent="Live data from the Hyperliquid API, except the last chart, which is the allocation announced by the Hyper Foundation in November 2024 (not live). Staked HYPE is not a separate slice in the first chart because staking cuts across it. * The locked wallet holds about "+nf((nc.filter(x=>x[1]/max>=.005&&x[0]!=="0xfefefefefefefefefefefefefefefefefefefefe").map(x=>x[1])[0]||0)/1e6,1)+"M HYPE, the same size as the 23.8% core-contributor allocation, but the API does not label it. Not-yet-emitted is the protocol's own futureEmissions figure.";
+}
+(function(){
+  const el=document.getElementById("psup");if(!el||!("IntersectionObserver" in window))return;
+  const io=new IntersectionObserver(es=>{if(es.some(e=>e.isIntersecting)){supplyLoad2();io.disconnect();}},{rootMargin:"400px"});io.observe(el);
+})();
 function hlpxRender(){
   const H=PU.hlpPos,body=$("hx_body");if(!body||!H)return;
   const all=Object.entries(H.cm).map(([k,c])=>{
@@ -1612,5 +1790,5 @@ $("copytxt").onclick=async()=>{
 };
 setupStatic();
 </script>
-<div style="position:fixed;top:10px;right:10px;z-index:99999;background:#f97316;color:#fff;font:700 11px/1 system-ui;padding:6px 10px;border-radius:99px;letter-spacing:.08em;pointer-events:none">BETA</div></body>
+<div style="position:fixed;top:10px;right:10px;z-index:99999;background:#f59e0b;color:#111;font:700 11px sans-serif;padding:4px 9px;border-radius:99px;letter-spacing:.08em">BETA</div></body>
 </html>
