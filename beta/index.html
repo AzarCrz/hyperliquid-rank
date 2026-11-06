@@ -404,6 +404,21 @@ textarea:focus{outline:2px solid var(--acc);outline-offset:1px}
 .sbody .c2{font:500 11px var(--sans);fill:var(--mute)}
 .sbody .c0{font:500 11px var(--sans);fill:var(--mute)}
 @media(max-width:820px){.sbody{flex-direction:column;align-items:stretch;gap:18px;padding:18px 14px}.sbody svg{margin:0 auto;width:230px;height:230px}}
+.csh{display:flex;align-items:baseline;gap:22px;flex-wrap:wrap;padding:18px 22px 16px}
+.csh1 b{font:700 54px/1 var(--sans);letter-spacing:-.02em;background:linear-gradient(#fff,#8ff3dc);-webkit-background-clip:text;background-clip:text;color:transparent}
+.csh1 span{margin-left:10px;color:var(--mute);font-size:14px}
+.csh p{margin:0;font:600 16px var(--sans);color:var(--ink)}
+.shb svg{width:14px;height:14px;margin-right:6px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;vertical-align:-2px}
+.smodal{position:fixed;inset:0;z-index:9999;background:rgba(2,12,9,.78);display:none;align-items:center;justify-content:center;padding:18px}
+.smodal.on{display:flex}
+.smbox{position:relative;width:min(980px,100%);max-height:92vh;overflow:auto;background:linear-gradient(#082a21,#04180f);border:1px solid rgba(111,227,207,.35);border-radius:22px;padding:22px;display:flex;gap:22px;align-items:flex-start}
+.smbox img{width:56%;border-radius:14px;border:1px solid rgba(111,227,207,.3);flex:none}
+.smbox .smr{flex:1;min-width:0;display:flex;flex-direction:column;gap:12px}
+.smbox textarea{width:100%;min-height:128px;resize:vertical;border-radius:12px;border:1px solid rgba(111,227,207,.3);background:rgba(0,0,0,.28);color:var(--ink);font:500 14.5px/1.45 var(--sans);padding:12px}
+.smx{position:absolute;right:12px;top:8px;background:none;border:0;color:var(--mute);font-size:26px;cursor:pointer}
+.smopt{display:flex;gap:12px;align-items:center;flex-wrap:wrap;font-size:14px;color:var(--mute)}
+.smopt input[type=date]{background:rgba(0,0,0,.3);color:var(--ink);border:1px solid rgba(111,227,207,.3);border-radius:8px;padding:5px 8px;font:inherit}
+@media(max-width:820px){.smbox{flex-direction:column;padding:16px}.smbox img{width:100%}.csh1 b{font-size:44px}}
 #more,#fees,#share,#ruler{opacity:0;transform:translateY(26px);transition:opacity .8s ease,transform .8s cubic-bezier(.2,.8,.2,1)}
 #more.in,#fees.in,#share.in,#ruler.in{opacity:1;transform:none}
 #v-results.on .wrap>#more,#v-results.on .wrap>#fees,#v-results.on .wrap>#share,#v-results.on .wrap>#ruler{animation:none}
@@ -537,6 +552,13 @@ textarea:focus{outline:2px solid var(--acc);outline-offset:1px}
     <p class="fn2" id="st_note"></p>
   </section>
 
+  <section class="card" id="cost" style="display:none">
+    <div class="card-head"><h2 class="ct">Cost per $1M</h2><div class="seg" id="csr" role="group"><i class="ind"></i><button class="tab" data-k="last" aria-pressed="true">Last session</button><button class="tab" data-k="24h" aria-pressed="false">24h</button><button class="tab" data-k="7d" aria-pressed="false">7d</button><button class="tab" data-k="30d" aria-pressed="false">30d</button></div><span class="ptip" id="cs_s"></span></div>
+    <div class="csh"><div class="csh1"><b id="cs_big">—</b><span>per $1M of volume</span></div><p id="cs_sum"></p></div>
+    <div class="stl" id="cs_body"></div>
+    <p class="fn2" id="cs_note"></p>
+  </section>
+
   <section class="card" id="fees" style="display:none">
     <div class="card-head"><h2 class="ct">Fees</h2></div>
     <div class="fbk" id="fbk" style="display:none"></div>
@@ -587,6 +609,8 @@ textarea:focus{outline:2px solid var(--acc);outline-offset:1px}
   <p class="note" id="refline" style="display:none"></p>
  </div>
 </section>
+
+<div class="smodal" id="smodal" role="dialog" aria-modal="true"><div class="smbox"><button class="smx" id="sm_x" aria-label="Close">×</button><img id="sm_img" alt=""><div class="smr"><div class="smopt" id="sm_opt"></div><textarea id="sm_txt" maxlength="280" aria-label="Post text"></textarea><div class="sbtns"><button class="pill full" id="sm_x2">Share on X</button><button class="pill ghost" id="sm_save">Save image</button><button class="pill ghost" id="sm_copy">Copy text</button></div><p class="hint">Attach the saved image to your post.</p></div></div></div>
 
 <!-- ============ 5. PULSE ============ -->
 <section class="view" id="v-pulse">
@@ -1082,13 +1106,13 @@ async function loadFills(addrs){
       list=list.concat(r.list);if(!r.complete)complete=false;if(!r.complete||r.list.length===10000)capAny=true;
     }
     if(tok!==fillsTok)return;
-    let fees=0,first=null,tot=0,hip=0,minT=Infinity;const fb={spot:0,perp:0,hip:0},stt={tk:0,mk:0,wins:0,loss:0,best:null,worst:null,lo:0,sh:0,mc:{}},dset=new Set(),hm={},now=Date.now(),HMS=[864e5,6048e5,2592e6],hv=[0,0,0];
+    let fees=0,first=null,tot=0,hip=0,minT=Infinity;const fb={spot:0,perp:0,hip:0},fl=[],stt={tk:0,mk:0,wins:0,loss:0,best:null,worst:null,lo:0,sh:0,mc:{}},dset=new Set(),hm={},now=Date.now(),HMS=[864e5,6048e5,2592e6],hv=[0,0,0];
     for(const f of list){
       const fee=parseFloat(f.fee)||0,px=parseFloat(f.px)||0,bf=parseFloat(f.builderFee)||0;
       const nt=px*(parseFloat(f.sz)||0);tot+=nt;
       if(typeof f.time==="number"&&f.time<minT)minT=f.time;
       if(typeof f.coin==="string"&&f.coin.indexOf(":")>0){hip+=nt;hm[f.coin]=(hm[f.coin]||0)+nt;HMS.forEach((ms,i)=>{if(f.time>=now-ms)hv[i]+=nt;});}
-      const fu=(!f.feeToken||STABLE.has(f.feeToken)?fee:fee*px)+bf;fees+=fu;
+      const fu=(!f.feeToken||STABLE.has(f.feeToken)?fee:fee*px)+bf;fees+=fu;fl.push([f.time,nt,fu,parseFloat(f.closedPnl)||0,f.crossed===true?1:f.crossed===false?0:-1]);
       if(f.crossed===true)stt.tk+=nt;else if(f.crossed===false)stt.mk+=nt;
       const cp=parseFloat(f.closedPnl)||0,cc=typeof f.coin==="string"?f.coin:"?";
       if(cp>0)stt.wins++;else if(cp<0)stt.loss++;
@@ -1100,7 +1124,7 @@ async function loadFills(addrs){
       if(typeof f.time==="number"&&(first===null||f.time<first))first=f.time;
     }
     const top=Object.entries(hm).sort((a,b)=>b[1]-a[1])[0]||null;
-    stt.days=dset.size;F={state:"ok",fees,fb,st:stt,first,n:list.length,capped:capAny,tot,hip,top};
+    stt.days=dset.size;F={state:"ok",fl,fees,fb,st:stt,first,n:list.length,capped:capAny,tot,hip,top};
     hipVols=hv;hipCov=HMS.map(ms=>!capAny||minT<=now-ms);
     if(EVaddr!==addrs[0])evmLoad(addrs[0],tok,(!F.capped&&F.first)?F.first:(X&&X.since)?X.since:(isFinite(minT)?minT:0));
   }catch(e){if(tok!==fillsTok)return;F={state:"err"};}
@@ -1145,7 +1169,7 @@ function renderMore(){
   renderMode();
   const on=!!(vols&&!manual&&D.p&&D.a);
   $("more").style.display=on?"":"none";
-  if(!on){$("fees").style.display="none";$("style").style.display="none";$("acct").style.display="none";$("ftier").style.display="none";}
+  if(!on){$("fees").style.display="none";$("style").style.display="none";$("acct").style.display="none";$("ftier").style.display="none";$("cost").style.display="none";}
   if(!on)return;
   $("k_pnl").textContent="Profit · "+S.tabs[W];
   const p=X.pnl[W],act=vols[W]>0,mp=$("m_pnl");
@@ -1161,7 +1185,7 @@ function renderMore(){
       ?`HIP-3 markets: <b>${nf(F.hip/F.tot*100,F.hip/F.tot<.1?1:0)}%</b> of the volume in ${scope} · most traded: <b>${F.top[0].replace(/[<>&]/g,"")}</b> (${fmtUSD(F.top[1])})${subsOn?" · incl. sub-accounts":""}`
       :`HIP-3 markets: none in ${scope}${subsOn?" · incl. sub-accounts":""}`;
   }else hl.style.display="none";
-  acRender();ftRender();
+  acRender();costRender();ftRender();
   const sb=$("style");
   if(F.state==="ok"&&F.st&&F.n>0){
     const T=F.st,usd=v=>(v<0?"−":"+")+fmtUSD(Math.abs(v)),cl=T.wins+T.loss,tv=T.tk+T.mk,ov=T.lo+T.sh;
@@ -1354,6 +1378,7 @@ function sparkDraw(svg,pts,color,zero,hh,fv){
   const d="M"+pts.map(p=>X(p[0]).toFixed(1)+","+Y(p[1]).toFixed(1)).join(" L");
   const z=(zero?Y(0):H-6).toFixed(1);
   svg.innerHTML='<defs><linearGradient id="hg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="'+color+'" stop-opacity=".32"/><stop offset="1" stop-color="'+color+'" stop-opacity="0"/></linearGradient></defs>'+(zero?'<line x1="4" x2="'+(W-4)+'" y1="'+z+'" y2="'+z+'" stroke="rgba(255,255,255,.2)" stroke-dasharray="3 4"/>':'')+'<path d="'+d+' L'+X(x1).toFixed(1)+','+z+' L'+X(x0).toFixed(1)+','+z+' Z" fill="url(#hg)"/><path d="'+d+'" fill="none" stroke="'+color+'" stroke-width="2" stroke-linejoin="round"/><g class="shv" style="display:none;pointer-events:none"><line y1="4" y2="'+(H-4)+'" stroke="rgba(255,255,255,.4)"/><circle r="4.5" fill="#fff" stroke="'+color+'" stroke-width="2"/><rect rx="6" height="34" fill="rgba(6,24,19,.94)" stroke="rgba(111,227,207,.4)"/><text class="t1" fill="#fff" font-size="12" font-weight="600"></text><text class="t2" fill="#8aa89f" font-size="10.5"></text></g>';
+  svg._sp={pts:pts,color:color,zero:zero,fv:fv};
   const gg=svg.querySelector(".shv"),ln=gg.querySelector("line"),ci=gg.querySelector("circle"),rc=gg.querySelector("rect"),t1=gg.querySelector(".t1"),t2=gg.querySelector(".t2");
   const fm=fv||(v=>nf(v,2));
   const mv=e=>{
@@ -1572,6 +1597,188 @@ function supplyRender(){
   const el=document.getElementById("psup");if(!el||!("IntersectionObserver" in window))return;
   const io=new IntersectionObserver(es=>{if(es.some(e=>e.isIntersecting)){supplyLoad2();io.disconnect();}},{rootMargin:"400px"});io.observe(el);
 })();
+/* ---------------- Share system: cost card, daily card, chart cards ---------------- */
+function cardBase(chip){
+  const c=document.createElement("canvas");c.width=1200;c.height=675;const g=c.getContext("2d"),ACC="#6fe3cf";
+  g.fillStyle="#00110d";g.fillRect(0,0,1200,675);
+  blob(g,160,40,720,"rgba(0,92,68,0.95)","rgba(0,92,68,0)");blob(g,1080,120,620,"rgba(0,112,85,0.85)","rgba(0,112,85,0)");blob(g,1180,700,520,"rgba(0,120,92,0.65)","rgba(0,120,92,0)");blob(g,260,760,560,"rgba(61,240,194,0.55)","rgba(61,240,194,0)");
+  const vg=g.createRadialGradient(600,300,260,600,300,820);vg.addColorStop(0,"rgba(0,8,6,0)");vg.addColorStop(1,"rgba(0,8,6,0.55)");g.fillStyle=vg;g.fillRect(0,0,1200,675);
+  rr(g,16,16,1168,643,34);g.strokeStyle="rgba(111,227,207,0.3)";g.lineWidth=2;g.stroke();
+  g.textBaseline="alphabetic";g.textAlign="left";g.font="700 22px "+SANS;g.fillStyle=ACC;g.fillText("HYPERLIQUID VOLUME CHECKER",72,94);
+  if(chip){const cw=g.measureText(chip).width+36;g.fillStyle="rgba(0,0,0,0.32)";rr(g,1128-cw,62,cw,46,23);g.fill();g.strokeStyle="rgba(111,227,207,0.5)";g.lineWidth=1.5;g.stroke();g.fillStyle=ACC;g.fillText(chip,1128-cw+18,93);}
+  return {c,g};
+}
+function cardFoot(g){const u=(siteUrl()||"hyperliquid-volume-checker").replace(/^https?:\/\//,"").replace(/\/$/,"");g.textAlign="right";g.font="600 24px "+SANS;g.fillStyle="#cfe5de";g.fillText(u,1128,640);g.textAlign="left";}
+function heroText(g,txt,x,y,maxW,fs0){let fs=fs0;g.font="700 "+fs+"px "+SANS;while(g.measureText(txt).width>maxW&&fs>60){fs-=6;g.font="700 "+fs+"px "+SANS;}
+  const tg=g.createLinearGradient(0,y-fs*.8,0,y);tg.addColorStop(0,"#ffffff");tg.addColorStop(1,"#8ff3dc");g.fillStyle=tg;g.fillText(txt,x,y);return g.measureText(txt).width;}
+function statRow(g,items,y){const n=items.length,w=1056/n;items.forEach((it,i)=>{const x=72+i*w;g.textAlign="left";g.font="500 22px "+SANS;g.fillStyle="#8fb2a8";g.fillText(it[0],x,y);g.font="700 38px "+SANS;g.fillStyle=it[2]||"#f1fbf8";g.fillText(it[1],x,y+46);});}
+function usdS(v){return (v<0?"−":"+")+fmtUSD(Math.abs(v));}
+function durTxt(ms){const m=Math.round(ms/6e4);return m>=60?Math.floor(m/60)+"h "+String(m%60).padStart(2,"0")+"m":m+"m";}
+
+const SM={draw:null,text:null,blob:null,name:"hyperliquid-volume-checker.png"};
+function smRedraw(){if(!SM.draw)return;const c=SM.draw();$("sm_img").src=c.toDataURL("image/png");SM.blob=null;c.toBlob(b=>{SM.blob=b;},"image/png");}
+function openShare(o){
+  SM.draw=o.draw;SM.name=o.name||"hyperliquid-volume-checker.png";
+  const op=$("sm_opt");op.innerHTML=o.opt||"";op.style.display=o.opt?"":"none";
+  $("sm_txt").value=o.text();
+  if(o.bind)o.bind(op,()=>{smRedraw();if(o.textOnOpt)$("sm_txt").value=o.text();});
+  smRedraw();$("smodal").classList.add("on");
+}
+const closeShare=()=>$("smodal").classList.remove("on");
+$("sm_x").onclick=closeShare;$("smodal").addEventListener("click",e=>{if(e.target.id==="smodal")closeShare();});
+addEventListener("keydown",e=>{if(e.key==="Escape")closeShare();});
+$("sm_x2").onclick=()=>{const q=new URLSearchParams({text:$("sm_txt").value});q.set("via","hugocrza");const u=siteUrl();if(u)q.set("url",u);window.open("https://twitter.com/intent/tweet?"+q.toString(),"_blank","noopener");};
+$("sm_copy").onclick=async()=>{const u=siteUrl(),t=$("sm_txt").value+(u?" "+u:"");try{await navigator.clipboard.writeText(t);const b=$("sm_copy");b.textContent="Copied ✓";setTimeout(()=>{b.textContent="Copy text";},1800);}catch(e){}};
+$("sm_save").onclick=async()=>{
+  let blob=SM.blob;if(!blob&&SM.draw)blob=await cardBlob(SM.draw());
+  const file=new File([blob],SM.name,{type:"image/png"});
+  if(isMobile&&navigator.canShare&&navigator.canShare({files:[file]})){try{await navigator.share({files:[file],text:$("sm_txt").value});return;}catch(e){if(e&&e.name==="AbortError")return;}}
+  const url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download=SM.name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),30000);
+  const b=$("sm_save");b.textContent="Saved ✓";setTimeout(()=>{b.textContent="Save image";},1800);
+};
+function addShareBtn(sel,fn){
+  const h=document.querySelector(sel+" .card-head")||document.querySelector(sel);if(!h||h.querySelector(".shb"))return;
+  const b=document.createElement("button");b.className="pill ghost sm shb";b.innerHTML='<svg viewBox="0 0 24 24"><path d="M12 4v11M7 9l5-5 5 5M5 20h14"/></svg>Share';b.onclick=fn;h.appendChild(b);
+}
+
+let CSK="last";
+function costCalc(k){
+  const fl=(F&&F.fl)||[];if(!fl.length)return null;
+  const a=fl.slice().sort((x,y)=>x[0]-y[0]);let sel;
+  if(k==="last"){let i=a.length-1;while(i>0&&a[i][0]-a[i-1][0]<=90*6e4)i--;sel=a.slice(i);}
+  else{const ms={"24h":864e5,"7d":6048e5,"30d":2592e6}[k];const t0=Date.now()-ms;sel=a.filter(f=>f[0]>=t0);}
+  if(!sel.length)return null;
+  let vol=0,fees=0,pnl=0,mk=0,tk=0;sel.forEach(f=>{vol+=f[1];fees+=f[2];pnl+=f[3];if(f[4]===1)tk+=f[1];else if(f[4]===0)mk+=f[1];});
+  const cost=fees-pnl;
+  return {vol,fees,pnl,cost,cpm:vol>0?cost/vol*1e6:0,mk:(mk+tk)>0?mk/(mk+tk)*100:null,n:sel.length,dur:sel[sel.length-1][0]-sel[0][0]};
+}
+function costSummary(R){return fmtUSD(R.vol)+" volume"+(R.mk!==null?" · "+nf(R.mk,0)+"% maker":"")+" · "+(R.cost>=0?"~$"+nf(R.cost,0)+" all-in":"earned ~$"+nf(-R.cost,0));}
+function costBig(R){return R.cpm<0?"+$"+nf(-R.cpm,0):"$"+nf(R.cpm,R.cpm<10?2:0);}
+function costRender(){
+  const card=$("cost");
+  if(!(F&&F.state==="ok"&&F.fl&&F.fl.length)){card.style.display="none";return;}
+  const R=costCalc(CSK);card.style.display="";
+  const bx=$("csr");bx.querySelectorAll(".tab").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.k===CSK)));moveInd(bx);
+  if(!R||R.vol<=0){$("cs_big").textContent="—";$("cs_sum").textContent="No trades in this window.";$("cs_body").innerHTML="";$("cs_s").textContent="";$("cs_note").textContent="";return;}
+  $("cs_big").textContent=costBig(R);$("cs_sum").textContent=costSummary(R);
+  const tile=(k,v,sub)=>'<div><span class="k">'+k+'</span><b>'+v+'</b><small>'+sub+'</small></div>';
+  $("cs_body").innerHTML=tile("Volume",fmtUSD(R.vol),R.mk!==null?nf(R.mk,0)+"% maker":"&nbsp;")+tile("Fees paid",fmtUSD(R.fees),"rebates netted")+tile("Closed PnL",'<span class="'+(R.pnl>=0?"pos":"neg")+'">'+usdS(R.pnl)+"</span>","excl. funding")+tile("Total cost",R.cost>=0?fmtUSD(R.cost):'<span class="pos">'+usdS(-R.cost)+"</span>","fees minus PnL");
+  $("cs_s").textContent=(CSK==="last"?durTxt(R.dur)+" · ":"")+R.n.toLocaleString("en-US")+" fills"+(F.capped?" · recent only":"");
+  $("cs_note").textContent="Total cost = fees paid minus closed PnL on the same fills. Funding and unrealised PnL are not included, so it is an estimate. A session is a run of fills with no gap longer than 90 minutes.";
+}
+function drawCostCard(){
+  const R=costCalc(CSK)||{vol:0,fees:0,pnl:0,cost:0,cpm:0,mk:null,dur:0,n:0};
+  const {c,g}=cardBase(CSK==="last"?"Last session · "+durTxt(R.dur):CSK==="24h"?"Last 24h":CSK==="7d"?"Last 7 days":"Last 30 days");
+  g.font="700 24px "+SANS;g.fillStyle="#8fb2a8";g.fillText("COST PER $1M OF VOLUME",72,176);
+  heroText(g,costBig(R),66,360,1000,230);
+  g.font="500 38px "+SANS;g.fillStyle="#d3e9e2";g.fillText(costSummary(R),72,440);
+  statRow(g,[["Volume",fmtUSD(R.vol)],["Fees paid",fmtUSD(R.fees)],["Closed PnL",usdS(R.pnl),R.pnl>=0?"#7ee8c9":"#ffb4b4"],["Fills",R.n.toLocaleString("en-US")]],530);
+  cardFoot(g);return c;
+}
+function costText(){const R=costCalc(CSK);if(!R)return"";return fmtUSD(R.vol)+" in volume"+(R.mk!==null?", "+nf(R.mk,0)+"% maker":"")+(R.cost>=0?", about $"+nf(R.cost,0)+" all-in":", net positive")+".\n\nThat's "+costBig(R).replace("+","")+" per $1M"+(R.cpm<0?" in my favour":"")+".";}
+(function(){
+  const bx=$("csr");if(!bx)return;
+  bx.addEventListener("click",e=>{const b=e.target.closest("[data-k]");if(!b)return;CSK=b.dataset.k;costRender();});
+  addShareBtn("#cost",()=>openShare({draw:drawCostCard,text:costText,name:"hl-cost-per-million.png"}));
+})();
+
+let DCD={on:true,date:"2026-11-27"};
+try{const j=JSON.parse(localStorage.getItem("hl_dcd")||"null");if(j&&j.date)DCD=Object.assign(DCD,j);}catch(e){}
+function dailyData(){
+  const P=PU.proto,B=PU.buys,hb=P&&P.sp&&Array.isArray(P.sp.balances)?P.sp.balances.find(b=>b.coin==="HYPE"):null;
+  const hr=PU.rows&&PU.rows.find(r=>r.name==="HYPE");
+  const px=hr?hr.px:(PU.cand&&PU.cand.length?parseFloat(PU.cand[PU.cand.length-1].c):0),chg=hr?hr.chg:null;
+  let b24=0,u24=0;if(B&&B.f){const t=Date.now()-864e5;B.f.forEach(f=>{if(f[0]>=t){b24+=f[1];u24+=f[2];}});}
+  const tot=hb?parseFloat(hb.total):0,cost=hb?parseFloat(hb.entryNtl):0;
+  let stk=null;if(PU.sv&&PU.sd){const st=PU.sv.reduce((a,v)=>a+(parseFloat(v.stake)||0),0)/1e8,nc=(PU.sd.nonCirculatingUserBalances||[]).reduce((a,x)=>a+(parseFloat(x[1])||0),0),ex=parseFloat(PU.sd.circulatingSupply)+nc;if(ex>0)stk=st/ex*100;}
+  return {px,chg,b24,u24,tot,avg:tot>0?cost/tot:0,stk};
+}
+function dayCount(){if(!DCD.on||!DCD.date)return null;const d=Math.ceil((new Date(DCD.date+"T00:00:00")-Date.now())/864e5);return d>=0?d:null;}
+function drawDailyCard(){
+  const D=dailyData(),dn=dayCount();
+  const {c,g}=cardBase(new Date().toLocaleDateString("en-GB",{day:"numeric",month:"short",year:"numeric"}));
+  if(dn!==null){heroText(g,"D-"+dn,66,330,1000,230);g.font="500 40px "+SANS;g.fillStyle="#d3e9e2";g.fillText("Believe in $HYPE.",72,414);}
+  else{
+    g.font="700 24px "+SANS;g.fillStyle="#8fb2a8";g.fillText("HYPE",72,176);
+    heroText(g,"$"+nf(D.px,D.px>=100?1:2),66,330,1000,230);
+    if(D.chg!==null){g.font="600 40px "+SANS;g.fillStyle=D.chg>=0?"#7ee8c9":"#ffb4b4";g.fillText((D.chg>=0?"+":"−")+nf(Math.abs(D.chg*100),1)+"% · 24h",72,414);}
+  }
+  const it=[];
+  if(dn!==null)it.push(["HYPE",D.px?"$"+nf(D.px,D.px>=100?1:2):"—",D.chg===null?undefined:(D.chg>=0?"#7ee8c9":"#ffb4b4")]);
+  it.push(["Fund bought · 24h",nf(Math.round(D.b24),0)+" HYPE"]);
+  it.push(["Fund holds · HYPE",nf(D.tot/1e6,1)+"M"]);
+  it.push(D.stk!==null?["Staked",nf(D.stk,0)+"%"]:["Fund avg price","$"+nf(D.avg,2)]);
+  statRow(g,it.slice(0,4),530);cardFoot(g);return c;
+}
+function dailyText(){
+  const D=dailyData(),dn=dayCount();
+  return (dn!==null?"D-"+dn+". Believe in $HYPE.\n\n":"$HYPE update.\n\n")+"The Assistance Fund bought "+nf(Math.round(D.b24),0)+" HYPE (≈ "+fmtUSD(D.u24)+") in the last 24h and now holds "+nf(D.tot/1e6,1)+"M HYPE."+(D.px?" HYPE at $"+nf(D.px,D.px>=100?1:2)+(D.chg!==null?" ("+(D.chg>=0?"+":"−")+nf(Math.abs(D.chg*100),1)+"%)":"")+".":"");
+}
+function openDaily(){
+  openShare({draw:drawDailyCard,text:dailyText,name:"hype-daily-card.png",textOnOpt:true,
+    opt:'<label><input type="checkbox" id="dc_on"'+(DCD.on?" checked":"")+'> Countdown</label><label>to <input type="date" id="dc_d" value="'+DCD.date+'"></label>',
+    bind:(op,re)=>{const f=()=>{DCD.on=$("dc_on").checked;DCD.date=$("dc_d").value||DCD.date;try{localStorage.setItem("hl_dcd",JSON.stringify(DCD));}catch(e){}re();};$("dc_on").onchange=f;$("dc_d").onchange=f;}});
+}
+
+function drawLineCard(o){
+  const {c,g}=cardBase(o.chip||"");
+  g.font="700 24px "+SANS;g.fillStyle="#8fb2a8";g.fillText(o.title.toUpperCase(),72,176);
+  heroText(g,o.big,66,290,1000,120);
+  if(o.sub){g.font="600 30px "+SANS;g.fillStyle=o.subc||"#d3e9e2";g.fillText(o.sub,72,336);}
+  const pts=o.pts,x0=72,x1=1128,y0=372,y1=600;
+  if(pts&&pts.length>1){
+    const ys=pts.map(p=>p[1]),lo=Math.min(o.zero?0:Infinity,...ys),hi=Math.max(o.zero?0:-Infinity,...ys),r=(hi-lo)||1,t0=pts[0][0],t1=pts[pts.length-1][0];
+    const X=t=>x0+(t-t0)/((t1-t0)||1)*(x1-x0),Y=v=>y0+(hi-v)/r*(y1-y0);
+    if(o.zero){g.setLineDash([6,8]);g.strokeStyle="rgba(255,255,255,.25)";g.lineWidth=1.5;g.beginPath();g.moveTo(x0,Y(0));g.lineTo(x1,Y(0));g.stroke();g.setLineDash([]);}
+    const base=o.zero?Y(0):y1,col=o.color||"#6fe3cf";
+    const gr=g.createLinearGradient(0,y0,0,y1);gr.addColorStop(0,"rgba(111,227,207,.30)");gr.addColorStop(1,"rgba(111,227,207,0)");
+    g.beginPath();pts.forEach((p,i)=>i?g.lineTo(X(p[0]),Y(p[1])):g.moveTo(X(p[0]),Y(p[1])));g.lineTo(X(t1),base);g.lineTo(X(t0),base);g.closePath();g.fillStyle=gr;g.fill();
+    g.beginPath();pts.forEach((p,i)=>i?g.lineTo(X(p[0]),Y(p[1])):g.moveTo(X(p[0]),Y(p[1])));g.strokeStyle=col;g.lineWidth=4;g.lineJoin="round";g.stroke();
+    const lp=pts[pts.length-1];g.beginPath();g.arc(X(lp[0]),Y(lp[1]),9,0,7);g.fillStyle="#fff";g.fill();g.lineWidth=4;g.strokeStyle=col;g.stroke();
+    g.font="500 20px "+SANS;g.fillStyle="#8fb2a8";g.textAlign="left";g.fillText(new Date(t0).toLocaleDateString("en-GB",{day:"numeric",month:"short"}),x0,640);
+  }
+  cardFoot(g);return c;
+}
+function chartShare(kind){
+  let o=null;
+  if(kind==="px"){
+    const cd=PU.cand;if(!cd||cd.length<2)return;const pts=cd.map(k=>[+k.t,parseFloat(k.c)]),a=pts[0][1],b=pts[pts.length-1][1],ch=(b/a-1)*100,hh=Math.round((pts[pts.length-1][0]-pts[0][0])/36e5);
+    o={title:"HYPE price · last "+hh+"h",big:"$"+nf(b,b>=100?1:2),sub:(ch>=0?"+":"−")+nf(Math.abs(ch),1)+"%",subc:ch>=0?"#7ee8c9":"#ffb4b4",pts};
+    o.text="$HYPE at $"+nf(b,b>=100?1:2)+" ("+(ch>=0?"+":"−")+nf(Math.abs(ch),1)+"% over the last "+hh+"h).";
+  }else if(kind==="fund"){
+    const F0=PU.fund;if(!F0||!F0.pts||F0.pts.length<2)return;const pts=F0.pts,ys=pts.map(p=>p[1]),last=ys[ys.length-1],avg=ys.reduce((x,y)=>x+y,0)/ys.length,pc=v=>(v>=0?"+":"−")+nf(Math.abs(v),Math.abs(v)<10?1:0)+"%";
+    o={title:F0.coin+" funding rate · APR",big:pc(last),sub:"average "+pc(avg),pts,zero:true};
+    o.text=F0.coin+" funding on Hyperliquid: "+pc(last)+" APR right now, "+pc(avg)+" on average over the period.";
+  }else if(kind==="hlp"||kind==="acct"){
+    const sv=document.getElementById(kind==="hlp"?"h_svg":"ac_svg"),sp=sv&&sv._sp;if(!sp||sp.pts.length<2)return;const pts=sp.pts,last=pts[pts.length-1][1],f=sp.fv||(v=>nf(v,2));
+    const title=(kind==="hlp"?"HLP vault":"Account history")+" · "+(sp.zero?"PnL":"value"),ch=last-pts[0][1];
+    o={title,big:f(last),sub:sp.zero?"":"change "+(ch>=0?"+":"−")+fmtUSD(Math.abs(ch)),subc:ch>=0?"#7ee8c9":"#ffb4b4",pts,zero:!!sp.zero,color:sp.color};
+    o.text=(kind==="hlp"?"HLP vault ":"My Hyperliquid account ")+(sp.zero?"PnL":"value")+": "+f(last)+".";
+  }else if(kind==="sup"){
+    const V=PU.sviews&&PU.sviews[PU.spk||"max"];if(!V)return;
+    openShare({draw:()=>drawDonutCard(V),text:()=>"HYPE supply: "+V.title.toLowerCase()+".",name:"hype-supply.png"});return;
+  }
+  if(!o)return;
+  openShare({draw:()=>drawLineCard(o),text:()=>o.text,name:"hl-chart.png"});
+}
+function drawDonutCard(V){
+  const {c,g}=cardBase("");
+  g.font="700 24px "+SANS;g.fillStyle="#8fb2a8";g.fillText(V.title.toUpperCase(),72,176);
+  const parts=V.parts.filter(p=>p.v>0),tot=parts.reduce((a,p)=>a+p.v,0)||1;let a0=-Math.PI/2;const cx=290,cy=410,R=170;
+  parts.forEach(p=>{const a1=a0+p.v/tot*Math.PI*2;g.beginPath();g.arc(cx,cy,R,a0+Math.min(.01,(a1-a0)/3),a1-Math.min(.01,(a1-a0)/3));g.strokeStyle=p.c;g.lineWidth=46;g.stroke();a0=a1;});
+  g.textAlign="center";g.font="700 64px "+SANS;g.fillStyle="#fff";g.fillText(V.c1,cx,cy+8);g.font="500 24px "+SANS;g.fillStyle="#8fb2a8";g.fillText(V.c2,cx,cy+42);
+  g.textAlign="left";let y=250;parts.slice(0,8).forEach(p=>{g.beginPath();g.arc(560,y-8,8,0,7);g.fillStyle=p.c;g.fill();g.font="500 26px "+SANS;g.fillStyle="#e3f4ee";let l=String(p.l).replace(/&amp;/g,"&").replace(/ \*$/,"");if(l.length>34)l=l.slice(0,33)+"…";g.fillText(l,584,y);g.textAlign="right";g.font="700 26px "+SANS;g.fillText(nf(p.v/tot*100,p.v/tot<.1?1:0)+"%",1128,y);g.textAlign="left";y+=46;});
+  cardFoot(g);return c;
+}
+(function(){
+  addShareBtn("#acct",()=>chartShare("acct"));
+  addShareBtn("#pbuy .pctl",()=>chartShare("px"));
+  addShareBtn("#psup",()=>chartShare("sup"));
+  const hl=document.querySelector("section.card.phlp");if(hl&&!hl.id)hl.id="phlpc";addShareBtn("#phlpc",()=>chartShare("hlp"));
+  addShareBtn("#pfund",()=>chartShare("fund"));
+  const ph=document.querySelector("#v-pulse .phead");if(ph){const b=document.createElement("button");b.className="pill full sm";b.id="dcbtn";b.textContent="Daily card";b.style.marginLeft="auto";b.onclick=openDaily;ph.appendChild(b);ph.style.display="flex";ph.style.alignItems="center";ph.style.gap="16px";}
+})();
+
 function hlpxRender(){
   const H=PU.hlpPos,body=$("hx_body");if(!body||!H)return;
   const all=Object.entries(H.cm).map(([k,c])=>{
