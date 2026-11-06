@@ -708,7 +708,7 @@ textarea:focus{outline:2px solid var(--acc);outline-offset:1px}
 
   <div class="psec" id="sec-p-vs">HYPE versus the market</div>
   <section class="card" id="pvs">
-    <div class="card-head"><h2 class="ct">HYPE vs</h2><div class="seg" id="vsr" role="group"><i class="ind"></i><button class="tab" data-r="24h" aria-pressed="false">24h</button><button class="tab" data-r="7d" aria-pressed="true">7d</button><button class="tab" data-r="30d" aria-pressed="false">30d</button></div><span class="ptip" id="vs_rank"></span></div>
+    <div class="card-head"><h2 class="ct">HYPE vs</h2><div class="seg" id="vsr" role="group"><i class="ind"></i><button class="tab" data-r="24h" aria-pressed="false">24h</button><button class="tab" data-r="7d" aria-pressed="true">7d</button><button class="tab" data-r="30d" aria-pressed="false">30d</button><button class="tab" data-r="all" aria-pressed="false">All</button></div><span class="ptip" id="vs_rank"></span></div>
     <div class="vsc" id="vs_chips"></div>
     <div class="pcwrap"><svg id="vs_svg" viewBox="0 0 800 300" role="img" aria-label="HYPE performance versus selected assets"></svg><p class="pempty" id="vs_empty">Loading…</p></div>
     <p class="ptip" id="vs_tip" style="padding:0 22px">&nbsp;</p>
@@ -1924,9 +1924,9 @@ async function vsResolve(t){
   }catch(e){}
   VS.coin[t]=null;return null;
 }
-async function vsCandles(coin,rng){
+async function vsCandles(coin,rng){const n0=Date.now();
   const k=coin+"|"+rng,hit=VS.cache[k];if(hit&&Date.now()-hit.t<120000)return hit.v;
-  const cfg={"24h":["15m",864e5],"7d":["1h",6048e5],"30d":["4h",2592e6]}[rng],n=Date.now();
+  const cfg={"24h":["15m",864e5],"7d":["1h",6048e5],"30d":["4h",2592e6],"all":["1d",n0-1732000000000]}[rng],n=n0;
   const j=await hlPost({type:"candleSnapshot",req:{coin,interval:cfg[0],startTime:n-cfg[1],endTime:n}});
   const v=(Array.isArray(j)?j:[]).map(c=>[+c.t,parseFloat(c.c)]).filter(p=>isFinite(p[1])&&p[1]>0);
   VS.cache[k]={t:Date.now(),v};return v;
@@ -1941,12 +1941,14 @@ async function vsLoad(){
     out[i]={nm,pts:pts&&pts.length>1?pts:null,col:i===0?"#6fe3cf":VSCOL[(i-1)%VSCOL.length]};
   }));
   if(my!==VS.busy)return;
+  if(VS.rng==="all"&&out[0]&&out[0].pts){const t0=out[0].pts[0][0];out.forEach(o=>{if(o.pts){o.pts=o.pts.filter(q=>q[0]>=t0);if(o.pts.length<2)o.pts=null;}});}
   VS.series=out;vsRender();
 }
 function vsRank(){
   const r=PU.rows;if(!r)return"";const L=r.filter(x=>isFinite(x.chg)&&x.vol>1e5).sort((a,b)=>b.chg-a.chg),i=L.findIndex(x=>x.name==="HYPE");
   return i<0?"":"24h: HYPE is #"+(i+1)+" of "+L.length+" markets";
 }
+const vsRl=()=>VS.rng==="all"?"all time":VS.rng;
 const vsNm=n=>String(n).split(":").pop();
 function vsLogo(n,col){const b=encodeURIComponent(vsNm(n));return '<span class="vlg" style="--c:'+col+'"><img src="https://app.hyperliquid.xyz/coins/'+b+'.svg" data-lg="1" data-n="'+b+'" alt="" loading="lazy" referrerpolicy="no-referrer"></span>';}
 document.addEventListener("error",e=>{const t=e.target;if(!t||t.tagName!=="IMG"||!t.dataset||!t.dataset.lg)return;if(t.dataset.lg==="1"){t.dataset.lg="2";t.src="https://app.hyperliquid.xyz/coins/"+t.dataset.n+"_spot.svg";}else t.remove();},true);
@@ -1967,7 +1969,7 @@ function vsRender(){
   const t0=S[0].pts[0][0],t1=S[0].pts[S[0].pts.length-1][0];
   const all=pc.flatMap(o=>o.p.map(q=>q[1])),lo=Math.min(0,...all),hi=Math.max(0,...all),r=(hi-lo)||1;
   const X=t=>pl+(t-t0)/((t1-t0)||1)*iw,Y=v=>pt+(hi-v)/r*ih,lab=v=>'<text x="'+(pl-6)+'" y="'+(Y(v)+4)+'" text-anchor="end" fill="currentColor" opacity=".6" font-size="11">'+(v<0?"−":"")+nf(Math.abs(v),Math.abs(v)<10?1:0)+"%</text>";
-  const dt=t=>new Date(t).toLocaleDateString("en-GB",{day:"numeric",month:"short"});
+  const dt=t=>new Date(t).toLocaleDateString("en-GB",(VS.rng==="all"?{month:"short",year:"2-digit"}:{day:"numeric",month:"short"}));
   let g='<line x1="'+pl+'" x2="'+(W-pr)+'" y1="'+Y(0)+'" y2="'+Y(0)+'" stroke="currentColor" stroke-opacity=".3" stroke-dasharray="3 4"/>'+lab(hi)+(lo<0?lab(lo):"")+lab(0);
   pc.slice().reverse().forEach(o=>{g+='<path d="M'+o.p.map(q=>X(q[0]).toFixed(1)+","+Y(q[1]).toFixed(1)).join(" L")+'" fill="none" stroke="'+o.s.col+'" stroke-width="'+(o.s.nm==="HYPE"?2.8:1.8)+'" stroke-linejoin="round" opacity="'+(o.s.nm==="HYPE"?1:.9)+'"/>';});
   g+='<text x="'+pl+'" y="'+(H-5)+'" fill="currentColor" opacity=".6" font-size="11">'+dt(t0)+'</text><text x="'+(W-pr)+'" y="'+(H-5)+'" text-anchor="end" fill="currentColor" opacity=".6" font-size="11">'+dt(t1)+'</text><line id="vs_g" y1="'+pt+'" y2="'+(H-pb)+'" stroke="currentColor" stroke-opacity=".4" style="display:none"/><g id="vs_h" pointer-events="none"></g>';
@@ -1975,7 +1977,7 @@ function vsRender(){
   const sgn=v=>(v>=0?"+":"−")+nf(Math.abs(v),Math.abs(v)<10?1:0)+"%",mv=e=>{
     const b=svg.getBoundingClientRect(),px=(e.clientX-b.left)*(W/b.width),t=t0+(px-pl)/iw*(t1-t0),ln=document.getElementById("vs_g");
     if(ln){ln.setAttribute("x1",Math.min(W-pr,Math.max(pl,px)));ln.setAttribute("x2",Math.min(W-pr,Math.max(pl,px)));ln.style.display="";}
-    $("vs_tip").textContent=new Date(t).toLocaleString("en-GB",{day:"numeric",month:"short",hour:"2-digit",minute:"2-digit"});
+    $("vs_tip").textContent=new Date(t).toLocaleString("en-GB",VS.rng==="all"?{day:"numeric",month:"short",year:"numeric"}:{day:"numeric",month:"short",hour:"2-digit",minute:"2-digit"});
     const cx=Math.min(W-pr,Math.max(pl,px)),it=pc.map(o=>{let bi=0,bd=1e18;o.p.forEach((q,i)=>{const d=Math.abs(q[0]-t);if(d<bd){bd=d;bi=i;}});const v=o.p[bi][1];return{o,v,x:X(o.p[bi][0]),y:Y(v)};}).sort((m,n)=>m.y-n.y);
     const ly=it.map(z=>z.y);for(let i=1;i<ly.length;i++)ly[i]=Math.max(ly[i],ly[i-1]+15);const ov=ly.length?ly[ly.length-1]-(H-pb):0;if(ov>0)for(let i=0;i<ly.length;i++)ly[i]-=ov;
     const left=cx>W*0.62;let h="";
@@ -1984,7 +1986,7 @@ function vsRender(){
   };
   svg.onpointermove=mv;svg.onpointerdown=mv;svg.onpointerleave=()=>{const ln=document.getElementById("vs_g");if(ln)ln.style.display="none";const hg=document.getElementById("vs_h");if(hg)hg.innerHTML="";$("vs_tip").innerHTML="&nbsp;";};$("vs_tip").innerHTML="&nbsp;";
   const hc=vsChg(S[0]);
-  $("vs_leg").innerHTML='<div>'+vsLogo("HYPE","#6fe3cf")+'HYPE<b class="'+(hc>=0?"pos":"neg")+'">'+sgn(hc)+"</b>"+VS.rng+"</div>"+ok.slice(1).map(o=>{const c=vsChg(o),d=hc-c;return '<div>'+vsLogo(o.nm,o.col)+esc(vsNm(o.nm))+'<b class="'+(c>=0?"pos":"neg")+'">'+sgn(c)+"</b>HYPE "+(d>=0?"ahead by ":"behind by ")+nf(Math.abs(d),Math.abs(d)<10?1:0)+" pts</div>";}).join("");
+  $("vs_leg").innerHTML='<div>'+vsLogo("HYPE","#6fe3cf")+'HYPE<b class="'+(hc>=0?"pos":"neg")+'">'+sgn(hc)+"</b>"+vsRl()+"</div>"+ok.slice(1).map(o=>{const c=vsChg(o),d=hc-c;return '<div>'+vsLogo(o.nm,o.col)+esc(vsNm(o.nm))+'<b class="'+(c>=0?"pos":"neg")+'">'+sgn(c)+"</b>HYPE "+(d>=0?"ahead by ":"behind by ")+nf(Math.abs(d),Math.abs(d)<10?1:0)+" pts</div>";}).join("");
 }
 (function(){
   const box=$("pvs");if(!box)return;
@@ -2020,22 +2022,22 @@ function vsRender(){
   addShareBtn("#pvs",()=>{
     const S=VS.series.filter(x=>x.pts);if(!S.length||!S[0].pts)return;
     const hc=vsChg(S[0]),oth=S.slice(1);
-    const text=()=>"$HYPE "+(hc>=0?"+":"−")+nf(Math.abs(hc),1)+"% over "+VS.rng+(oth.length?". "+oth.map(o=>o.nm+" "+((vsChg(o)>=0?"+":"−")+nf(Math.abs(vsChg(o)),1))+"%").join(", ")+".":".")+(oth.length===1?" HYPE is "+(hc-vsChg(oth[0])>=0?"ahead of ":"behind ")+oth[0].nm+" by "+nf(Math.abs(hc-vsChg(oth[0])),1)+" pts.":"");
+    const text=()=>"$HYPE "+(hc>=0?"+":"−")+nf(Math.abs(hc),1)+"% "+(VS.rng==="all"?"since launch":"over "+VS.rng)+(oth.length?". "+oth.map(o=>o.nm+" "+((vsChg(o)>=0?"+":"−")+nf(Math.abs(vsChg(o)),1))+"%").join(", ")+".":".")+(oth.length===1?" HYPE is "+(hc-vsChg(oth[0])>=0?"ahead of ":"behind ")+oth[0].nm+" by "+nf(Math.abs(hc-vsChg(oth[0])),1)+" pts.":"");
     openShare({draw:()=>drawVsCard(S),text,name:"hype-vs-market.png"});
   });
 })();
 function drawVsCard(S){
-  const hc=vsChg(S[0]),{c,g}=cardBase(VS.rng.toUpperCase(),1),sg=v=>(v>=0?"+":"−")+nf(Math.abs(v),Math.abs(v)<10?1:0)+"%",GR="#58e3a4",RD="#ff7b7b",MU="#8fb2a8",oth=S.slice(1);
+  const hc=vsChg(S[0]),{c,g}=cardBase(VS.rng==="all"?"ALL TIME":VS.rng.toUpperCase(),1),sg=v=>(v>=0?"+":"−")+nf(Math.abs(v),Math.abs(v)<10?1:0)+"%",GR="#58e3a4",RD="#ff7b7b",MU="#8fb2a8",oth=S.slice(1);
   const x0=92,x1=900,y0=168,y1=586,all=S.flatMap(o=>o.pts.map(q=>(q[1]/o.pts[0][1]-1)*100)),lo0=Math.min(0,...all),hi0=Math.max(0,...all),pad=(hi0-lo0)*.06||1,lo=lo0<0?lo0-pad:0,hi=hi0+pad,r=(hi-lo)||1,t0=S[0].pts[0][0],t1=S[0].pts[S[0].pts.length-1][0];
   const X=t=>x0+(t-t0)/((t1-t0)||1)*(x1-x0),Y=v=>y0+(hi-v)/r*(y1-y0),pv=(o,q)=>(q[1]/o.pts[0][1]-1)*100;
   /* header */
   g.textAlign="left";g.font="600 20px "+SANS;g.fillStyle=MU;g.fillText("HYPE VS "+(oth.length?oth.map(o=>vsNm(o.nm)).join(" · "):"THE MARKET"),x0-8,70);
-  g.font="700 74px "+SANS;g.fillStyle=hc>=0?GR:RD;g.fillText(sg(hc),x0-10,138);const hw=g.measureText(sg(hc)).width;g.font="600 22px "+SANS;g.fillStyle=MU;g.fillText("HYPE · "+VS.rng,x0-4+hw+4,138);
+  g.font="700 74px "+SANS;g.fillStyle=hc>=0?GR:RD;g.fillText(sg(hc),x0-10,138);const hw=g.measureText(sg(hc)).width;g.font="600 22px "+SANS;g.fillStyle=MU;g.fillText("HYPE · "+vsRl(),x0-4+hw+4,138);
   /* grid */
   const raw=r/4,mag=Math.pow(10,Math.floor(Math.log10(raw))),step=[1,2,2.5,5,10].map(m=>m*mag).find(v=>v>=raw)||raw;
   g.font="500 18px "+SANS;g.textAlign="right";
   for(let v=Math.ceil(lo/step)*step;v<=hi+1e-9;v+=step){const y=Y(v),z=Math.abs(v)<1e-9;g.strokeStyle=z?"rgba(255,255,255,.34)":"rgba(255,255,255,.07)";g.lineWidth=z?1.6:1;g.setLineDash(z?[6,8]:[]);g.beginPath();g.moveTo(x0,y);g.lineTo(x1,y);g.stroke();g.setLineDash([]);g.fillStyle=z?"#cfe5de":MU;g.fillText((v<0?"−":(v>0?"+":""))+nf(Math.abs(v),step<1?1:0)+"%",x0-12,y+6);}
-  const tf=t=>VS.rng==="24h"?new Date(t).toLocaleTimeString("en-GB",{hour:"2-digit",minute:"2-digit"}):new Date(t).toLocaleDateString("en-GB",{day:"numeric",month:"short"});
+  const tf=t=>VS.rng==="24h"?new Date(t).toLocaleTimeString("en-GB",{hour:"2-digit",minute:"2-digit"}):new Date(t).toLocaleDateString("en-GB",(VS.rng==="all"?{month:"short",year:"2-digit"}:{day:"numeric",month:"short"}));
   g.font="500 18px "+SANS;g.fillStyle=MU;for(let i=0;i<=4;i++){g.textAlign=i===0?"left":i===4?"right":"center";g.fillText(tf(t0+(t1-t0)*i/4),x0+(x1-x0)*i/4,y1+34);}
   /* hype area */
   const h=S[0],gr=g.createLinearGradient(0,y0,0,y1);gr.addColorStop(0,"rgba(111,227,207,.26)");gr.addColorStop(1,"rgba(111,227,207,0)");
