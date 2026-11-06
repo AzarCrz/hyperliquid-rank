@@ -419,6 +419,16 @@ textarea:focus{outline:2px solid var(--acc);outline-offset:1px}
 .smopt{display:flex;gap:12px;align-items:center;flex-wrap:wrap;font-size:14px;color:var(--mute)}
 .smopt input[type=date]{background:rgba(0,0,0,.3);color:var(--ink);border:1px solid rgba(111,227,207,.3);border-radius:8px;padding:5px 8px;font:inherit}
 @media(max-width:820px){.smbox{flex-direction:column;padding:16px}.smbox img{width:100%}.csh1 b{font-size:44px}}
+
+.hdt{border-top:1px solid rgba(111,227,207,.26);overflow-x:auto}
+.hdr{display:grid;grid-template-columns:1.25fr 1fr 1fr 1fr 1fr 1fr .9fr;gap:8px;padding:11px 22px;align-items:baseline;font-size:14px;font-variant-numeric:tabular-nums;border-bottom:1px solid rgba(111,227,207,.1);min-width:680px}
+.hdr.hh{font:600 11px var(--sans);letter-spacing:.1em;text-transform:uppercase;color:var(--mute)}
+.hdr b{font-weight:700}.hdr small{color:var(--mute);font-size:12px;margin-left:5px}
+.hdr .r{text-align:right}
+.hds{display:flex;gap:26px;flex-wrap:wrap;padding:14px 22px;border-bottom:1px solid rgba(111,227,207,.1);font-size:13px;color:var(--mute)}
+.hds b{display:block;color:var(--ink);font:700 18px var(--sans);margin-top:2px}
+.hsp .hdr{grid-template-columns:1.2fr 1fr 1fr 1fr 1fr 1fr}
+@media(max-width:820px){.hdr{padding:10px 14px;min-width:0!important}.hds{padding:12px 14px;gap:18px}#hd_body>.hdr{grid-template-columns:1.5fr 1fr 1fr 1fr 1fr}#hd_body>.hdr>span:nth-child(4),#hd_body>.hdr>span:nth-child(7){display:none}.hsp .hdr{grid-template-columns:1.2fr 1fr 1fr 1fr}.hsp .hdr>span:nth-child(n+5){display:none}}
 #more,#fees,#share,#ruler{opacity:0;transform:translateY(26px);transition:opacity .8s ease,transform .8s cubic-bezier(.2,.8,.2,1)}
 #more.in,#fees.in,#share.in,#ruler.in{opacity:1;transform:none}
 #v-results.on .wrap>#more,#v-results.on .wrap>#fees,#v-results.on .wrap>#share,#v-results.on .wrap>#ruler{animation:none}
@@ -544,6 +554,12 @@ textarea:focus{outline:2px solid var(--acc);outline-offset:1px}
   <section class="card" id="acct" style="display:none">
     <div class="card-head"><h2 class="ct">Account history</h2><div class="acctl"><div class="seg" id="acmode" role="group"><i class="ind"></i><button class="tab" data-m="pnl" aria-pressed="true">PnL</button><button class="tab" data-m="val" aria-pressed="false">Value</button></div><div class="seg" id="acrange" role="group"><i class="ind"></i><button class="tab" data-k="day" aria-pressed="false">24h</button><button class="tab" data-k="week" aria-pressed="false">7d</button><button class="tab" data-k="month" aria-pressed="false">30d</button><button class="tab" data-k="allTime" aria-pressed="true">All</button></div></div></div>
     <div class="acb"><small id="ac_s1">&nbsp;</small><svg id="ac_svg" viewBox="0 0 300 180" role="img" aria-label="Account history"></svg><small id="ac_s2"></small></div>
+  </section>
+
+  <section class="card" id="hold" style="display:none">
+    <div class="card-head"><h2 class="ct">Holdings</h2><div class="seg" id="hdmode" role="group"><i class="ind"></i><button class="tab" data-m="perp" aria-pressed="true">Perps</button><button class="tab" data-m="spot" aria-pressed="false">Spot</button></div><span class="ptip" id="hd_s"></span></div>
+    <div class="hdt" id="hd_body"></div>
+    <p class="fn2" id="hd_note"></p>
   </section>
 
   <section class="card" id="style" style="display:none">
@@ -1169,7 +1185,7 @@ function renderMore(){
   renderMode();
   const on=!!(vols&&!manual&&D.p&&D.a);
   $("more").style.display=on?"":"none";
-  if(!on){$("fees").style.display="none";$("style").style.display="none";$("acct").style.display="none";$("ftier").style.display="none";$("cost").style.display="none";}
+  if(!on){$("fees").style.display="none";$("style").style.display="none";$("acct").style.display="none";$("ftier").style.display="none";$("cost").style.display="none";$("hold").style.display="none";}
   if(!on)return;
   $("k_pnl").textContent="Profit · "+S.tabs[W];
   const p=X.pnl[W],act=vols[W]>0,mp=$("m_pnl");
@@ -1185,7 +1201,7 @@ function renderMore(){
       ?`HIP-3 markets: <b>${nf(F.hip/F.tot*100,F.hip/F.tot<.1?1:0)}%</b> of the volume in ${scope} · most traded: <b>${F.top[0].replace(/[<>&]/g,"")}</b> (${fmtUSD(F.top[1])})${subsOn?" · incl. sub-accounts":""}`
       :`HIP-3 markets: none in ${scope}${subsOn?" · incl. sub-accounts":""}`;
   }else hl.style.display="none";
-  acRender();costRender();ftRender();
+  acRender();hdRender();costRender();ftRender();
   const sb=$("style");
   if(F.state==="ok"&&F.st&&F.n>0){
     const T=F.st,usd=v=>(v<0?"−":"+")+fmtUSD(Math.abs(v)),cl=T.wins+T.loss,tv=T.tk+T.mk,ov=T.lo+T.sh;
@@ -1245,9 +1261,9 @@ async function lookup(){
   vols=res;addrShown=raw.slice(0,6)+"…"+raw.slice(-4);
   if(!(vols[W]>0)){const k=[3,2,1,0].find(i=>vols[i]>0);if(k!==undefined)W=k;}
   if(vols.every(x=>!(x>0))){resetProgress();await show("v-landing");$("err").textContent=S.none;return;}
-  fillsTok++;EV=null;EVaddr="";FT=null;F={state:"loading"};mainAddr=raw;subsOn=false;subList=null;subData=null;subMsg="";MODE="all";hipVols=null;hipCov=null;$("subnote").textContent="";introRan=false;lastTier=-1;$("subbtn").classList.remove("on");$("subbtn").disabled=false;$("subbtn").textContent="Include sub-accounts";
+  fillsTok++;EV=null;EVaddr="";FT=null;HD=null;F={state:"loading"};mainAddr=raw;subsOn=false;subList=null;subData=null;subMsg="";MODE="all";hipVols=null;hipCov=null;$("subnote").textContent="";introRan=false;lastTier=-1;$("subbtn").classList.remove("on");$("subbtn").disabled=false;$("subbtn").textContent="Include sub-accounts";
   buildTabs();renderResults();await finishProgress();await show("v-results");intro();
-  loadFills(raw).finally(()=>{if(raw===mainAddr)feeLoad(raw);});
+  loadFills(raw).finally(()=>{if(raw===mainAddr)feeLoad(raw).finally(()=>{if(raw===mainAddr)holdLoad(raw);});});
 }
 async function manualGo(){
   const x=parseFloat($("mvol").value);$("err").textContent="";
@@ -1777,6 +1793,87 @@ function drawDonutCard(V){
   const hl=document.querySelector("section.card.phlp");if(hl&&!hl.id)hl.id="phlpc";addShareBtn("#phlpc",()=>chartShare("hlp"));
   addShareBtn("#pfund",()=>chartShare("fund"));
   const ph=document.querySelector("#v-pulse .phead");if(ph){const b=document.createElement("button");b.className="pill full sm";b.id="dcbtn";b.textContent="Daily card";b.style.marginLeft="auto";b.onclick=openDaily;ph.appendChild(b);ph.style.display="flex";ph.style.alignItems="center";ph.style.gap="16px";}
+})();
+
+
+/* ---------------- Holdings: perp positions and spot balances ---------------- */
+let HD=null,HDM="perp";
+async function holdLoad(addr){
+  HD=null;
+  try{
+    const c=p=>p.catch(()=>null);
+    const [main,sp,meta,dx]=await Promise.all([c(hlPost({type:"clearinghouseState",user:addr})),c(hlPost({type:"spotClearinghouseState",user:addr})),c(hlPost({type:"spotMetaAndAssetCtxs"})),c(hlPost({type:"perpDexs"}))]);
+    if(addr!==mainAddr)return;
+    const names=Array.isArray(dx)?dx.filter(x=>x&&x.name).map(x=>x.name):[];
+    const states=[{dex:"",st:main}];
+    for(let i=0;i<names.length;i+=4){
+      const part=await Promise.all(names.slice(i,i+4).map(n=>c(hlPost({type:"clearinghouseState",user:addr,dex:n})).then(st=>({dex:n,st}))));
+      if(addr!==mainAddr)return;part.forEach(x=>states.push(x));
+    }
+    // prices for spot tokens
+    const px={USDC:1,USDT0:1,USDH:1,USDE:1};
+    if(Array.isArray(meta)&&meta[0]&&Array.isArray(meta[0].tokens)&&Array.isArray(meta[0].universe)&&Array.isArray(meta[1])){
+      const tn={};meta[0].tokens.forEach(t=>{tn[t.index]=t.name;});
+      meta[0].universe.forEach((u,i)=>{const ctx=meta[1][i];if(!ctx||!u.tokens||u.tokens[1]!==0)return;const nm=tn[u.tokens[0]],m=parseFloat(ctx.markPx);if(nm&&m>0&&px[nm]===undefined)px[nm]=m;});
+    }
+    const spot=[];let spotV=0;
+    if(sp&&Array.isArray(sp.balances))sp.balances.forEach(b=>{
+      const tot=parseFloat(b.total)||0;if(tot<=0)return;const pr=px[b.coin]!==undefined?px[b.coin]:null,val=pr!==null?tot*pr:null,cost=parseFloat(b.entryNtl)||0;
+      spot.push({coin:b.coin,tot,pr,val,cost});if(val!==null)spotV+=val;
+    });
+    spot.sort((a,b)=>(b.val||0)-(a.val||0));
+    const perp=[];let perpEq=0;
+    states.forEach(x=>{const st=x.st;if(!st)return;perpEq+=parseFloat(st.marginSummary&&st.marginSummary.accountValue)||0;
+      (st.assetPositions||[]).forEach(a=>{const q=a&&a.position;if(!q)return;const sz=parseFloat(q.szi)||0;if(!sz)return;
+        perp.push({coin:q.coin,sz,val:Math.abs(parseFloat(q.positionValue)||0),entry:parseFloat(q.entryPx)||0,pnl:parseFloat(q.unrealizedPnl)||0,roe:parseFloat(q.returnOnEquity),lev:q.leverage&&q.leverage.value,liq:q.liquidationPx?parseFloat(q.liquidationPx):null,margin:parseFloat(q.marginUsed)||0,dex:x.dex});});});
+    perp.sort((a,b)=>b.val-a.val);
+    HD={spot,perp,spotV,perpEq};if(!perp.length&&spot.length)HDM="spot";else HDM="perp";
+  }catch(e){HD=null;}
+  if(addr===mainAddr)renderMore();
+}
+function hdRender(){
+  const card=$("hold");
+  if(!HD||(!HD.perp.length&&!HD.spot.length)){card.style.display="none";return;}
+  card.style.display="";
+  const bx=$("hdmode");bx.querySelectorAll(".tab").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.m===HDM)));moveInd(bx);
+  const fp=x=>x>=1000?nf(x,0):x>=100?nf(x,1):x>=1?nf(x,3):nf(x,5),sg=v=>(v<0?"−":"+")+fmtUSD(Math.abs(v)),cl=v=>v>=0?"pos":"neg";
+  const nm=c=>esc(String(c).replace(/^[^:]+:/,"")),dxb=d=>d?'<span class="pb">'+esc(d)+"</span>":"";
+  let h="";
+  if(HDM==="perp"){
+    const L=HD.perp.filter(x=>x.sz>0).reduce((a,x)=>a+x.val,0),S=HD.perp.filter(x=>x.sz<0).reduce((a,x)=>a+x.val,0),U=HD.perp.reduce((a,x)=>a+x.pnl,0);
+    h+='<div class="hds"><div>Perp equity<b>'+fmtUSD(HD.perpEq)+'</b></div><div>Long<b>'+fmtUSD(L)+'</b></div><div>Short<b>'+fmtUSD(S)+'</b></div><div>Net<b>'+(L-S<0?"−":"")+fmtUSD(Math.abs(L-S))+'</b></div><div>Unrealised PnL<b class="'+cl(U)+'">'+sg(U)+'</b></div></div>';
+    if(!HD.perp.length)h+='<p class="pempty">No open perp positions.</p>';
+    else{
+      h+='<div class="hdr hh"><span>Market</span><span class="r">Size</span><span class="r">Value</span><span class="r">Entry</span><span class="r">Liq. price</span><span class="r">PnL</span><span class="r">Margin</span></div>';
+      HD.perp.forEach(x=>{h+='<div class="hdr"><span><b>'+nm(x.coin)+"</b>"+dxb(x.dex)+'<small class="'+(x.sz>0?"pos":"neg")+'">'+(x.sz>0?"Long":"Short")+(x.lev?" "+x.lev+"x":"")+'</small></span><span class="r">'+nf(Math.abs(x.sz),Math.abs(x.sz)<10?3:0)+'</span><span class="r">'+fmtUSD(x.val)+'</span><span class="r">$'+fp(x.entry)+'</span><span class="r">'+(x.liq?"$"+fp(x.liq):"—")+'</span><span class="r '+cl(x.pnl)+'">'+sg(x.pnl)+(isFinite(x.roe)?'<small>'+(x.roe>=0?"+":"−")+nf(Math.abs(x.roe*100),1)+"%</small>":"")+'</span><span class="r">'+fmtUSD(x.margin)+"</span></div>";});
+    }
+  }else{
+    h+='<div class="hds"><div>Spot value<b>'+fmtUSD(HD.spotV)+'</b></div><div>Tokens<b>'+HD.spot.length+'</b></div></div><div class="hsp">';
+    if(!HD.spot.length)h+='<p class="pempty">No spot balances.</p>';
+    else{
+      h+='<div class="hdr hh"><span>Token</span><span class="r">Balance</span><span class="r">Price</span><span class="r">Value</span><span class="r">Avg entry</span><span class="r">PnL</span></div>';
+      HD.spot.forEach(x=>{const ent=x.cost>0&&x.tot>0?x.cost/x.tot:null,pn=ent!==null&&x.val!==null?x.val-x.cost:null;
+        h+='<div class="hdr"><span><b>'+esc(x.coin)+'</b>'+(HD.spotV>0&&x.val?'<small>'+nf(x.val/HD.spotV*100,x.val/HD.spotV<.1?1:0)+"%</small>":"")+'</span><span class="r">'+nf(x.tot,x.tot<10?4:x.tot<1e4?2:0)+'</span><span class="r">'+(x.pr!==null?"$"+fp(x.pr):"—")+'</span><span class="r">'+(x.val!==null?fmtUSD(x.val):"—")+'</span><span class="r">'+(ent!==null?"$"+fp(ent):"—")+'</span><span class="r '+(pn!==null?cl(pn):"")+'">'+(pn!==null?sg(pn):"—")+"</span></div>";});
+    }
+    h+="</div>";
+  }
+  $("hd_body").innerHTML=h;
+  $("hd_s").textContent=fmtUSD(HD.spotV+HD.perpEq)+" total · main address"+(subsOn?" only":"");
+  $("hd_note").textContent="Live balances at this moment, read from Hyperliquid. Perp equity counts every perp account of this address, including HIP-3 markets. Spot prices are the current market price against USDC; the average entry and PnL come from the cost basis Hyperliquid reports, which can be missing for tokens that were airdropped or transferred in.";
+}
+function drawHoldCard(){
+  const L=HD.perp.filter(x=>x.sz>0).reduce((a,x)=>a+x.val,0),S=HD.perp.filter(x=>x.sz<0).reduce((a,x)=>a+x.val,0),U=HD.perp.reduce((a,x)=>a+x.pnl,0);
+  const {c,g}=cardBase("Portfolio");
+  g.font="700 24px "+SANS;g.fillStyle="#8fb2a8";g.fillText("TOTAL ACCOUNT VALUE",72,176);
+  heroText(g,fmtUSD(HD.spotV+HD.perpEq),66,330,1000,200);
+  g.font="500 36px "+SANS;g.fillStyle="#d3e9e2";g.fillText("Spot "+fmtUSD(HD.spotV)+" · Perps "+fmtUSD(HD.perpEq),72,414);
+  statRow(g,[["Long",fmtUSD(L)],["Short",fmtUSD(S)],["Net",(L-S<0?"−":"")+fmtUSD(Math.abs(L-S))],["Unrealised",usdS(U),U>=0?"#7ee8c9":"#ffb4b4"]],520);
+  cardFoot(g);return c;
+}
+(function(){
+  const bx=$("hdmode");if(!bx)return;
+  bx.addEventListener("click",e=>{const b=e.target.closest("[data-m]");if(!b)return;HDM=b.dataset.m;hdRender();});
+  addShareBtn("#hold",()=>{if(!HD)return;openShare({draw:drawHoldCard,text:()=>"Portfolio on Hyperliquid: "+fmtUSD(HD.spotV)+" in spot and "+fmtUSD(HD.perpEq)+" in perps ("+HD.perp.length+" open position"+(HD.perp.length===1?"":"s")+").",name:"hl-portfolio.png"});});
 })();
 
 function hlpxRender(){
