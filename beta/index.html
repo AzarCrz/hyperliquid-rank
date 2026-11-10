@@ -538,6 +538,32 @@ textarea:focus{outline:2px solid var(--acc);outline-offset:1px}
   .hero-body{padding:22px 18px 4px}.subwrap{position:static;margin:0 0 12px;display:flex;justify-content:flex-end}.facts{margin:20px -18px 0}.facts div{padding:12px 18px}
   .col{padding:16px 14px}.sbody{padding:14px}
 }
+
+/* ---------- unified navigation ---------- */
+.gtop{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:10px 12px;width:100%}
+.gtop .brand{justify-self:start;cursor:pointer;min-width:0}
+.gtop .brand span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.gtop .gnav{justify-self:center}
+.gtop .gr{justify-self:end;display:flex;align-items:center;min-width:0}
+.gnav .tab{padding:8px 20px;font-size:14px}
+button.addr{cursor:pointer;max-width:230px;transition:border-color .2s,background .2s}
+button.addr:hover{border-color:rgba(111,227,207,.6);background:rgba(111,227,207,.08)}
+button.addr .aw{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+button.addr em{font:500 11.5px var(--sans);font-style:normal;color:var(--acc);letter-spacing:.04em;text-transform:uppercase;flex:none}
+.ltop.gtop{grid-template-columns:1fr;max-width:1180px}
+.ltop.gtop .brand,.ltop.gtop .gr{display:none}
+.gfoot{text-align:center}
+.gtop .brand .bs{display:none}
+.gfoot a{color:var(--acc);text-decoration:none;cursor:pointer}
+.gfoot a:hover{text-decoration:underline;text-underline-offset:3px}
+@media(max-width:720px){
+  .gtop{grid-template-columns:minmax(0,1fr) auto}
+  .gtop .gnav{grid-column:1/-1;grid-row:2;justify-self:stretch;display:flex}
+  .gtop .gnav .tab{flex:1;padding:9px 6px;font-size:13.5px}
+  .ltop.gtop .gnav{justify-self:stretch}
+  button.addr{max-width:190px;padding:7px 12px}button.addr em{display:none}
+  .gtop .brand .bl{display:none}.gtop .brand .bs{display:inline}
+}
 </style>
 </head>
 <body>
@@ -545,7 +571,7 @@ textarea:focus{outline:2px solid var(--acc);outline-offset:1px}
 
 <!-- ============ 1. LANDING ============ -->
 <section class="view on" id="v-landing">
-  <div class="ltop"><button class="pill ghost sm" data-radar>Live radar</button><button class="pill ghost sm" data-method>How it works</button></div>
+  <div class="ltop gtop" data-gtop></div>
   <div class="hero">
     <span class="kicker">Unofficial tool</span>
     <h1>Hyperliquid Volume Checker</h1>
@@ -562,7 +588,7 @@ textarea:focus{outline:2px solid var(--acc);outline-offset:1px}
     </div>
     <p class="mini">No connection. No signature.</p>
   </div>
-  <div class="lfoot">Independent tool, not affiliated with Hyperliquid. · Made by <a href="https://x.com/hugocrza" target="_blank" rel="noopener">@hugocrza</a></div>
+  <div class="lfoot gfoot" data-gfoot></div>
 </section>
 
 <!-- ============ 2. LOADING ============ -->
@@ -574,16 +600,7 @@ textarea:focus{outline:2px solid var(--acc);outline-offset:1px}
 <!-- ============ 3. RESULTS ============ -->
 <section class="view" id="v-results">
  <div class="wrap">
-  <header class="topbar">
-    <div class="brand"><span>Hyperliquid Volume Checker</span></div>
-    <div class="tb-right">
-      <button class="pill ghost sm" data-radar>Radar</button>
-      <button class="pill ghost sm" data-pulse>Pulse</button>
-      <button class="pill ghost sm" data-method>How it works</button>
-      <button class="pill ghost sm" id="back">Change address</button>
-      <span class="addr"><span id="who"></span></span>
-    </div>
-  </header>
+  <header class="topbar gtop" data-gtop></header>
 
   <nav class="seg snav" id="snav" role="group" aria-label="Sections"><i class="ind"></i><button class="tab" data-go="sec-rank" aria-pressed="true">Rank</button><button class="tab" data-go="more" aria-pressed="false">Wallet</button><button class="tab" data-go="fees" aria-pressed="false">Fees</button><button class="tab" data-go="sec-ladder" aria-pressed="false">Ladder</button><button class="tab" data-go="share" aria-pressed="false">Share</button></nav>
 
@@ -696,7 +713,7 @@ textarea:focus{outline:2px solid var(--acc);outline-offset:1px}
   </section>
 
   <p class="note" id="foot"></p>
-  <p class="note">Independent tool, not affiliated with Hyperliquid. · Made by <a href="https://x.com/hugocrza" target="_blank" rel="noopener">@hugocrza</a></p>
+  <p class="note gfoot" data-gfoot></p>
   <p class="note" id="refline" style="display:none"></p>
  </div>
 </section>
@@ -706,12 +723,9 @@ textarea:focus{outline:2px solid var(--acc);outline-offset:1px}
 <!-- ============ 5. PULSE ============ -->
 <section class="view" id="v-pulse">
  <div class="wrap">
-  <header class="topbar">
-    <div class="brand"><span>Hyperliquid Volume Checker</span></div>
-    <div class="tb-right"><button class="pill ghost sm" id="pback">Back</button></div>
-  </header>
-  <div class="phead"><div><h1 class="ptitle">Pulse</h1><p class="psub"><i class="live"></i><span id="pstat">Loading the market…</span></p></div></div>
-  <nav class="seg snav" id="psnav" role="group" aria-label="Pulse sections"><i class="ind"></i><button class="tab" data-go="sec-p-buy" aria-pressed="true">Buyback</button><button class="tab" data-go="sec-p-sup" aria-pressed="false">Supply</button><button class="tab" data-go="sec-p-hlp" aria-pressed="false">HLP</button><button class="tab" data-go="sec-p-fund" aria-pressed="false">Funding</button><button class="tab" data-go="sec-p-vs" aria-pressed="false">Versus</button><button class="tab" data-go="sec-p-all" aria-pressed="false">Markets</button></nav>
+  <header class="topbar gtop" data-gtop></header>
+  <div class="phead"><div><h1 class="ptitle">Market</h1><p class="psub"><i class="live"></i><span id="pstat">Loading the market…</span></p></div></div>
+  <nav class="seg snav" id="psnav" role="group" aria-label="Market sections"><i class="ind"></i><button class="tab" data-go="sec-p-buy" aria-pressed="true">Buyback</button><button class="tab" data-go="sec-p-sup" aria-pressed="false">Supply</button><button class="tab" data-go="sec-p-hlp" aria-pressed="false">HLP</button><button class="tab" data-go="sec-p-fund" aria-pressed="false">Funding</button><button class="tab" data-go="sec-p-vs" aria-pressed="false">Versus</button><button class="tab" data-go="sec-p-all" aria-pressed="false">Markets</button></nav>
   <div class="psec" id="sec-p-buy">Buyback · the protocol's engine</div>
   <section class="card" id="pbuy">
     <p class="pstory" id="pb_head">Reading the Assistance Fund…</p>
@@ -792,16 +806,14 @@ textarea:focus{outline:2px solid var(--acc);outline-offset:1px}
     <p class="pempty" id="pempty" style="display:none">No market matches your search.</p>
   </section>
   <p class="note">Source: Hyperliquid public API (api.hyperliquid.xyz), read live in your browser (markets every 30 seconds, buyback, HLP and funding comparison every 2 minutes). Buyback = HYPE held by the Assistance Fund system address 0xfefe…fefe, whose HYPE is treated as burned; the 24h figure is the change in that balance and its dollar value uses the current HYPE price. Volume is the rolling 24h notional. Funding is annualized from the current hourly rate and only shown for markets with at least $1M of open interest. Informational only, not financial advice.</p>
+  <p class="note gfoot" data-gfoot></p>
  </div>
 </section>
 
 <!-- ============ 4. HOW IT WORKS ============ -->
 <section class="view" id="v-radar">
  <div class="wrap">
-  <header class="topbar">
-    <div class="brand"><span>Hyperliquid Volume Checker</span></div>
-    <div class="tb-right"><button class="pill ghost sm" id="rback">Back</button></div>
-  </header>
+  <header class="topbar gtop" data-gtop></header>
   <div class="phead"><div><h1 class="ptitle">Radar</h1><p class="psub"><i class="live"></i><span id="rd_stat">Connecting…</span></p></div></div>
   <p class="rdlead">Large market orders on Hyperliquid as they happen, with the 30-day volume rank of the trader behind each one.</p>
   <div class="rdctl">
@@ -829,15 +841,13 @@ textarea:focus{outline:2px solid var(--acc);outline-offset:1px}
     </div>
   </div>
   <p class="fn" style="padding:0 6px 24px">Market orders (the side that takes liquidity) on Hyperliquid perps, read live from the public trade feed; fills of one order are added up. Rank = the trader's 30-day volume against the sample, like the main rank, read for the biggest orders first (a few small ones may show "n/a"). HIP-3 markets are not included yet. Click a wallet or a rank to open it in the checker.</p>
+  <p class="note gfoot" data-gfoot style="padding-bottom:24px"></p>
  </div>
 </section>
 
 <section class="view" id="v-method">
  <div class="wrap">
-  <header class="topbar">
-    <div class="brand"><span>Hyperliquid Volume Checker</span></div>
-    <div class="tb-right"><button class="pill ghost sm" id="mback">Back</button></div>
-  </header>
+  <header class="topbar gtop" data-gtop></header>
   <section class="card">
     <div class="card-head"><h2 class="ct">How it works</h2></div>
     <ol class="steps">
@@ -853,7 +863,7 @@ textarea:focus{outline:2px solid var(--acc);outline-offset:1px}
       <li><b>Accuracy</b>About ±1 point. Less precise at the extremes (very top, very low volumes), and the 24h figure moves the most. The sample is refreshed periodically; its date is shown at the bottom of your results.</li>
     </ol>
   </section>
-  <p class="note">Independent tool, not affiliated with Hyperliquid. · Made by <a href="https://x.com/hugocrza" target="_blank" rel="noopener">@hugocrza</a></p>
+  <p class="note gfoot" data-gfoot></p>
  </div>
 </section>
 
@@ -883,6 +893,7 @@ async function show(id){
   const cur=document.querySelector(".view.on");
   if(cur&&cur.id!==id){cur.classList.add("out");await sleep(260);cur.classList.remove("on","out");}
   $(id).classList.add("on");window.scrollTo(0,0);
+  if(typeof renderNav==="function")renderNav();
 }
 let lastTp=0,lastTopVal=0,lastEdge=false,lastTopText="";
 function startProgress(){
@@ -1052,7 +1063,7 @@ function renderResults(){
   const v=currentVolume();
   if(v===null||v<=0)return false;
   const r=quantileOf(v,W),t=THR(W),med=t[QS.indexOf(0.5)];
-  $("who").textContent=manual?S.manualwho:addrShown;
+  renderNav();
   if(introRan&&!r.edge){introGen++;tween($("top"),(1-r.q)*100,x=>"Top "+fmtPct(x)+"%",750,100);}
   else{$("top").textContent=topText(r);$("top")._v=r.edge?NaN:(1-r.q)*100;}
   $("sub").textContent=(r.edge==="low"?"lowest volumes of "+POP():r.edge==="high"?"top of "+POP():"of "+POP())+" · "+lc(volLabel(W));
@@ -1088,7 +1099,6 @@ function renderResults(){
   renderMore();
   crowdRender(v,t,r,tp,med);
   $("subbtn").style.display=(vols&&!manual)?"":"none";
-  document.querySelectorAll("#v-results [data-pulse]").forEach(b=>{b.style.display=manual?"none":"";});
   last={top:topText(r),v:fmtUSD(v),vol:volLabel(W),subs:subsOn,hip:MODE==="hip"};
   renderNote();
   $("ttext").value=shareText();
@@ -1444,7 +1454,6 @@ $("addr").addEventListener("keydown",e=>{if(e.key==="Enter")lookup();});
 $("mtoggle").onclick=()=>{const m=$("manual");m.style.display=m.style.display==="block"?"none":"block";if(m.style.display==="block")$("mvol").focus();};
 $("mgo").onclick=manualGo;
 $("mvol").addEventListener("keydown",e=>{if(e.key==="Enter")manualGo();});
-$("back").onclick=async()=>{await show("v-landing");$("addr").focus();};
 let prevView="v-landing";
 /* ---------------- Pulse: live market ---------------- */
 const PU={timer:null,tick:null,rows:null,hip:0,core:0,ts:0,filter:"all",view:"mk",q:"",sort:"vol",dir:-1,first:true,busy:false};
@@ -2468,8 +2477,6 @@ async function openRadar(){
   rdRender();rdConnect();clearInterval(RD.tmr);RD.tmr=setInterval(()=>{if(RD.on&&!document.hidden&&!RD.paused)rdSide();},1000);
 }
 function closeRadar(){RD.on=false;clearInterval(RD.ping);clearInterval(RD.tmr);if(RD.ws){try{RD.ws.close();}catch(e){}RD.ws=null;}}
-document.querySelectorAll("[data-radar]").forEach(b=>b.addEventListener("click",openRadar));
-$("rback").onclick=async()=>{closeRadar();await show(prevView);};
 $("rd_pause").onclick=()=>{RD.paused=!RD.paused;$("rd_pause").textContent=RD.paused?"Resume":"Pause";rdStat();};
 $("rd_thr").addEventListener("click",e=>{const b=e.target.closest("[data-t]");if(!b)return;RD.thr=+b.dataset.t;rdSave();$("rd_thr").querySelectorAll(".tab").forEach(x=>x.setAttribute("aria-pressed",String(x===b)));moveInd($("rd_thr"));rdStat();rdRender();});
 $("rd_flt").addEventListener("click",e=>{const b=e.target.closest("[data-f]");if(!b)return;RD.flt=b.dataset.f;rdSave();$("rd_flt").querySelectorAll(".tab").forEach(x=>x.setAttribute("aria-pressed",String(x===b)));moveInd($("rd_flt"));rdRender();});
@@ -2477,11 +2484,37 @@ $("v-radar").addEventListener("click",e=>{
   const w=e.target.closest("[data-a]");if(w){closeRadar();$("addr").value=w.dataset.a;lookup();return;}
   const s=e.target.closest("[data-sh]");if(s)rdShare(+s.dataset.sh);
 });
-document.querySelectorAll("[data-method]").forEach(b=>b.addEventListener("click",openMethod));
-$("mback").onclick=()=>show(prevView);
 $("subbtn").onclick=toggleSubs;
-document.querySelectorAll("[data-pulse]").forEach(b=>b.addEventListener("click",openPulse));
-$("pback").onclick=async()=>{closePulse();await show(prevView);};
+/* ============ UNIFIED NAV ============ */
+function navActive(){const c=document.querySelector(".view.on"),id=c?c.id:"";return id==="v-radar"?"radar":id==="v-pulse"?"market":(id==="v-results"||id==="v-landing")?"checker":"";}
+function renderNav(){
+  const act=navActive(),cur=document.querySelector(".view.on"),land=cur&&cur.id==="v-landing";
+  const wal=(last&&(manual||addrShown))?(manual?S.manualwho:addrShown):"";
+  const t=(k,l)=>'<button class="tab" data-nav="'+k+'" aria-pressed="'+(act===k)+'">'+l+'</button>';
+  const h='<div class="brand" data-nav="checker" title="Home"><span class="bl">Hyperliquid Volume Checker</span><span class="bs">Volume Checker</span></div><div class="seg gnav" role="group" aria-label="Main"><i class="ind"></i>'+t("checker","Checker")+t("radar","Radar")+t("market","Market")+'</div><div class="gr">'+(wal&&!land?'<button class="addr" data-nav="change" title="Change address"><span class="aw">'+esc(wal)+'</span><em>Change</em></button>':'')+'</div>';
+  document.querySelectorAll("[data-gtop]").forEach(e=>{if(e._h!==h){e.innerHTML=h;e._h=h;}});
+  const f='<a data-gm>How it works</a> · Independent tool, not affiliated with Hyperliquid · Made by <a href="https://x.com/hugocrza" target="_blank" rel="noopener">@hugocrza</a>';
+  document.querySelectorAll("[data-gfoot]").forEach(e=>{if(e._h!==f){e.innerHTML=f;e._h=f;}});
+  document.querySelectorAll(".gnav").forEach(moveInd);
+}
+async function goNav(k){
+  const cur=document.querySelector(".view.on"),id=cur?cur.id:"";
+  if(id==="v-loading")return;
+  if(k==="radar"){if(id==="v-radar")return;if(id==="v-pulse")closePulse();return openRadar();}
+  if(k==="market"){if(id==="v-pulse")return;if(id==="v-radar")closeRadar();return openPulse();}
+  if(id==="v-radar")closeRadar();if(id==="v-pulse")closePulse();
+  if(k==="change"){await show("v-landing");$("addr").focus();return;}
+  if(id==="v-landing"){window.scrollTo({top:0,behavior:"smooth"});return;}
+  const tg=last?"v-results":"v-landing";
+  if(id===tg){window.scrollTo({top:0,behavior:"smooth"});return;}
+  await show(tg);
+}
+document.addEventListener("click",e=>{
+  const n=e.target.closest("[data-nav]");if(n){e.preventDefault();goNav(n.dataset.nav);return;}
+  const m=e.target.closest("[data-gm]");if(m){e.preventDefault();openMethod();}
+});
+window.addEventListener("resize",()=>document.querySelectorAll(".gnav").forEach(moveInd));
+renderNav();
 $("pview").addEventListener("click",e=>{const b=e.target.closest("[data-v]");if(!b)return;PU.view=b.dataset.v;PU.anim=true;$("pview").querySelectorAll(".tab").forEach(x=>x.setAttribute("aria-pressed",String(x===b)));moveInd($("pview"));pulseRender();});
 $("psearch").addEventListener("input",e=>{PU.q=e.target.value;PU.anim=false;pulseRender();});
 $("pfilter").addEventListener("click",e=>{const b=e.target.closest("[data-f]");if(!b)return;PU.filter=b.dataset.f;PU.anim=true;$("pfilter").querySelectorAll(".tab").forEach(x=>x.setAttribute("aria-pressed",String(x===b)));moveInd($("pfilter"));pulseRender();});
@@ -2515,5 +2548,5 @@ $("copytxt").onclick=async()=>{
 };
 setupStatic();
 </script>
-<div style="position:fixed;left:12px;bottom:12px;z-index:99999;padding:4px 10px;border-radius:999px;background:#f97316;color:#fff;font:700 11px system-ui;letter-spacing:.08em;pointer-events:none">BETA</div></body>
+<div style="position:fixed;bottom:14px;left:14px;z-index:9999;background:#ff9f1a;color:#1a1000;font:700 11px system-ui;letter-spacing:.12em;padding:6px 10px;border-radius:999px;box-shadow:0 4px 18px rgba(0,0,0,.4);pointer-events:none">BETA</div></body>
 </html>
