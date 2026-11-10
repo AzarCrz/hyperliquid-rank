@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta name="robots" content="noindex,nofollow">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#00110d">
@@ -188,6 +187,59 @@ textarea:focus{outline:2px solid var(--acc);outline-offset:1px}
 .note{font-size:12.5px;color:var(--mute);text-align:center;margin:0 auto;max-width:860px}
 .mlink{margin-left:auto}
 .ltop{gap:10px}
+#v-radar{align-items:center;padding:20px 20px 48px}
+#v-radar .wrap{max-width:1180px;animation:rise .6s cubic-bezier(.2,.8,.2,1) both}
+.rdlead{margin:4px 4px 0;color:#cfe5de;font-size:15px;line-height:1.55;max-width:700px}
+.rdctl{display:flex;gap:10px 14px;flex-wrap:wrap;align-items:center;margin:2px 4px}
+.rdlbl{color:var(--mute);font:600 11px var(--sans);letter-spacing:.14em;text-transform:uppercase}
+.rdkpi{display:grid;grid-template-columns:repeat(6,1fr);border:1px solid rgba(111,227,207,.18);border-radius:14px;background:rgba(0,0,0,.30);overflow:hidden}
+.rdkpi>div{padding:12px 16px;border-right:1px solid rgba(111,227,207,.10);min-width:0}
+.rdkpi>div:last-child{border-right:0}
+.rdkpi small{display:block;color:var(--mute);font:600 10.5px var(--sans);letter-spacing:.14em;text-transform:uppercase;margin-bottom:6px}
+.rdkpi b{display:block;font:700 19px ui-monospace,"SF Mono",Menlo,Consolas,monospace;color:var(--ink);font-variant-numeric:tabular-nums;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rdkpi b.up{color:#58e3a4}.rdkpi b.dn{color:#ff7b7b}
+.rdgrid{display:grid;grid-template-columns:minmax(0,1.75fr) minmax(0,1fr);gap:16px;align-items:start}
+.rdside{display:flex;flex-direction:column;gap:16px}
+.rdp{border:1px solid rgba(111,227,207,.18);border-radius:14px;background:rgba(0,0,0,.28);overflow:hidden}
+.rdp>h3{margin:0;padding:11px 16px;border-bottom:1px solid rgba(111,227,207,.14);font:700 11px var(--sans);letter-spacing:.16em;text-transform:uppercase;color:var(--acc);display:flex;justify-content:space-between;gap:10px}
+.rdp>h3 span{color:var(--mute);font-weight:500;letter-spacing:.06em;text-transform:none}
+.tape{max-height:640px;overflow:auto}
+.tr{position:relative;isolation:isolate;display:grid;grid-template-columns:64px 44px 58px minmax(0,1fr) 92px 100px 88px 26px;align-items:center;gap:8px;padding:0 14px;height:34px;font:500 12.5px ui-monospace,"SF Mono",Menlo,Consolas,monospace;color:var(--ink);border-bottom:1px solid rgba(255,255,255,.045);font-variant-numeric:tabular-nums}
+.tr.th{position:sticky;top:0;z-index:3;height:30px;background:#06201a;color:var(--mute);font:600 10.5px var(--sans);letter-spacing:.12em;text-transform:uppercase;border-bottom:1px solid rgba(111,227,207,.18)}
+.tr::before{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(90deg,var(--hc,transparent) var(--w,0%),transparent var(--w,0%))}
+.tr.rb{--hc:rgba(88,227,164,.15);--fl:rgba(88,227,164,.38)}.tr.rs{--hc:rgba(255,123,123,.15);--fl:rgba(255,123,123,.38)}
+.tr.new::after{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;background:var(--fl);animation:rdfl 1.6s ease-out forwards}
+@keyframes rdfl{from{opacity:1}to{opacity:0}}
+.tr .bu{color:#58e3a4;font-weight:700}.tr .se{color:#ff7b7b;font-weight:700}
+.tr .c-m{font-weight:700;letter-spacing:.02em}
+.tr .c-z,.tr .c-p{text-align:right}
+.tr .c-z{font-weight:700;font-size:13.5px}
+.tr .c-t,.tr .c-p{color:var(--mute)}
+.tr button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer;text-align:left}
+.tr .rdw{color:#9fc4ba;text-decoration:none}.tr .rdw:hover{color:var(--acc);text-decoration:underline}
+.tr .rk{padding:3px 8px;border-radius:6px;background:rgba(255,255,255,.06);color:var(--mute);font:600 11.5px ui-monospace,"SF Mono",Menlo,Consolas,monospace;text-align:center;white-space:nowrap}
+.tr .rk.hot{background:rgba(111,227,207,.18);color:#6fe3cf;box-shadow:inset 0 0 0 1px rgba(111,227,207,.5)}
+.tr .rk.pend{background:linear-gradient(90deg,rgba(255,255,255,.04),rgba(255,255,255,.14),rgba(255,255,255,.04));background-size:200% 100%;animation:rdsk 1.3s linear infinite;color:transparent}
+.tr .rk.pop{animation:rdpop .5s cubic-bezier(.2,1.4,.4,1) both}
+@keyframes rdpop{0%{transform:scale(.6);opacity:0}100%{transform:none;opacity:1}}
+@keyframes rdsk{from{background-position:200% 0}to{background-position:-200% 0}}
+.tr .shbtn{color:var(--mute);font-size:14px;text-align:center}.tr .shbtn:hover{color:var(--acc)}
+.rdempty{padding:26px 16px;color:var(--mute);font:500 13px ui-monospace,"SF Mono",Menlo,Consolas,monospace}
+.sg{display:grid;align-items:center;gap:8px;padding:0 16px;height:34px;font:500 12.5px ui-monospace,"SF Mono",Menlo,Consolas,monospace;border-bottom:1px solid rgba(255,255,255,.045);font-variant-numeric:tabular-nums}
+.sg.th{height:28px;color:var(--mute);font:600 10.5px var(--sans);letter-spacing:.12em;text-transform:uppercase}
+.sg.fl{grid-template-columns:48px 1fr 1fr 1fr 70px}.sg.wl{grid-template-columns:1fr 34px 1fr 82px}
+.sg>*:not(:first-child){text-align:right}
+.sg b{font-weight:700}
+.sg .up{color:#58e3a4}.sg .dn{color:#ff7b7b}
+.dv{position:relative;height:8px;background:rgba(255,255,255,.05);border-radius:4px}
+.dv::after{content:"";position:absolute;left:50%;top:-2px;bottom:-2px;width:1px;background:rgba(255,255,255,.3)}
+.dv i{position:absolute;top:0;bottom:0;border-radius:4px}
+.sg button{font:inherit;color:#9fc4ba;background:none;border:0;padding:0;cursor:pointer;text-align:left}.sg button:hover{color:var(--acc);text-decoration:underline}
+.sg .rk{padding:3px 6px;border-radius:6px;background:rgba(255,255,255,.06);color:var(--mute);font:600 11px ui-monospace,"SF Mono",Menlo,Consolas,monospace;text-align:center;white-space:nowrap}.sg .rk.hot{background:rgba(111,227,207,.18);color:#6fe3cf;box-shadow:inset 0 0 0 1px rgba(111,227,207,.5)}
+@media(max-width:900px){.rdgrid{grid-template-columns:minmax(0,1fr)}.rdkpi{grid-template-columns:repeat(3,1fr)}.rdkpi>div{border-bottom:1px solid rgba(111,227,207,.10)}}
+@media(max-width:640px){#v-radar{padding:16px 12px 36px}.tr{grid-template-columns:42px 52px minmax(0,1fr) 84px 24px;gap:6px;padding:0 10px}.tr .c-t,.tr .c-p,.tr .c-w{display:none}.rdkpi b{font-size:16px;white-space:normal;overflow:visible}.sg.fl{grid-template-columns:44px 1fr 1fr 1fr}.sg.fl .dv,.sg.fl .dvh{display:none}}
+@media(prefers-reduced-motion:reduce){.tr.new::after,.tr .rk{animation:none!important}}
+
 #v-pulse{align-items:center;padding:20px 20px 48px}
 #v-pulse .wrap{animation:rise .6s cubic-bezier(.2,.8,.2,1) both}
 .phead{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:10px 20px;margin:6px 4px 0}
@@ -485,6 +537,32 @@ textarea:focus{outline:2px solid var(--acc);outline-offset:1px}
   .hero-body{padding:22px 18px 4px}.subwrap{position:static;margin:0 0 12px;display:flex;justify-content:flex-end}.facts{margin:20px -18px 0}.facts div{padding:12px 18px}
   .col{padding:16px 14px}.sbody{padding:14px}
 }
+
+/* ---------- unified navigation ---------- */
+.gtop{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:10px 12px;width:100%}
+.gtop .brand{justify-self:start;cursor:pointer;min-width:0}
+.gtop .brand span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.gtop .gnav{justify-self:center}
+.gtop .gr{justify-self:end;display:flex;align-items:center;min-width:0}
+.gnav .tab{padding:8px 20px;font-size:14px}
+button.addr{cursor:pointer;max-width:230px;transition:border-color .2s,background .2s}
+button.addr:hover{border-color:rgba(111,227,207,.6);background:rgba(111,227,207,.08)}
+button.addr .aw{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+button.addr em{font:500 11.5px var(--sans);font-style:normal;color:var(--acc);letter-spacing:.04em;text-transform:uppercase;flex:none}
+.ltop.gtop{grid-template-columns:1fr;max-width:1180px}
+.ltop.gtop .brand,.ltop.gtop .gr{display:none}
+.gfoot{text-align:center}
+.gtop .brand .bs{display:none}
+.gfoot a{color:var(--acc);text-decoration:none;cursor:pointer}
+.gfoot a:hover{text-decoration:underline;text-underline-offset:3px}
+@media(max-width:720px){
+  .gtop{grid-template-columns:minmax(0,1fr) auto}
+  .gtop .gnav{grid-column:1/-1;grid-row:2;justify-self:stretch;display:flex}
+  .gtop .gnav .tab{flex:1;padding:9px 6px;font-size:13.5px}
+  .ltop.gtop .gnav{justify-self:stretch}
+  button.addr{max-width:190px;padding:7px 12px}button.addr em{display:none}
+  .gtop .brand .bl{display:none}.gtop .brand .bs{display:inline}
+}
 </style>
 </head>
 <body>
@@ -492,7 +570,7 @@ textarea:focus{outline:2px solid var(--acc);outline-offset:1px}
 
 <!-- ============ 1. LANDING ============ -->
 <section class="view on" id="v-landing">
-  <div class="ltop"><button class="pill ghost sm" data-method>How it works</button></div>
+  <div class="ltop gtop" data-gtop></div>
   <div class="hero">
     <span class="kicker">Unofficial tool</span>
     <h1>Hyperliquid Volume Checker</h1>
@@ -509,7 +587,7 @@ textarea:focus{outline:2px solid var(--acc);outline-offset:1px}
     </div>
     <p class="mini">No connection. No signature.</p>
   </div>
-  <div class="lfoot">Independent tool, not affiliated with Hyperliquid. · Made by <a href="https://x.com/hugocrza" target="_blank" rel="noopener">@hugocrza</a></div>
+  <div class="lfoot gfoot" data-gfoot></div>
 </section>
 
 <!-- ============ 2. LOADING ============ -->
@@ -521,15 +599,7 @@ textarea:focus{outline:2px solid var(--acc);outline-offset:1px}
 <!-- ============ 3. RESULTS ============ -->
 <section class="view" id="v-results">
  <div class="wrap">
-  <header class="topbar">
-    <div class="brand"><span>Hyperliquid Volume Checker</span></div>
-    <div class="tb-right">
-      <button class="pill ghost sm" data-pulse>Pulse</button>
-      <button class="pill ghost sm" data-method>How it works</button>
-      <button class="pill ghost sm" id="back">Change address</button>
-      <span class="addr"><span id="who"></span></span>
-    </div>
-  </header>
+  <header class="topbar gtop" data-gtop></header>
 
   <nav class="seg snav" id="snav" role="group" aria-label="Sections"><i class="ind"></i><button class="tab" data-go="sec-rank" aria-pressed="true">Rank</button><button class="tab" data-go="more" aria-pressed="false">Wallet</button><button class="tab" data-go="fees" aria-pressed="false">Fees</button><button class="tab" data-go="sec-ladder" aria-pressed="false">Ladder</button><button class="tab" data-go="share" aria-pressed="false">Share</button></nav>
 
@@ -642,7 +712,7 @@ textarea:focus{outline:2px solid var(--acc);outline-offset:1px}
   </section>
 
   <p class="note" id="foot"></p>
-  <p class="note">Independent tool, not affiliated with Hyperliquid. · Made by <a href="https://x.com/hugocrza" target="_blank" rel="noopener">@hugocrza</a></p>
+  <p class="note gfoot" data-gfoot></p>
   <p class="note" id="refline" style="display:none"></p>
  </div>
 </section>
@@ -652,12 +722,9 @@ textarea:focus{outline:2px solid var(--acc);outline-offset:1px}
 <!-- ============ 5. PULSE ============ -->
 <section class="view" id="v-pulse">
  <div class="wrap">
-  <header class="topbar">
-    <div class="brand"><span>Hyperliquid Volume Checker</span></div>
-    <div class="tb-right"><button class="pill ghost sm" id="pback">Back</button></div>
-  </header>
-  <div class="phead"><div><h1 class="ptitle">Pulse</h1><p class="psub"><i class="live"></i><span id="pstat">Loading the market…</span></p></div></div>
-  <nav class="seg snav" id="psnav" role="group" aria-label="Pulse sections"><i class="ind"></i><button class="tab" data-go="sec-p-buy" aria-pressed="true">Buyback</button><button class="tab" data-go="sec-p-sup" aria-pressed="false">Supply</button><button class="tab" data-go="sec-p-hlp" aria-pressed="false">HLP</button><button class="tab" data-go="sec-p-fund" aria-pressed="false">Funding</button><button class="tab" data-go="sec-p-vs" aria-pressed="false">Versus</button><button class="tab" data-go="sec-p-all" aria-pressed="false">Markets</button></nav>
+  <header class="topbar gtop" data-gtop></header>
+  <div class="phead"><div><h1 class="ptitle">Market</h1><p class="psub"><i class="live"></i><span id="pstat">Loading the market…</span></p></div></div>
+  <nav class="seg snav" id="psnav" role="group" aria-label="Market sections"><i class="ind"></i><button class="tab" data-go="sec-p-buy" aria-pressed="true">Buyback</button><button class="tab" data-go="sec-p-sup" aria-pressed="false">Supply</button><button class="tab" data-go="sec-p-hlp" aria-pressed="false">HLP</button><button class="tab" data-go="sec-p-fund" aria-pressed="false">Funding</button><button class="tab" data-go="sec-p-vs" aria-pressed="false">Versus</button><button class="tab" data-go="sec-p-all" aria-pressed="false">Markets</button></nav>
   <div class="psec" id="sec-p-buy">Buyback · the protocol's engine</div>
   <section class="card" id="pbuy">
     <p class="pstory" id="pb_head">Reading the Assistance Fund…</p>
@@ -708,7 +775,7 @@ textarea:focus{outline:2px solid var(--acc);outline-offset:1px}
 
   <div class="psec" id="sec-p-vs">HYPE versus the market</div>
   <section class="card" id="pvs">
-    <div class="card-head"><h2 class="ct">HYPE vs</h2><div class="seg" id="vsr" role="group"><i class="ind"></i><button class="tab" data-r="24h" aria-pressed="false">24h</button><button class="tab" data-r="7d" aria-pressed="true">7d</button><button class="tab" data-r="30d" aria-pressed="false">30d</button></div><span class="ptip" id="vs_rank"></span></div>
+    <div class="card-head"><h2 class="ct">HYPE vs</h2><div class="seg" id="vsr" role="group"><i class="ind"></i><button class="tab" data-r="24h" aria-pressed="false">24h</button><button class="tab" data-r="7d" aria-pressed="true">7d</button><button class="tab" data-r="30d" aria-pressed="false">30d</button><button class="tab" data-r="all" aria-pressed="false">All</button></div><span class="ptip" id="vs_rank"></span></div>
     <div class="vsc" id="vs_chips"></div>
     <div class="pcwrap"><svg id="vs_svg" viewBox="0 0 800 300" role="img" aria-label="HYPE performance versus selected assets"></svg><p class="pempty" id="vs_empty">Loading…</p></div>
     <p class="ptip" id="vs_tip" style="padding:0 22px">&nbsp;</p>
@@ -738,16 +805,48 @@ textarea:focus{outline:2px solid var(--acc);outline-offset:1px}
     <p class="pempty" id="pempty" style="display:none">No market matches your search.</p>
   </section>
   <p class="note">Source: Hyperliquid public API (api.hyperliquid.xyz), read live in your browser (markets every 30 seconds, buyback, HLP and funding comparison every 2 minutes). Buyback = HYPE held by the Assistance Fund system address 0xfefe…fefe, whose HYPE is treated as burned; the 24h figure is the change in that balance and its dollar value uses the current HYPE price. Volume is the rolling 24h notional. Funding is annualized from the current hourly rate and only shown for markets with at least $1M of open interest. Informational only, not financial advice.</p>
+  <p class="note gfoot" data-gfoot></p>
  </div>
 </section>
 
 <!-- ============ 4. HOW IT WORKS ============ -->
+<section class="view" id="v-radar">
+ <div class="wrap">
+  <header class="topbar gtop" data-gtop></header>
+  <div class="phead"><div><h1 class="ptitle">Radar</h1><p class="psub"><i class="live"></i><span id="rd_stat">Connecting…</span></p></div></div>
+  <p class="rdlead">Large market orders on Hyperliquid as they happen, with the 30-day volume rank of the trader behind each one.</p>
+  <div class="rdctl">
+    <span class="rdlbl">Min size</span>
+    <div class="seg" id="rd_thr" role="group" aria-label="Minimum order size"><i class="ind"></i><button class="tab" data-t="100000" aria-pressed="true">$100k</button><button class="tab" data-t="250000" aria-pressed="false">$250k</button><button class="tab" data-t="500000" aria-pressed="false">$500k</button><button class="tab" data-t="1000000" aria-pressed="false">$1M</button></div>
+    <span class="rdlbl">Wallets</span>
+    <div class="seg" id="rd_flt" role="group" aria-label="Wallet filter"><i class="ind"></i><button class="tab" data-f="all" aria-pressed="true">All</button><button class="tab" data-f="top" aria-pressed="false">Top 1% only</button></div>
+    <button class="pill ghost sm" id="rd_pause">Pause</button>
+  </div>
+  <div class="rdkpi">
+    <div><small>Orders</small><b id="rd_n">0</b></div>
+    <div><small>Buy volume</small><b id="rd_bv">—</b></div>
+    <div><small>Sell volume</small><b id="rd_sv">—</b></div>
+    <div><small>Net flow</small><b id="rd_net">—</b></div>
+    <div><small>Biggest</small><b id="rd_big">—</b></div>
+    <div><small>Top 1% wallets</small><b id="rd_top">0</b></div>
+  </div>
+  <div class="rdgrid">
+    <div class="rdp"><h3>Tape · latest orders <span id="rd_cnt"></span></h3>
+      <div class="tape"><div class="tr th"><span class="c-t">Time</span><span>Side</span><span>Mkt</span><span style="text-align:right">Size</span><span class="c-p" style="text-align:right">Avg px</span><span class="c-w">Wallet</span><span>Rank</span><span></span></div><div id="rd_tape"></div><div class="rdempty" id="rd_empty">Waiting for large orders…</div></div>
+    </div>
+    <div class="rdside">
+      <div class="rdp"><h3>Flow by market <span>last 10 min</span></h3><div id="rd_mk"></div></div>
+      <div class="rdp"><h3>Most active wallets <span>last 10 min</span></h3><div id="rd_wl"></div></div>
+    </div>
+  </div>
+  <p class="fn" style="padding:0 6px 24px">Market orders (the side that takes liquidity) on Hyperliquid perps, read live from the public trade feed; fills of one order are added up. Rank = the trader's 30-day volume against the sample, like the main rank, read for the biggest orders first (a few small ones may show "n/a"). HIP-3 markets are not included yet. Click a wallet or a rank to open it in the checker.</p>
+  <p class="note gfoot" data-gfoot style="padding-bottom:24px"></p>
+ </div>
+</section>
+
 <section class="view" id="v-method">
  <div class="wrap">
-  <header class="topbar">
-    <div class="brand"><span>Hyperliquid Volume Checker</span></div>
-    <div class="tb-right"><button class="pill ghost sm" id="mback">Back</button></div>
-  </header>
+  <header class="topbar gtop" data-gtop></header>
   <section class="card">
     <div class="card-head"><h2 class="ct">How it works</h2></div>
     <ol class="steps">
@@ -757,28 +856,29 @@ textarea:focus{outline:2px solid var(--acc);outline-offset:1px}
       <li><b>Your rank</b>Your volume is placed between the two closest thresholds (log scale) to get a percentile. "Top 10%" means you out-traded about 90% of active traders.</li>
       <li><b>Profit and account size</b>Same sample, same method. Your profit (PnL) for the selected period and your current account value come from the same API call as your volume, and are ranked against the sampled wallets that traded in that period.</li>
       <li><b>First trade and fees</b>Read from your own trade history. Hyperliquid may only expose part of a very long history; when that happens, fees are shown as a minimum ("≥") for the fills we could read, and the start date comes from your account history instead ("Active since"). Fees in other tokens are converted at the fill price. The same fills show how much of your volume is on HIP-3 markets (stocks, commodities and other builder-deployed perps), but this is not ranked.</li>
-      <li id="m_hip" style="display:none"><b>HIP-3 view</b>Ranks your HIP-3 volume (read from your own trades, over 24h, 7d or 30d) against HIP-3 traders: wallets seen trading on HIP-3 markets over <span id="m_hl"></span>, of which <span id="m_hs"></span> were sampled and measured from their trades. Wallets with no HIP-3 volume in a period are not counted. Stocks, commodities and other builder-deployed perps all count together.</li>
+      <li id="m_hip" style="display:none"><b>HIP-3 view</b>Ranks your HIP-3 volume (read from your own trades, over 24h, 7d, 30d or all time) against HIP-3 traders: wallets seen trading on HIP-3 markets over <span id="m_hl"></span>, of which <span id="m_hs"></span> were sampled and measured from their trades. Wallets with no HIP-3 volume in a period are not counted. The all-time ranking compares your full HIP-3 history with the all-time HIP-3 volume of sampled wallets. Stocks, commodities and other builder-deployed perps all count together.</li>
+      <li><b>Live radar</b>Streams Hyperliquid's public trade feed in your browser: market orders above the size you choose, with the trader's 30-day volume rank. Nothing is stored.</li>
       <li><b>What "active" means</b>Wallets that traded during the listening window. Dormant addresses are not counted, so your rank is stricter than a comparison with every address ever created.</li>
       <li><b>Accuracy</b>About ±1 point. Less precise at the extremes (very top, very low volumes), and the 24h figure moves the most. The sample is refreshed periodically; its date is shown at the bottom of your results.</li>
     </ol>
   </section>
-  <p class="note">Independent tool, not affiliated with Hyperliquid. · Made by <a href="https://x.com/hugocrza" target="_blank" rel="noopener">@hugocrza</a></p>
+  <p class="note gfoot" data-gfoot></p>
  </div>
 </section>
 
 <script>
 const REFERRAL="";  // optional: your referral link (shown and labelled as such). Empty = disabled.
-const D={"generated":"2026-11-02","hours":20,"sessions":2,"seen":71313,"sample":37160,"q":[0.001,0.005,0.01,0.02,0.03,0.04,0.05,0.06,0.07,0.08,0.09,0.1,0.11,0.12,0.13,0.14,0.15,0.16,0.17,0.18,0.19,0.2,0.21,0.22,0.23,0.24,0.25,0.26,0.27,0.28,0.29,0.3,0.31,0.32,0.33,0.34,0.35,0.36,0.37,0.38,0.39,0.4,0.41,0.42,0.43,0.44,0.45,0.46,0.47,0.48,0.49,0.5,0.51,0.52,0.53,0.54,0.55,0.56,0.57,0.58,0.59,0.6,0.61,0.62,0.63,0.64,0.65,0.66,0.67,0.68,0.69,0.7,0.71,0.72,0.73,0.74,0.75,0.76,0.77,0.78,0.79,0.8,0.81,0.82,0.83,0.84,0.85,0.86,0.87,0.88,0.89,0.9,0.91,0.92,0.93,0.94,0.95,0.96,0.97,0.98,0.99,0.995,0.999],"t":{"day":[5.09,10.51,11.95,14.97,20.26,24.36,29.41,35.2,40.62,47.35,53.79,61.28,70.01,78.04,87.35,96.88,103.79,115.9,128.87,142.13,154.01,170.22,186.88,199.97,216.65,236.67,255.01,277.49,299.56,323.96,350.54,378.3,403.69,436.46,469.65,499.45,528.22,568.79,606.56,651.01,701.08,748.03,799.48,865.06,933.6,998.5,1059.7,1145.51,1227.43,1329.55,1443.08,1541.14,1661.94,1806.23,1945.78,2068.59,2220.95,2400.67,2588.58,2812.23,3021.71,3305.41,3584.43,3888.74,4165.35,4545.88,4933.13,5319.0,5804.2,6320.46,6930.92,7646.52,8385.69,9205.46,10008.67,10845.86,11993.96,13374.64,15024.21,16816.08,18982.3,20721.83,23221.39,25997.66,29412.53,33388.81,38119.44,44197.25,51015.92,60102.77,72335.96,87250.74,106632.87,136036.89,174029.55,235984.03,323512.42,480521.98,767820.49,1399191.49,3796563.18,8737451.7,48060298.01],"week":[10.02,14.91,22.38,34.23,49.12,66.75,87.46,109.61,136.19,165.51,197.3,229.87,265.89,309.84,358.96,406.43,457.03,512.68,571.48,637.06,703.92,770.71,845.24,923.22,999.32,1081.07,1171.24,1267.29,1370.4,1491.25,1608.55,1741.4,1888.3,2017.99,2193.12,2377.97,2573.04,2768.48,2985.15,3207.43,3437.77,3679.79,3957.48,4243.33,4576.79,4892.49,5236.43,5698.66,6119.21,6602.78,7065.47,7591.22,8189.82,8782.58,9420.29,10082.37,10837.27,11711.75,12618.26,13749.52,14995.79,16232.45,17731.8,19284.75,20849.99,22910.86,24996.12,26878.04,29431.51,32006.79,35035.83,38372.19,41867.32,45774.28,50020.86,55267.34,61047.7,68036.27,75554.36,83295.14,93526.44,106182.2,119962.97,135749.19,154190.19,175943.32,202573.03,232982.92,270940.59,315319.42,377879.79,450901.33,542299.5,663752.49,841426.51,1113632.24,1549525.92,2288558.2,3676229.68,6905573.3,18745303.32,49914568.44,290602313.05],"month":[10.77,20.46,30.34,59.12,91.91,130.89,178.33,230.19,295.2,369.84,446.0,532.01,626.06,736.39,849.37,976.68,1101.59,1247.24,1417.81,1590.82,1789.04,1990.76,2201.95,2443.42,2698.75,2974.04,3246.27,3538.46,3833.65,4116.5,4449.28,4833.14,5185.51,5606.34,6115.3,6558.32,7097.62,7674.68,8336.05,8991.03,9717.25,10466.44,11316.78,12138.35,13228.73,14288.48,15536.13,16736.95,18070.6,19611.18,21295.27,23220.45,25298.62,27330.98,29435.84,31632.6,34320.91,37264.11,40223.45,43436.39,47149.34,51344.68,55814.8,60925.81,66218.64,71774.1,78212.1,84747.65,92165.17,100755.52,110043.25,120032.74,131982.37,145966.4,160958.82,179275.53,197728.9,218226.32,243716.41,272894.27,306917.11,346910.87,388130.96,439774.75,495891.4,561788.85,641718.99,739843.35,860216.66,1000349.35,1194325.87,1440948.86,1769908.41,2193646.37,2849087.29,3785581.11,5141537.78,7501012.6,11716343.48,22991484.42,64134847.98,177982356.18,1019525837.98],"allTime":[13.23,28.41,43.86,89.24,149.51,219.19,316.3,433.68,567.88,723.58,895.07,1070.18,1329.4,1595.74,1861.91,2176.05,2497.34,2884.95,3286.42,3735.41,4179.27,4705.04,5280.99,5904.11,6601.95,7386.89,8236.89,9195.01,10191.91,11352.25,12594.74,14020.24,15607.71,17267.99,19151.93,21090.11,23425.94,25908.67,28463.18,31385.59,34672.89,38367.42,42140.35,46053.41,50233.68,55520.24,60735.3,66479.23,72503.09,79304.68,85786.42,93014.71,101224.22,111069.84,121106.3,133501.05,147344.03,161240.65,179208.51,196639.41,217416.3,239365.62,265316.65,291389.72,321524.01,355376.93,392117.79,434568.92,478277.09,527106.48,583921.87,643825.97,714588.52,802128.41,897745.24,1003237.66,1126294.99,1265808.28,1413526.43,1593004.89,1798930.85,2046709.5,2345831.6,2693240.25,3112652.21,3623782.0,4193579.75,4954674.57,5890972.19,7082770.09,8557424.07,10411075.38,13329400.05,17023314.88,22029568.17,29069760.83,41022413.66,62485937.73,103435027.62,205580460.01,649167688.14,1808111436.81,12066186200.88]},"p":{"day":[-223464.89,-35329.11,-13411.43,-5648.85,-2978.71,-1831.48,-1239.84,-859.43,-621.76,-480.51,-376.61,-292.24,-238.75,-192.38,-158.76,-133.2,-110.84,-93.45,-79.18,-66.92,-57.73,-51.13,-44.02,-37.82,-32.78,-28.23,-24.97,-21.9,-18.93,-16.59,-14.47,-12.59,-11.05,-9.64,-8.42,-7.43,-6.52,-5.79,-5.15,-4.51,-3.96,-3.45,-3.03,-2.67,-2.37,-2.05,-1.76,-1.52,-1.33,-1.15,-0.98,-0.85,-0.71,-0.6,-0.5,-0.41,-0.33,-0.26,-0.2,-0.14,-0.09,-0.06,-0.02,0.01,0.06,0.13,0.2,0.29,0.38,0.51,0.65,0.83,1.04,1.32,1.67,2.06,2.54,3.1,3.81,4.63,5.64,6.94,8.55,10.51,13.21,16.22,20.31,25.74,32.6,41.71,53.25,67.62,88.62,117.38,161.73,227.9,331.4,510.32,988.29,2123.23,7066.35,18611.41,151736.68],"week":[-226376.06,-44272.75,-18556.33,-7745.17,-4369.2,-2745.87,-1856.67,-1347.95,-1005.1,-783.33,-628.29,-518.44,-422.07,-343.03,-284.73,-238.07,-201.55,-172.44,-148.5,-124.71,-108.63,-94.41,-82.34,-71.06,-61.88,-54.25,-47.22,-41.38,-36.33,-31.99,-28.61,-25.15,-22.1,-19.66,-17.57,-15.75,-13.95,-12.42,-11.02,-9.67,-8.52,-7.51,-6.67,-5.81,-5.07,-4.43,-3.85,-3.32,-2.89,-2.47,-2.1,-1.75,-1.43,-1.15,-0.93,-0.72,-0.54,-0.4,-0.26,-0.14,-0.06,0.02,0.14,0.32,0.56,0.85,1.21,1.68,2.25,2.98,3.89,4.89,6.18,7.85,9.8,12.34,15.77,19.65,24.12,29.52,36.75,45.45,56.1,69.29,85.46,106.46,129.68,164.53,204.31,266.27,339.57,448.82,606.27,817.58,1139.89,1594.04,2470.07,3765.76,6388.61,13285.63,40949.12,102181.99,610221.18],"month":[-972039.05,-171203.27,-78863.81,-31053.92,-17247.75,-11164.6,-7848.71,-5782.23,-4440.22,-3406.55,-2749.53,-2231.53,-1839.08,-1519.39,-1262.24,-1078.98,-923.14,-804.41,-687.9,-602.3,-522.64,-459.77,-404.79,-356.78,-312.99,-276.55,-244.44,-215.79,-190.94,-168.75,-148.81,-132.36,-118.48,-105.46,-93.08,-83.63,-74.97,-67.42,-60.68,-54.4,-49.41,-44.41,-39.67,-35.5,-31.86,-28.59,-25.31,-22.72,-20.24,-18.13,-16.01,-14.11,-12.45,-11.06,-9.71,-8.46,-7.42,-6.42,-5.53,-4.74,-4.06,-3.42,-2.82,-2.29,-1.83,-1.42,-1.09,-0.77,-0.52,-0.31,-0.13,-0.02,0.13,0.41,0.86,1.5,2.37,3.46,4.91,7.04,9.85,13.04,17.75,24.03,32.34,44.31,60.19,81.09,106.84,142.94,192.79,267.88,389.8,568.62,831.34,1304.78,2062.93,3339.11,6248.71,14507.75,58084.81,192819.16,1725243.82],"allTime":[-2315757.99,-377818.54,-158603.7,-57748.33,-31320.79,-19806.9,-13738.34,-9872.89,-7712.85,-6018.34,-4831.86,-3958.1,-3202.41,-2649.46,-2186.6,-1866.32,-1547.95,-1322.57,-1131.87,-969.24,-833.41,-711.61,-611.14,-529.72,-465.4,-404.84,-351.63,-310.01,-270.73,-233.8,-204.43,-179.25,-157.66,-138.35,-121.86,-109.12,-96.62,-86.39,-76.2,-67.2,-58.97,-52.4,-46.69,-41.41,-36.4,-31.97,-28.11,-24.58,-21.62,-18.94,-16.49,-14.38,-12.24,-10.55,-8.94,-7.65,-6.48,-5.35,-4.4,-3.56,-2.83,-2.17,-1.61,-1.16,-0.73,-0.42,-0.16,-0.02,0.18,0.67,1.47,2.58,4.23,6.55,9.98,14.21,20.66,28.88,42.04,59.46,81.14,109.98,146.89,208.79,277.88,376.21,506.67,679.69,943.37,1333.97,1801.18,2569.61,3763.61,5500.67,8453.11,13385.39,22741.13,38794.64,73561.92,162628.42,473796.53,1215314.96,7212329.03]},"pp":{"day":0.382,"week":0.402,"month":0.298,"allTime":0.338},"a":[0.0,0.0,0.0,0.0,0.01,0.05,0.45,0.95,1.56,2.25,3.07,3.89,4.66,5.44,6.4,7.44,8.59,9.78,11.21,12.54,14.26,16.14,18.15,19.98,22.46,24.89,27.68,30.79,34.06,37.6,41.27,45.9,49.58,53.59,58.76,64.16,70.1,77.21,83.92,91.26,97.29,102.82,110.59,120.98,133.34,146.48,161.01,178.89,195.55,211.57,232.01,254.01,278.42,303.28,335.25,370.87,404.11,444.03,486.49,521.78,569.18,623.49,692.64,764.08,842.04,925.19,1000.45,1076.73,1176.48,1297.57,1456.46,1620.33,1828.32,2016.33,2240.64,2507.6,2806.44,3146.04,3618.78,4121.37,4682.11,5225.13,5944.07,6857.66,7929.79,9238.19,10241.07,11598.28,13421.85,16061.76,19100.31,22322.25,27620.87,34831.72,45959.41,62464.96,85709.61,120206.44,193386.97,355966.07,983692.87,2186627.16,10097336.0],"h":{"day":[4.49,10.76,14.32,19.41,24.26,29.89,34.81,41.61,48.84,56.58,65.23,75.42,84.96,97.59,106.51,118.63,134.0,149.5,165.32,183.89,198.81,212.57,230.1,247.82,271.19,289.14,307.02,338.49,366.11,395.1,424.09,465.44,496.99,524.05,568.46,604.67,648.65,696.41,752.55,818.42,884.76,945.7,999.55,1058.74,1143.51,1224.88,1349.95,1474.0,1583.56,1716.97,1892.42,1999.6,2137.01,2329.33,2523.89,2755.94,2945.51,3120.91,3386.74,3700.96,3999.41,4283.86,4591.03,4962.97,5244.55,5686.56,6103.4,6760.13,7261.58,7958.6,8710.28,9565.73,10224.42,11146.16,12190.18,13634.83,15086.57,16574.06,18353.31,20166.51,22462.88,25163.7,28158.42,32059.78,35718.2,40600.56,47144.28,53872.1,62648.04,74877.94,89771.87,107454.39,131619.15,169451.98,212030.42,280638.43,392276.83,529494.04,906568.79,1759757.92,4101649.21,8775731.24,37945814.41],"week":[8.12,15.4,24.57,33.89,45.67,62.77,81.91,100.76,122.49,148.98,177.77,202.05,240.4,276.91,319.68,353.24,382.63,416.26,452.22,499.59,559.03,616.9,697.68,776.68,858.6,941.27,1002.76,1091.84,1182.94,1290.18,1396.49,1493.11,1629.36,1763.77,1902.88,2035.02,2210.98,2392.04,2575.31,2785.36,3009.03,3252.33,3543.86,3845.58,4141.78,4543.57,4877.76,5145.82,5672.65,6062.84,6608.62,7049.83,7664.62,8277.8,9044.79,9795.1,10538.83,11290.28,12451.35,13474.44,14421.09,15880.39,17368.58,18854.63,20394.75,22485.83,24738.78,26934.47,29504.47,32778.92,35502.34,39077.58,41991.83,45802.16,49456.05,53210.64,58591.87,64713.16,73615.65,82489.49,92313.0,103668.19,116924.5,134797.91,150418.88,173456.64,196823.36,226921.72,261418.77,315201.17,367821.72,435095.86,532998.74,668080.37,847500.0,1078201.7,1452530.49,2083847.03,3265663.72,5717428.65,13872593.61,22367023.88,62204155.28],"month":[10.98,22.08,29.7,44.09,68.75,99.15,135.07,178.02,211.99,272.47,329.8,372.82,415.18,466.64,534.08,620.96,721.3,815.93,936.95,1054.32,1184.61,1354.46,1522.13,1686.74,1867.05,2052.18,2242.62,2486.64,2708.25,2974.62,3243.43,3571.52,3876.66,4246.14,4630.54,5028.94,5505.18,6006.32,6555.45,7056.59,7651.06,8186.37,8937.23,9806.56,10594.07,11565.43,12491.08,13680.29,14715.59,15842.9,16930.97,18437.43,20088.52,22044.4,24027.2,25917.63,28101.25,30759.14,33641.81,36943.84,39911.23,43266.81,47839.02,52404.54,57155.31,62999.81,68736.97,74382.23,80803.2,89160.53,96576.49,104211.93,114490.86,125390.57,140150.24,156186.56,174205.67,194673.63,217587.02,243816.62,276262.09,308613.5,354316.38,397593.5,444608.65,496994.1,573335.59,645833.45,746124.12,882496.96,1042410.53,1210088.89,1422301.28,1783661.54,2219123.66,2856215.01,3898032.71,5248412.23,8248825.94,13385524.32,27645344.6,50172226.34,109304739.47]},"hs":12040,"hw":20956,"hh":10};
+const D={"generated":"2026-11-02","hours":20,"sessions":2,"seen":71313,"sample":37160,"q":[0.001,0.005,0.01,0.02,0.03,0.04,0.05,0.06,0.07,0.08,0.09,0.1,0.11,0.12,0.13,0.14,0.15,0.16,0.17,0.18,0.19,0.2,0.21,0.22,0.23,0.24,0.25,0.26,0.27,0.28,0.29,0.3,0.31,0.32,0.33,0.34,0.35,0.36,0.37,0.38,0.39,0.4,0.41,0.42,0.43,0.44,0.45,0.46,0.47,0.48,0.49,0.5,0.51,0.52,0.53,0.54,0.55,0.56,0.57,0.58,0.59,0.6,0.61,0.62,0.63,0.64,0.65,0.66,0.67,0.68,0.69,0.7,0.71,0.72,0.73,0.74,0.75,0.76,0.77,0.78,0.79,0.8,0.81,0.82,0.83,0.84,0.85,0.86,0.87,0.88,0.89,0.9,0.91,0.92,0.93,0.94,0.95,0.96,0.97,0.98,0.99,0.995,0.999],"t":{"day":[5.09,10.51,11.95,14.97,20.26,24.36,29.41,35.2,40.62,47.35,53.79,61.28,70.01,78.04,87.35,96.88,103.79,115.9,128.87,142.13,154.01,170.22,186.88,199.97,216.65,236.67,255.01,277.49,299.56,323.96,350.54,378.3,403.69,436.46,469.65,499.45,528.22,568.79,606.56,651.01,701.08,748.03,799.48,865.06,933.6,998.5,1059.7,1145.51,1227.43,1329.55,1443.08,1541.14,1661.94,1806.23,1945.78,2068.59,2220.95,2400.67,2588.58,2812.23,3021.71,3305.41,3584.43,3888.74,4165.35,4545.88,4933.13,5319.0,5804.2,6320.46,6930.92,7646.52,8385.69,9205.46,10008.67,10845.86,11993.96,13374.64,15024.21,16816.08,18982.3,20721.83,23221.39,25997.66,29412.53,33388.81,38119.44,44197.25,51015.92,60102.77,72335.96,87250.74,106632.87,136036.89,174029.55,235984.03,323512.42,480521.98,767820.49,1399191.49,3796563.18,8737451.7,48060298.01],"week":[10.02,14.91,22.38,34.23,49.12,66.75,87.46,109.61,136.19,165.51,197.3,229.87,265.89,309.84,358.96,406.43,457.03,512.68,571.48,637.06,703.92,770.71,845.24,923.22,999.32,1081.07,1171.24,1267.29,1370.4,1491.25,1608.55,1741.4,1888.3,2017.99,2193.12,2377.97,2573.04,2768.48,2985.15,3207.43,3437.77,3679.79,3957.48,4243.33,4576.79,4892.49,5236.43,5698.66,6119.21,6602.78,7065.47,7591.22,8189.82,8782.58,9420.29,10082.37,10837.27,11711.75,12618.26,13749.52,14995.79,16232.45,17731.8,19284.75,20849.99,22910.86,24996.12,26878.04,29431.51,32006.79,35035.83,38372.19,41867.32,45774.28,50020.86,55267.34,61047.7,68036.27,75554.36,83295.14,93526.44,106182.2,119962.97,135749.19,154190.19,175943.32,202573.03,232982.92,270940.59,315319.42,377879.79,450901.33,542299.5,663752.49,841426.51,1113632.24,1549525.92,2288558.2,3676229.68,6905573.3,18745303.32,49914568.44,290602313.05],"month":[10.77,20.46,30.34,59.12,91.91,130.89,178.33,230.19,295.2,369.84,446.0,532.01,626.06,736.39,849.37,976.68,1101.59,1247.24,1417.81,1590.82,1789.04,1990.76,2201.95,2443.42,2698.75,2974.04,3246.27,3538.46,3833.65,4116.5,4449.28,4833.14,5185.51,5606.34,6115.3,6558.32,7097.62,7674.68,8336.05,8991.03,9717.25,10466.44,11316.78,12138.35,13228.73,14288.48,15536.13,16736.95,18070.6,19611.18,21295.27,23220.45,25298.62,27330.98,29435.84,31632.6,34320.91,37264.11,40223.45,43436.39,47149.34,51344.68,55814.8,60925.81,66218.64,71774.1,78212.1,84747.65,92165.17,100755.52,110043.25,120032.74,131982.37,145966.4,160958.82,179275.53,197728.9,218226.32,243716.41,272894.27,306917.11,346910.87,388130.96,439774.75,495891.4,561788.85,641718.99,739843.35,860216.66,1000349.35,1194325.87,1440948.86,1769908.41,2193646.37,2849087.29,3785581.11,5141537.78,7501012.6,11716343.48,22991484.42,64134847.98,177982356.18,1019525837.98],"allTime":[13.23,28.41,43.86,89.24,149.51,219.19,316.3,433.68,567.88,723.58,895.07,1070.18,1329.4,1595.74,1861.91,2176.05,2497.34,2884.95,3286.42,3735.41,4179.27,4705.04,5280.99,5904.11,6601.95,7386.89,8236.89,9195.01,10191.91,11352.25,12594.74,14020.24,15607.71,17267.99,19151.93,21090.11,23425.94,25908.67,28463.18,31385.59,34672.89,38367.42,42140.35,46053.41,50233.68,55520.24,60735.3,66479.23,72503.09,79304.68,85786.42,93014.71,101224.22,111069.84,121106.3,133501.05,147344.03,161240.65,179208.51,196639.41,217416.3,239365.62,265316.65,291389.72,321524.01,355376.93,392117.79,434568.92,478277.09,527106.48,583921.87,643825.97,714588.52,802128.41,897745.24,1003237.66,1126294.99,1265808.28,1413526.43,1593004.89,1798930.85,2046709.5,2345831.6,2693240.25,3112652.21,3623782.0,4193579.75,4954674.57,5890972.19,7082770.09,8557424.07,10411075.38,13329400.05,17023314.88,22029568.17,29069760.83,41022413.66,62485937.73,103435027.62,205580460.01,649167688.14,1808111436.81,12066186200.88]},"p":{"day":[-223464.89,-35329.11,-13411.43,-5648.85,-2978.71,-1831.48,-1239.84,-859.43,-621.76,-480.51,-376.61,-292.24,-238.75,-192.38,-158.76,-133.2,-110.84,-93.45,-79.18,-66.92,-57.73,-51.13,-44.02,-37.82,-32.78,-28.23,-24.97,-21.9,-18.93,-16.59,-14.47,-12.59,-11.05,-9.64,-8.42,-7.43,-6.52,-5.79,-5.15,-4.51,-3.96,-3.45,-3.03,-2.67,-2.37,-2.05,-1.76,-1.52,-1.33,-1.15,-0.98,-0.85,-0.71,-0.6,-0.5,-0.41,-0.33,-0.26,-0.2,-0.14,-0.09,-0.06,-0.02,0.01,0.06,0.13,0.2,0.29,0.38,0.51,0.65,0.83,1.04,1.32,1.67,2.06,2.54,3.1,3.81,4.63,5.64,6.94,8.55,10.51,13.21,16.22,20.31,25.74,32.6,41.71,53.25,67.62,88.62,117.38,161.73,227.9,331.4,510.32,988.29,2123.23,7066.35,18611.41,151736.68],"week":[-226376.06,-44272.75,-18556.33,-7745.17,-4369.2,-2745.87,-1856.67,-1347.95,-1005.1,-783.33,-628.29,-518.44,-422.07,-343.03,-284.73,-238.07,-201.55,-172.44,-148.5,-124.71,-108.63,-94.41,-82.34,-71.06,-61.88,-54.25,-47.22,-41.38,-36.33,-31.99,-28.61,-25.15,-22.1,-19.66,-17.57,-15.75,-13.95,-12.42,-11.02,-9.67,-8.52,-7.51,-6.67,-5.81,-5.07,-4.43,-3.85,-3.32,-2.89,-2.47,-2.1,-1.75,-1.43,-1.15,-0.93,-0.72,-0.54,-0.4,-0.26,-0.14,-0.06,0.02,0.14,0.32,0.56,0.85,1.21,1.68,2.25,2.98,3.89,4.89,6.18,7.85,9.8,12.34,15.77,19.65,24.12,29.52,36.75,45.45,56.1,69.29,85.46,106.46,129.68,164.53,204.31,266.27,339.57,448.82,606.27,817.58,1139.89,1594.04,2470.07,3765.76,6388.61,13285.63,40949.12,102181.99,610221.18],"month":[-972039.05,-171203.27,-78863.81,-31053.92,-17247.75,-11164.6,-7848.71,-5782.23,-4440.22,-3406.55,-2749.53,-2231.53,-1839.08,-1519.39,-1262.24,-1078.98,-923.14,-804.41,-687.9,-602.3,-522.64,-459.77,-404.79,-356.78,-312.99,-276.55,-244.44,-215.79,-190.94,-168.75,-148.81,-132.36,-118.48,-105.46,-93.08,-83.63,-74.97,-67.42,-60.68,-54.4,-49.41,-44.41,-39.67,-35.5,-31.86,-28.59,-25.31,-22.72,-20.24,-18.13,-16.01,-14.11,-12.45,-11.06,-9.71,-8.46,-7.42,-6.42,-5.53,-4.74,-4.06,-3.42,-2.82,-2.29,-1.83,-1.42,-1.09,-0.77,-0.52,-0.31,-0.13,-0.02,0.13,0.41,0.86,1.5,2.37,3.46,4.91,7.04,9.85,13.04,17.75,24.03,32.34,44.31,60.19,81.09,106.84,142.94,192.79,267.88,389.8,568.62,831.34,1304.78,2062.93,3339.11,6248.71,14507.75,58084.81,192819.16,1725243.82],"allTime":[-2315757.99,-377818.54,-158603.7,-57748.33,-31320.79,-19806.9,-13738.34,-9872.89,-7712.85,-6018.34,-4831.86,-3958.1,-3202.41,-2649.46,-2186.6,-1866.32,-1547.95,-1322.57,-1131.87,-969.24,-833.41,-711.61,-611.14,-529.72,-465.4,-404.84,-351.63,-310.01,-270.73,-233.8,-204.43,-179.25,-157.66,-138.35,-121.86,-109.12,-96.62,-86.39,-76.2,-67.2,-58.97,-52.4,-46.69,-41.41,-36.4,-31.97,-28.11,-24.58,-21.62,-18.94,-16.49,-14.38,-12.24,-10.55,-8.94,-7.65,-6.48,-5.35,-4.4,-3.56,-2.83,-2.17,-1.61,-1.16,-0.73,-0.42,-0.16,-0.02,0.18,0.67,1.47,2.58,4.23,6.55,9.98,14.21,20.66,28.88,42.04,59.46,81.14,109.98,146.89,208.79,277.88,376.21,506.67,679.69,943.37,1333.97,1801.18,2569.61,3763.61,5500.67,8453.11,13385.39,22741.13,38794.64,73561.92,162628.42,473796.53,1215314.96,7212329.03]},"pp":{"day":0.382,"week":0.402,"month":0.298,"allTime":0.338},"a":[0.0,0.0,0.0,0.0,0.01,0.05,0.45,0.95,1.56,2.25,3.07,3.89,4.66,5.44,6.4,7.44,8.59,9.78,11.21,12.54,14.26,16.14,18.15,19.98,22.46,24.89,27.68,30.79,34.06,37.6,41.27,45.9,49.58,53.59,58.76,64.16,70.1,77.21,83.92,91.26,97.29,102.82,110.59,120.98,133.34,146.48,161.01,178.89,195.55,211.57,232.01,254.01,278.42,303.28,335.25,370.87,404.11,444.03,486.49,521.78,569.18,623.49,692.64,764.08,842.04,925.19,1000.45,1076.73,1176.48,1297.57,1456.46,1620.33,1828.32,2016.33,2240.64,2507.6,2806.44,3146.04,3618.78,4121.37,4682.11,5225.13,5944.07,6857.66,7929.79,9238.19,10241.07,11598.28,13421.85,16061.76,19100.31,22322.25,27620.87,34831.72,45959.41,62464.96,85709.61,120206.44,193386.97,355966.07,983692.87,2186627.16,10097336.0],"h":{"day":[4.49,10.76,14.32,19.41,24.26,29.89,34.81,41.61,48.84,56.58,65.23,75.42,84.96,97.59,106.51,118.63,134.0,149.5,165.32,183.89,198.81,212.57,230.1,247.82,271.19,289.14,307.02,338.49,366.11,395.1,424.09,465.44,496.99,524.05,568.46,604.67,648.65,696.41,752.55,818.42,884.76,945.7,999.55,1058.74,1143.51,1224.88,1349.95,1474.0,1583.56,1716.97,1892.42,1999.6,2137.01,2329.33,2523.89,2755.94,2945.51,3120.91,3386.74,3700.96,3999.41,4283.86,4591.03,4962.97,5244.55,5686.56,6103.4,6760.13,7261.58,7958.6,8710.28,9565.73,10224.42,11146.16,12190.18,13634.83,15086.57,16574.06,18353.31,20166.51,22462.88,25163.7,28158.42,32059.78,35718.2,40600.56,47144.28,53872.1,62648.04,74877.94,89771.87,107454.39,131619.15,169451.98,212030.42,280638.43,392276.83,529494.04,906568.79,1759757.92,4101649.21,8775731.24,37945814.41],"week":[8.12,15.4,24.57,33.89,45.67,62.77,81.91,100.76,122.49,148.98,177.77,202.05,240.4,276.91,319.68,353.24,382.63,416.26,452.22,499.59,559.03,616.9,697.68,776.68,858.6,941.27,1002.76,1091.84,1182.94,1290.18,1396.49,1493.11,1629.36,1763.77,1902.88,2035.02,2210.98,2392.04,2575.31,2785.36,3009.03,3252.33,3543.86,3845.58,4141.78,4543.57,4877.76,5145.82,5672.65,6062.84,6608.62,7049.83,7664.62,8277.8,9044.79,9795.1,10538.83,11290.28,12451.35,13474.44,14421.09,15880.39,17368.58,18854.63,20394.75,22485.83,24738.78,26934.47,29504.47,32778.92,35502.34,39077.58,41991.83,45802.16,49456.05,53210.64,58591.87,64713.16,73615.65,82489.49,92313.0,103668.19,116924.5,134797.91,150418.88,173456.64,196823.36,226921.72,261418.77,315201.17,367821.72,435095.86,532998.74,668080.37,847500.0,1078201.7,1452530.49,2083847.03,3265663.72,5717428.65,13872593.61,22367023.88,62204155.28],"month":[10.98,22.08,29.7,44.09,68.75,99.15,135.07,178.02,211.99,272.47,329.8,372.82,415.18,466.64,534.08,620.96,721.3,815.93,936.95,1054.32,1184.61,1354.46,1522.13,1686.74,1867.05,2052.18,2242.62,2486.64,2708.25,2974.62,3243.43,3571.52,3876.66,4246.14,4630.54,5028.94,5505.18,6006.32,6555.45,7056.59,7651.06,8186.37,8937.23,9806.56,10594.07,11565.43,12491.08,13680.29,14715.59,15842.9,16930.97,18437.43,20088.52,22044.4,24027.2,25917.63,28101.25,30759.14,33641.81,36943.84,39911.23,43266.81,47839.02,52404.54,57155.31,62999.81,68736.97,74382.23,80803.2,89160.53,96576.49,104211.93,114490.86,125390.57,140150.24,156186.56,174205.67,194673.63,217587.02,243816.62,276262.09,308613.5,354316.38,397593.5,444608.65,496994.1,573335.59,645833.45,746124.12,882496.96,1042410.53,1210088.89,1422301.28,1783661.54,2219123.66,2856215.01,3898032.71,5248412.23,8248825.94,13385524.32,27645344.6,50172226.34,109304739.47],"allTime":[16.89,29.41,39.26,86.86,134.34,195.34,258.99,340.28,391.52,466.09,592.43,718.76,895.95,1145.86,1339.56,1592.84,1873.63,2132.42,2544.48,2917.74,3411.54,3929.1,4505.11,5086.22,5734.09,6363.74,6959.93,7915.76,8850.05,9925.54,11109.85,12262.11,13511.15,14785.02,16409.98,17964.79,19372.74,21453.53,23374.14,25882.79,28874.08,31465.23,34290.85,37109.44,40234.23,43101.42,45808.67,49758.11,54255.7,59800.5,65223.08,69834.82,76425.61,84390.88,91519.9,98913.48,107055.3,115715.03,126139.06,138056.02,153540.36,166340.32,179451.41,200563.22,216236.92,236276.72,255966.46,281594.02,314945.22,345818.82,380226.08,421282.02,454247.4,509712.94,559044.79,621038.71,683625.08,748489.98,828016.63,937564.94,1040156.8,1192115.65,1327402.88,1481790.15,1716722.74,1953568.75,2225467.7,2622811.66,3143398.47,3540802.89,4141655.68,4802187.95,5694736.68,6669157.76,8447605.41,10546598.92,13676733.57,17398393.16,24077009.2,36426281.24,65936559.41,98025197.73,164244350.4]},"hsa":6022,"hs":12040,"hw":20956,"hh":10};
 const QS=D.q, T=D.t, WK=["day","week","month","allTime"];
 const SANS='system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif';
 let MODE="all",hipVols=null,hipCov=null,subMsg="";
-const HW=["day","week","month"];
+const HW=["day","week","month","allTime"];
 const S={
   tabs:["24h","7d","30d","All time"],
   vol:["24h volume","7-day volume","30-day volume","All-time volume"],
   card:["24H","7 DAYS","30 DAYS","ALL TIME"],
-  cardh:["HIP-3 · 24H","HIP-3 · 7D","HIP-3 · 30D"],
-  volh:["24h HIP-3 volume","7-day HIP-3 volume","30-day HIP-3 volume"],
+  cardh:["HIP-3 · 24H","HIP-3 · 7D","HIP-3 · 30D","HIP-3 · ALL TIME"],
+  volh:["24h HIP-3 volume","7-day HIP-3 volume","30-day HIP-3 volume","All-time HIP-3 volume"],
   bad:"Invalid address (0x + 40 characters).",
   api:"Couldn't read this wallet. Try again or enter your volume manually.",
   none:"No volume found for this wallet.",novol:"Enter a volume above 0.",
@@ -792,6 +892,7 @@ async function show(id){
   const cur=document.querySelector(".view.on");
   if(cur&&cur.id!==id){cur.classList.add("out");await sleep(260);cur.classList.remove("on","out");}
   $(id).classList.add("on");window.scrollTo(0,0);
+  if(typeof renderNav==="function")renderNav();
 }
 let lastTp=0,lastTopVal=0,lastEdge=false,lastTopText="";
 function startProgress(){
@@ -961,7 +1062,7 @@ function renderResults(){
   const v=currentVolume();
   if(v===null||v<=0)return false;
   const r=quantileOf(v,W),t=THR(W),med=t[QS.indexOf(0.5)];
-  $("who").textContent=manual?S.manualwho:addrShown;
+  renderNav();
   if(introRan&&!r.edge){introGen++;tween($("top"),(1-r.q)*100,x=>"Top "+fmtPct(x)+"%",750,100);}
   else{$("top").textContent=topText(r);$("top")._v=r.edge?NaN:(1-r.q)*100;}
   $("sub").textContent=(r.edge==="low"?"lowest volumes of "+POP():r.edge==="high"?"top of "+POP():"of "+POP())+" · "+lc(volLabel(W));
@@ -997,8 +1098,8 @@ function renderResults(){
   renderMore();
   crowdRender(v,t,r,tp,med);
   $("subbtn").style.display=(vols&&!manual)?"":"none";
-  document.querySelectorAll("#v-results [data-pulse]").forEach(b=>{b.style.display=manual?"none":"";});
   last={top:topText(r),v:fmtUSD(v),vol:volLabel(W),subs:subsOn,hip:MODE==="hip"};
+  renderNav();
   renderNote();
   $("ttext").value=shareText();
   cacheCard();
@@ -1009,7 +1110,7 @@ function listenText(){
   return (D.sessions||1)>1?`${D.sessions} sessions (${D.hours}h, last ${d})`:`${D.hours}h (${d})`;
 }
 function buildTabs(){
-  const names=MODE==="hip"?S.tabs.slice(0,3):S.tabs,box=$("tabs");
+  const names=S.tabs,box=$("tabs");
   let ind=box.querySelector(".ind");
   if(!ind){ind=document.createElement("i");ind.className="ind";box.prepend(ind);}
   box.querySelectorAll(".tab").forEach(b=>b.remove());
@@ -1033,7 +1134,7 @@ function renderMode(){
 function setMode(m){
   if(m===MODE||!hipVols)return;
   if(m==="hip"){
-    const k=[W<3?W:2,2,1,0].find(i=>hipVols[i]>0&&D.h[HW[i]]);
+    const k=[W,3,2,1,0].find(i=>hipVols[i]>0&&D.h[HW[i]]);
     if(k===undefined)return;
     MODE="hip";W=k;
   }else{
@@ -1153,7 +1254,7 @@ async function loadFills(addrs){
       list=list.concat(r.list);if(!r.complete)complete=false;if(!r.complete||r.list.length===10000)capAny=true;
     }
     if(tok!==fillsTok)return;
-    let fees=0,first=null,tot=0,hip=0,minT=Infinity;const fb={spot:0,perp:0,hip:0},fl=[],stt={tk:0,mk:0,wins:0,loss:0,best:null,worst:null,lo:0,sh:0,mc:{}},dset=new Set(),hm={},now=Date.now(),HMS=[864e5,6048e5,2592e6],hv=[0,0,0];
+    let fees=0,first=null,tot=0,hip=0,minT=Infinity;const fb={spot:0,perp:0,hip:0},fl=[],stt={tk:0,mk:0,wins:0,loss:0,best:null,worst:null,lo:0,sh:0,mc:{}},dset=new Set(),hm={},now=Date.now(),HMS=[864e5,6048e5,2592e6,1e15],hv=[0,0,0,0];
     for(const f of list){
       const fee=parseFloat(f.fee)||0,px=parseFloat(f.px)||0,bf=parseFloat(f.builderFee)||0;
       const nt=px*(parseFloat(f.sz)||0);tot+=nt;
@@ -1353,7 +1454,6 @@ $("addr").addEventListener("keydown",e=>{if(e.key==="Enter")lookup();});
 $("mtoggle").onclick=()=>{const m=$("manual");m.style.display=m.style.display==="block"?"none":"block";if(m.style.display==="block")$("mvol").focus();};
 $("mgo").onclick=manualGo;
 $("mvol").addEventListener("keydown",e=>{if(e.key==="Enter")manualGo();});
-$("back").onclick=async()=>{await show("v-landing");$("addr").focus();};
 let prevView="v-landing";
 /* ---------------- Pulse: live market ---------------- */
 const PU={timer:null,tick:null,rows:null,hip:0,core:0,ts:0,filter:"all",view:"mk",q:"",sort:"vol",dir:-1,first:true,busy:false};
@@ -1645,13 +1745,13 @@ function supplyRender(){
   const io=new IntersectionObserver(es=>{if(es.some(e=>e.isIntersecting)){supplyLoad2();io.disconnect();}},{rootMargin:"400px"});io.observe(el);
 })();
 /* ---------------- Share system: cost card, daily card, chart cards ---------------- */
-function cardBase(chip){
+function cardBase(chip,bare){
   const c=document.createElement("canvas");c.width=1200;c.height=675;const g=c.getContext("2d"),ACC="#6fe3cf";
   g.fillStyle="#00110d";g.fillRect(0,0,1200,675);
   blob(g,160,40,720,"rgba(0,92,68,0.95)","rgba(0,92,68,0)");blob(g,1080,120,620,"rgba(0,112,85,0.85)","rgba(0,112,85,0)");blob(g,1180,700,520,"rgba(0,120,92,0.65)","rgba(0,120,92,0)");blob(g,260,760,560,"rgba(61,240,194,0.55)","rgba(61,240,194,0)");
   const vg=g.createRadialGradient(600,300,260,600,300,820);vg.addColorStop(0,"rgba(0,8,6,0)");vg.addColorStop(1,"rgba(0,8,6,0.55)");g.fillStyle=vg;g.fillRect(0,0,1200,675);
   rr(g,16,16,1168,643,34);g.strokeStyle="rgba(111,227,207,0.3)";g.lineWidth=2;g.stroke();
-  g.textBaseline="alphabetic";g.textAlign="left";g.font="700 22px "+SANS;g.fillStyle=ACC;g.fillText("HYPERLIQUID VOLUME CHECKER",72,94);
+  g.textBaseline="alphabetic";g.textAlign="left";g.font="700 22px "+SANS;g.fillStyle=ACC;if(!bare)g.fillText("HYPERLIQUID VOLUME CHECKER",72,94);
   if(chip){const cw=g.measureText(chip).width+36;g.fillStyle="rgba(0,0,0,0.32)";rr(g,1128-cw,62,cw,46,23);g.fill();g.strokeStyle="rgba(111,227,207,0.5)";g.lineWidth=1.5;g.stroke();g.fillStyle=ACC;g.fillText(chip,1128-cw+18,93);}
   return {c,g};
 }
@@ -1924,9 +2024,9 @@ async function vsResolve(t){
   }catch(e){}
   VS.coin[t]=null;return null;
 }
-async function vsCandles(coin,rng){
+async function vsCandles(coin,rng){const n0=Date.now();
   const k=coin+"|"+rng,hit=VS.cache[k];if(hit&&Date.now()-hit.t<120000)return hit.v;
-  const cfg={"24h":["15m",864e5],"7d":["1h",6048e5],"30d":["4h",2592e6]}[rng],n=Date.now();
+  const cfg={"24h":["15m",864e5],"7d":["1h",6048e5],"30d":["4h",2592e6],"all":["1d",n0-1732000000000]}[rng],n=n0;
   const j=await hlPost({type:"candleSnapshot",req:{coin,interval:cfg[0],startTime:n-cfg[1],endTime:n}});
   const v=(Array.isArray(j)?j:[]).map(c=>[+c.t,parseFloat(c.c)]).filter(p=>isFinite(p[1])&&p[1]>0);
   VS.cache[k]={t:Date.now(),v};return v;
@@ -1941,12 +2041,14 @@ async function vsLoad(){
     out[i]={nm,pts:pts&&pts.length>1?pts:null,col:i===0?"#6fe3cf":VSCOL[(i-1)%VSCOL.length]};
   }));
   if(my!==VS.busy)return;
+  if(VS.rng==="all"&&out[0]&&out[0].pts){const t0=out[0].pts[0][0];out.forEach(o=>{if(o.pts){o.pts=o.pts.filter(q=>q[0]>=t0);if(o.pts.length<2)o.pts=null;}});}
   VS.series=out;vsRender();
 }
 function vsRank(){
   const r=PU.rows;if(!r)return"";const L=r.filter(x=>isFinite(x.chg)&&x.vol>1e5).sort((a,b)=>b.chg-a.chg),i=L.findIndex(x=>x.name==="HYPE");
   return i<0?"":"24h: HYPE is #"+(i+1)+" of "+L.length+" markets";
 }
+const vsRl=()=>VS.rng==="all"?"all time":VS.rng;
 const vsNm=n=>String(n).split(":").pop();
 function vsLogo(n,col){const b=encodeURIComponent(vsNm(n));return '<span class="vlg" style="--c:'+col+'"><img src="https://app.hyperliquid.xyz/coins/'+b+'.svg" data-lg="1" data-n="'+b+'" alt="" loading="lazy" referrerpolicy="no-referrer"></span>';}
 document.addEventListener("error",e=>{const t=e.target;if(!t||t.tagName!=="IMG"||!t.dataset||!t.dataset.lg)return;if(t.dataset.lg==="1"){t.dataset.lg="2";t.src="https://app.hyperliquid.xyz/coins/"+t.dataset.n+"_spot.svg";}else t.remove();},true);
@@ -1967,7 +2069,7 @@ function vsRender(){
   const t0=S[0].pts[0][0],t1=S[0].pts[S[0].pts.length-1][0];
   const all=pc.flatMap(o=>o.p.map(q=>q[1])),lo=Math.min(0,...all),hi=Math.max(0,...all),r=(hi-lo)||1;
   const X=t=>pl+(t-t0)/((t1-t0)||1)*iw,Y=v=>pt+(hi-v)/r*ih,lab=v=>'<text x="'+(pl-6)+'" y="'+(Y(v)+4)+'" text-anchor="end" fill="currentColor" opacity=".6" font-size="11">'+(v<0?"−":"")+nf(Math.abs(v),Math.abs(v)<10?1:0)+"%</text>";
-  const dt=t=>new Date(t).toLocaleDateString("en-GB",{day:"numeric",month:"short"});
+  const dt=t=>new Date(t).toLocaleDateString("en-GB",(VS.rng==="all"?{month:"short",year:"2-digit"}:{day:"numeric",month:"short"}));
   let g='<line x1="'+pl+'" x2="'+(W-pr)+'" y1="'+Y(0)+'" y2="'+Y(0)+'" stroke="currentColor" stroke-opacity=".3" stroke-dasharray="3 4"/>'+lab(hi)+(lo<0?lab(lo):"")+lab(0);
   pc.slice().reverse().forEach(o=>{g+='<path d="M'+o.p.map(q=>X(q[0]).toFixed(1)+","+Y(q[1]).toFixed(1)).join(" L")+'" fill="none" stroke="'+o.s.col+'" stroke-width="'+(o.s.nm==="HYPE"?2.8:1.8)+'" stroke-linejoin="round" opacity="'+(o.s.nm==="HYPE"?1:.9)+'"/>';});
   g+='<text x="'+pl+'" y="'+(H-5)+'" fill="currentColor" opacity=".6" font-size="11">'+dt(t0)+'</text><text x="'+(W-pr)+'" y="'+(H-5)+'" text-anchor="end" fill="currentColor" opacity=".6" font-size="11">'+dt(t1)+'</text><line id="vs_g" y1="'+pt+'" y2="'+(H-pb)+'" stroke="currentColor" stroke-opacity=".4" style="display:none"/><g id="vs_h" pointer-events="none"></g>';
@@ -1975,7 +2077,7 @@ function vsRender(){
   const sgn=v=>(v>=0?"+":"−")+nf(Math.abs(v),Math.abs(v)<10?1:0)+"%",mv=e=>{
     const b=svg.getBoundingClientRect(),px=(e.clientX-b.left)*(W/b.width),t=t0+(px-pl)/iw*(t1-t0),ln=document.getElementById("vs_g");
     if(ln){ln.setAttribute("x1",Math.min(W-pr,Math.max(pl,px)));ln.setAttribute("x2",Math.min(W-pr,Math.max(pl,px)));ln.style.display="";}
-    $("vs_tip").textContent=new Date(t).toLocaleString("en-GB",{day:"numeric",month:"short",hour:"2-digit",minute:"2-digit"});
+    $("vs_tip").textContent=new Date(t).toLocaleString("en-GB",VS.rng==="all"?{day:"numeric",month:"short",year:"numeric"}:{day:"numeric",month:"short",hour:"2-digit",minute:"2-digit"});
     const cx=Math.min(W-pr,Math.max(pl,px)),it=pc.map(o=>{let bi=0,bd=1e18;o.p.forEach((q,i)=>{const d=Math.abs(q[0]-t);if(d<bd){bd=d;bi=i;}});const v=o.p[bi][1];return{o,v,x:X(o.p[bi][0]),y:Y(v)};}).sort((m,n)=>m.y-n.y);
     const ly=it.map(z=>z.y);for(let i=1;i<ly.length;i++)ly[i]=Math.max(ly[i],ly[i-1]+15);const ov=ly.length?ly[ly.length-1]-(H-pb):0;if(ov>0)for(let i=0;i<ly.length;i++)ly[i]-=ov;
     const left=cx>W*0.62;let h="";
@@ -1984,7 +2086,7 @@ function vsRender(){
   };
   svg.onpointermove=mv;svg.onpointerdown=mv;svg.onpointerleave=()=>{const ln=document.getElementById("vs_g");if(ln)ln.style.display="none";const hg=document.getElementById("vs_h");if(hg)hg.innerHTML="";$("vs_tip").innerHTML="&nbsp;";};$("vs_tip").innerHTML="&nbsp;";
   const hc=vsChg(S[0]);
-  $("vs_leg").innerHTML='<div>'+vsLogo("HYPE","#6fe3cf")+'HYPE<b class="'+(hc>=0?"pos":"neg")+'">'+sgn(hc)+"</b>"+VS.rng+"</div>"+ok.slice(1).map(o=>{const c=vsChg(o),d=hc-c;return '<div>'+vsLogo(o.nm,o.col)+esc(vsNm(o.nm))+'<b class="'+(c>=0?"pos":"neg")+'">'+sgn(c)+"</b>HYPE "+(d>=0?"ahead by ":"behind by ")+nf(Math.abs(d),Math.abs(d)<10?1:0)+" pts</div>";}).join("");
+  $("vs_leg").innerHTML='<div>'+vsLogo("HYPE","#6fe3cf")+'HYPE<b class="'+(hc>=0?"pos":"neg")+'">'+sgn(hc)+"</b>"+vsRl()+"</div>"+ok.slice(1).map(o=>{const c=vsChg(o),d=hc-c;return '<div>'+vsLogo(o.nm,o.col)+esc(vsNm(o.nm))+'<b class="'+(c>=0?"pos":"neg")+'">'+sgn(c)+"</b>HYPE "+(d>=0?"ahead by ":"behind by ")+nf(Math.abs(d),Math.abs(d)<10?1:0)+" pts</div>";}).join("");
 }
 (function(){
   const box=$("pvs");if(!box)return;
@@ -2020,20 +2122,41 @@ function vsRender(){
   addShareBtn("#pvs",()=>{
     const S=VS.series.filter(x=>x.pts);if(!S.length||!S[0].pts)return;
     const hc=vsChg(S[0]),oth=S.slice(1);
-    const text=()=>"$HYPE "+(hc>=0?"+":"−")+nf(Math.abs(hc),1)+"% over "+VS.rng+(oth.length?". "+oth.map(o=>o.nm+" "+((vsChg(o)>=0?"+":"−")+nf(Math.abs(vsChg(o)),1))+"%").join(", ")+".":".")+(oth.length===1?" HYPE is "+(hc-vsChg(oth[0])>=0?"ahead of ":"behind ")+oth[0].nm+" by "+nf(Math.abs(hc-vsChg(oth[0])),1)+" pts.":"");
+    const text=()=>"$HYPE "+(hc>=0?"+":"−")+nf(Math.abs(hc),1)+"% "+(VS.rng==="all"?"since launch":"over "+VS.rng)+(oth.length?". "+oth.map(o=>o.nm+" "+((vsChg(o)>=0?"+":"−")+nf(Math.abs(vsChg(o)),1))+"%").join(", ")+".":".")+(oth.length===1?" HYPE is "+(hc-vsChg(oth[0])>=0?"ahead of ":"behind ")+oth[0].nm+" by "+nf(Math.abs(hc-vsChg(oth[0])),1)+" pts.":"");
     openShare({draw:()=>drawVsCard(S),text,name:"hype-vs-market.png"});
   });
 })();
 function drawVsCard(S){
-  const hc=vsChg(S[0]),oth=S.slice(1),{c,g}=cardBase(VS.rng.toUpperCase());
-  g.font="700 24px "+SANS;g.fillStyle="#8fb2a8";g.fillText("HYPE VS "+(oth.length?oth.map(o=>o.nm).join(", "):"THE MARKET"),72,176);
-  heroText(g,(hc>=0?"+":"−")+nf(Math.abs(hc),1)+"%",66,300,700,130);
-  let lx=72;g.font="600 26px "+SANS;oth.forEach(o=>{const cc=vsChg(o),t=o.nm+" "+(cc>=0?"+":"−")+nf(Math.abs(cc),1)+"%",w=g.measureText(t).width+34;g.beginPath();g.arc(lx+8,331,8,0,7);g.fillStyle=o.col;g.fill();g.fillStyle="#e3f4ee";g.fillText(t,lx+24,340);lx+=w+22;});
-  const x0=72,x1=1128,y0=372,y1=610,all=S.flatMap(o=>o.pts.map(q=>(q[1]/o.pts[0][1]-1)*100)),lo=Math.min(0,...all),hi=Math.max(0,...all),r=(hi-lo)||1,t0=S[0].pts[0][0],t1=S[0].pts[S[0].pts.length-1][0];
-  const X=t=>x0+(t-t0)/((t1-t0)||1)*(x1-x0),Y=v=>y0+(hi-v)/r*(y1-y0);
-  g.setLineDash([6,8]);g.strokeStyle="rgba(255,255,255,.25)";g.lineWidth=1.5;g.beginPath();g.moveTo(x0,Y(0));g.lineTo(x1,Y(0));g.stroke();g.setLineDash([]);
-  S.slice().reverse().forEach(o=>{g.beginPath();o.pts.forEach((q,i)=>{const x=X(q[0]),y=Y((q[1]/o.pts[0][1]-1)*100);i?g.lineTo(x,y):g.moveTo(x,y);});g.strokeStyle=o.col;g.lineWidth=o.nm==="HYPE"?6:3.5;g.lineJoin="round";g.stroke();});
-  cardFoot(g);return c;
+  const hc=vsChg(S[0]),{c,g}=cardBase(VS.rng==="all"?"ALL TIME":VS.rng.toUpperCase(),1),sg=v=>(v>=0?"+":"−")+nf(Math.abs(v),Math.abs(v)<10?1:0)+"%",GR="#58e3a4",RD="#ff7b7b",MU="#8fb2a8",oth=S.slice(1);
+  const x0=92,x1=900,y0=168,y1=586,all=S.flatMap(o=>o.pts.map(q=>(q[1]/o.pts[0][1]-1)*100)),lo0=Math.min(0,...all),hi0=Math.max(0,...all),pad=(hi0-lo0)*.06||1,lo=lo0<0?lo0-pad:0,hi=hi0+pad,r=(hi-lo)||1,t0=S[0].pts[0][0],t1=S[0].pts[S[0].pts.length-1][0];
+  const X=t=>x0+(t-t0)/((t1-t0)||1)*(x1-x0),Y=v=>y0+(hi-v)/r*(y1-y0),pv=(o,q)=>(q[1]/o.pts[0][1]-1)*100;
+  /* header */
+  g.textAlign="left";g.font="600 20px "+SANS;g.fillStyle=MU;g.fillText("HYPE VS "+(oth.length?oth.map(o=>vsNm(o.nm)).join(" · "):"THE MARKET"),x0-8,70);
+  g.font="700 74px "+SANS;g.fillStyle=hc>=0?GR:RD;g.fillText(sg(hc),x0-10,138);const hw=g.measureText(sg(hc)).width;g.font="600 22px "+SANS;g.fillStyle=MU;g.fillText("HYPE · "+vsRl(),x0-4+hw+4,138);
+  /* grid */
+  const raw=r/4,mag=Math.pow(10,Math.floor(Math.log10(raw))),step=[1,2,2.5,5,10].map(m=>m*mag).find(v=>v>=raw)||raw;
+  g.font="500 18px "+SANS;g.textAlign="right";
+  for(let v=Math.ceil(lo/step)*step;v<=hi+1e-9;v+=step){const y=Y(v),z=Math.abs(v)<1e-9;g.strokeStyle=z?"rgba(255,255,255,.34)":"rgba(255,255,255,.07)";g.lineWidth=z?1.6:1;g.setLineDash(z?[6,8]:[]);g.beginPath();g.moveTo(x0,y);g.lineTo(x1,y);g.stroke();g.setLineDash([]);g.fillStyle=z?"#cfe5de":MU;g.fillText((v<0?"−":(v>0?"+":""))+nf(Math.abs(v),step<1?1:0)+"%",x0-12,y+6);}
+  const tf=t=>VS.rng==="24h"?new Date(t).toLocaleTimeString("en-GB",{hour:"2-digit",minute:"2-digit"}):new Date(t).toLocaleDateString("en-GB",(VS.rng==="all"?{month:"short",year:"2-digit"}:{day:"numeric",month:"short"}));
+  g.font="500 18px "+SANS;g.fillStyle=MU;for(let i=0;i<=4;i++){g.textAlign=i===0?"left":i===4?"right":"center";g.fillText(tf(t0+(t1-t0)*i/4),x0+(x1-x0)*i/4,y1+34);}
+  /* hype area */
+  const h=S[0],gr=g.createLinearGradient(0,y0,0,y1);gr.addColorStop(0,"rgba(111,227,207,.26)");gr.addColorStop(1,"rgba(111,227,207,0)");
+  g.beginPath();h.pts.forEach((q,i)=>{const x=X(q[0]),y=Y(pv(h,q));i?g.lineTo(x,y):g.moveTo(x,y);});g.lineTo(X(t1),Y(0));g.lineTo(X(t0),Y(0));g.closePath();g.fillStyle=gr;g.fill();
+  /* lines */
+  S.slice().reverse().forEach(o=>{g.beginPath();o.pts.forEach((q,i)=>{const x=X(q[0]),y=Y(pv(o,q));i?g.lineTo(x,y):g.moveTo(x,y);});g.strokeStyle=o.col;g.lineWidth=o.nm==="HYPE"?5.5:3.2;g.lineJoin="round";g.lineCap="round";g.stroke();});
+  /* end labels */
+  const E=S.map(o=>{const l=o.pts[o.pts.length-1];return{o,y:Y(pv(o,l)),v:vsChg(o)};}).sort((a,b)=>a.y-b.y),ph=o=>o.o.nm==="HYPE"?44:50,L=E.map(e=>e.y);
+  for(let i=1;i<L.length;i++)L[i]=Math.max(L[i],L[i-1]+54);const ov=L[L.length-1]-(y1-10);if(ov>0)for(let i=0;i<L.length;i++)L[i]-=ov;
+  const px=x1+34,pw=1160-px;
+  E.forEach((e,i)=>{const o=e.o,me=o.nm==="HYPE",ly=L[i],ph2=me?46:54;
+    g.beginPath();g.arc(x1,e.y,me?8:6,0,7);g.fillStyle=o.col;g.fill();g.strokeStyle="#00110d";g.lineWidth=3;g.stroke();
+    g.strokeStyle=o.col;g.globalAlpha=.55;g.lineWidth=1.5;g.beginPath();g.moveTo(x1+10,e.y);g.lineTo(px-6,ly);g.stroke();g.globalAlpha=1;
+    g.fillStyle=me?"rgba(111,227,207,.18)":"rgba(0,0,0,.34)";rr(g,px,ly-ph2/2,pw,ph2,14);g.fill();g.strokeStyle=o.col;g.lineWidth=me?2.2:1.6;g.globalAlpha=me?1:.7;rr(g,px,ly-ph2/2,pw,ph2,14);g.stroke();g.globalAlpha=1;
+    g.textAlign="left";g.font="700 21px "+SANS;g.fillStyle="#f1fbf8";g.fillText(vsNm(o.nm),px+16,ly+(me?7:-3));
+    g.textAlign="right";g.font="700 24px "+SANS;g.fillStyle=e.v>=0?GR:RD;g.fillText(sg(e.v),px+pw-14,ly+(me?8:-2));
+    if(!me){const d=hc-e.v;g.textAlign="left";g.font="500 15px "+SANS;g.fillStyle=MU;g.fillText("HYPE "+(d>=0?"ahead by ":"behind by ")+nf(Math.abs(d),Math.abs(d)<10?1:0)+" pts",px+16,ly+17);}
+  });
+  g.textAlign="left";return c;
 }
 
 function hlpxRender(){
@@ -2250,11 +2373,148 @@ async function openMethod(){
   $("m_sample").textContent=D.sample.toLocaleString("en-US");
   await show("v-method");
 }
-document.querySelectorAll("[data-method]").forEach(b=>b.addEventListener("click",openMethod));
-$("mback").onclick=()=>show(prevView);
+
+/* ============ RADAR (live trades + wallet rank) ============ */
+const RD={ws:null,on:false,thr:100000,flt:"all",rows:[],q:new Map(),paused:false,backoff:1000,coins:null,n:0,buy:0,sell:0,big:null,top:0,seen:new Set(),pop:new Set(),lastId:0,pts:[],queue:[],busy:0,rt:0,ping:0,tmr:0};
+try{const j=JSON.parse(localStorage.getItem("hl_rd")||"null");if(j){if([1e5,25e4,5e5,1e6].includes(j.thr))RD.thr=j.thr;if(j.flt==="top")RD.flt="top";}}catch(e){}
+const rdSave=()=>{try{localStorage.setItem("hl_rd",JSON.stringify({thr:RD.thr,flt:RD.flt}));}catch(e){}};
+const RDZ="0x"+"0".repeat(64),RDWIN=600000;
+function rdQ(v){const t=T.month,n=t.length;if(!(v>0))return null;if(v<=t[0])return {q:QS[0],edge:"low"};if(v>=t[n-1])return {q:QS[n-1],edge:"high"};let lo=0,hi=n-1;while(hi-lo>1){const m=(lo+hi)>>1;if(t[m]<=v)lo=m;else hi=m;}const f=(Math.log(v)-Math.log(t[lo]))/(Math.log(t[hi])-Math.log(t[lo]));return {q:QS[lo]+f*(QS[hi]-QS[lo]),edge:null};}
+const rdTop=q=>!q||q.st!=="ok"?"…":!(q.v>0)?"No 30d volume":topText(q.r);
+const rdHot=q=>!!(q&&q.st==="ok"&&q.r&&(q.r.edge==="high"||(!q.r.edge&&(1-q.r.q)<=0.01)));
+const rdShort=a=>a.slice(0,6)+"…"+a.slice(-4);
+function rdStat(){const e=$("rd_stat");if(!e)return;e.textContent=RD.paused?"Paused":(RD.ws&&RD.ws.readyState===1?"Live · "+(RD.coins?RD.coins.length:"")+" markets · orders ≥ "+fmtUSD(RD.thr):"Connecting…");}
+async function rdCoins(){if(RD.coins)return RD.coins;const j=await hlPost({type:"meta"});RD.coins=(j.universe||[]).filter(u=>!u.isDelisted).map(u=>u.name);if(!RD.coins.length)throw new Error("meta");return RD.coins;}
+function rdConnect(){
+  if(!RD.on)return;
+  rdCoins().then(cs=>{
+    if(!RD.on)return;
+    const ws=new WebSocket("wss://api.hyperliquid.xyz/ws");RD.ws=ws;
+    ws.onopen=()=>{RD.backoff=1000;let i=0;const send=()=>{if(RD.ws!==ws||ws.readyState!==1)return;cs.slice(i,i+30).forEach(c=>ws.send(JSON.stringify({method:"subscribe",subscription:{type:"trades",coin:c}})));i+=30;if(i<cs.length)setTimeout(send,300);};send();clearInterval(RD.ping);RD.ping=setInterval(()=>{if(ws.readyState===1)ws.send('{"method":"ping"}');},30000);rdStat();};
+    ws.onmessage=e=>{if(RD.paused)return;let m;try{m=JSON.parse(e.data);}catch(_){return;}if(m&&m.channel==="trades"&&Array.isArray(m.data))rdTrades(m.data);};
+    ws.onclose=()=>{clearInterval(RD.ping);if(RD.on&&RD.ws===ws){const e=$("rd_stat");if(e)e.textContent="Reconnecting…";setTimeout(rdConnect,RD.backoff);RD.backoff=Math.min(RD.backoff*2,15000);}};
+    ws.onerror=()=>{try{ws.close();}catch(_){}};
+  }).catch(()=>{if(RD.on){const e=$("rd_stat");if(e)e.textContent="Couldn't reach Hyperliquid. Retrying…";setTimeout(rdConnect,4000);}});
+}
+function rdTrades(arr){
+  const g=new Map();
+  for(const t of arr){
+    const u=t.users;if(!u||u.length<2||!t.hash||t.hash===RDZ)continue;
+    const tk=t.side==="B"?u[0]:u[1],px=+t.px,sz=+t.sz;if(!(px>0&&sz>0))continue;
+    const k=t.coin+"|"+tk+"|"+t.side+"|"+t.hash;let o=g.get(k);
+    if(!o){o={k,coin:t.coin,side:t.side,addr:tk,n:0,sz:0,nt:0,time:t.time};g.set(k,o);}
+    o.sz+=sz;o.nt+=px*sz;o.n++;
+  }
+  let add=false;
+  g.forEach(o=>{if(o.nt<RD.thr||RD.seen.has(o.k))return;RD.seen.add(o.k);if(RD.seen.size>600)RD.seen.delete(RD.seen.values().next().value);o.px=o.nt/o.sz;o.id=++RD.n;o.at=Date.now();RD.rows.unshift(o);if(RD.rows.length>300)RD.rows.pop();
+    if(o.side==="B")RD.buy+=o.nt;else RD.sell+=o.nt;if(!RD.big||o.nt>RD.big.nt)RD.big=o;rdRank(o.addr,o.nt);add=true;});
+  if(add)rdSchedule();
+}
+function rdRank(a,nt){
+  const q=RD.q.get(a);
+  if(q){if(q.st==="pend"){const it=RD.queue.find(x=>x.a===a);if(it&&nt>it.nt)it.nt=nt;return;}if(!q.drop)return;}
+  RD.q.set(a,{st:"pend"});RD.queue.push({a,nt});
+  if(RD.queue.length>40){RD.queue.sort((x,y)=>y.nt-x.nt);const d=RD.queue.pop();RD.q.set(d.a,{st:"err",drop:true});}
+  rdPump();
+}
+function rdPump(){
+  if(RD.busy>=1||!RD.queue.length)return;
+  RD.queue.sort((x,y)=>y.nt-x.nt);const a=RD.queue.shift().a;RD.busy++;
+  hlPost({type:"portfolio",user:a}).then(j=>{const r=parseP(j),v=r.v[2],rk=rdQ(v);RD.q.set(a,{st:"ok",v,r:rk,all:r.v[3]});if(rdHot({st:"ok",r:rk})&&v>0)RD.top++;}).catch(()=>{RD.q.set(a,{st:"err"});}).finally(()=>{RD.busy--;rdSchedule();setTimeout(rdPump,1500);});
+}
+function rdSchedule(){if(RD.rt)return;RD.rt=setTimeout(()=>{RD.rt=0;rdRender();},250);}
+function rdTween(el,to,fmt,ms){
+  if(!el)return;if(REDUCE){el.textContent=fmt(to);return;}
+  const from=+el.dataset.v||0;el.dataset.v=to;const t0=performance.now();
+  (function f(t){const k=Math.min(1,(t-t0)/ms),e=1-Math.pow(1-k,3);el.textContent=fmt(from+(to-from)*e);if(k<1)requestAnimationFrame(f);})(t0);
+}
+const rdWin=()=>{const t0=Date.now()-RDWIN;return RD.rows.filter(o=>o.at>=t0&&(RD.flt==="all"||rdHot(RD.q.get(o.addr))));};
+function rdSide(){
+  const mk=$("rd_mk"),wl=$("rd_wl");if(!mk||!wl)return;
+  const win=rdWin(),m=new Map(),w=new Map();
+  win.forEach(o=>{let x=m.get(o.coin);if(!x){x={coin:o.coin,b:0,s:0};m.set(o.coin,x);}if(o.side==="B")x.b+=o.nt;else x.s+=o.nt;
+    let y=w.get(o.addr);if(!y){y={a:o.addr,n:0,v:0};w.set(o.addr,y);}y.n++;y.v+=o.nt;});
+  const f=[...m.values()].sort((x,y)=>(y.b+y.s)-(x.b+x.s)).slice(0,8),mxn=Math.max(1,...f.map(x=>Math.abs(x.b-x.s)));
+  mk.innerHTML=f.length?'<div class="sg fl th"><span>Mkt</span><span>Buy</span><span>Sell</span><span>Net</span><span class="dvh">Bias</span></div>'+f.map(x=>{const n=x.b-x.s,pc=Math.abs(n)/mxn*50;return '<div class="sg fl"><b>'+esc(x.coin)+'</b><span class="up">'+fmtUSD(x.b)+'</span><span class="dn">'+fmtUSD(x.s)+'</span><b class="'+(n>=0?"up":"dn")+'">'+(n>=0?"+":"−")+fmtUSD(Math.abs(n))+'</b><div class="dv"><i style="'+(n>=0?"left:50%;background:#58e3a4;":"right:50%;background:#ff7b7b;")+'width:'+pc.toFixed(1)+'%"></i></div></div>';}).join(""):'<div class="rdempty">No orders yet.</div>';
+  const ws=[...w.values()].sort((x,y)=>y.v-x.v).slice(0,6);
+  wl.innerHTML=ws.length?'<div class="sg wl th"><span>Wallet</span><span>Ord</span><span>Volume</span><span>Rank</span></div>'+ws.map(x=>{const q=RD.q.get(x.a)||{st:"pend"};return '<div class="sg wl"><button data-a="'+esc(x.a)+'">'+rdShort(x.a)+'</button><span>'+x.n+'</span><b>'+fmtUSD(x.v)+'</b><span class="rk'+(rdHot(q)?" hot":"")+'">'+(q.st==="ok"?(q.v>0?topText(q.r).replace("Top ",""):"—"):"…")+'</span></div>';}).join(""):'<div class="rdempty">No orders yet.</div>';
+}
+function rdRender(){
+  if(!RD.on)return;
+  const tape=$("rd_tape");if(!tape)return;
+  const rows=RD.rows.filter(o=>RD.flt==="all"||rdHot(RD.q.get(o.addr))).slice(0,60);
+  const lastId=RD.lastId||0;let maxId=lastId;const mx=Math.max(1,...rows.map(o=>o.nt));
+  tape.innerHTML=rows.map(o=>{const q=RD.q.get(o.addr)||{st:"pend"},buy=o.side==="B",hot=rdHot(q),isNew=o.id>lastId,pop=q.st==="ok"&&!RD.pop.has(o.id);
+    if(o.id>maxId)maxId=o.id;if(pop)RD.pop.add(o.id);
+    const rk=q.st==="err"?"n/a":q.st==="pend"?"":(q.v>0?topText(q.r).replace("Top ","TOP "):"NO VOL");
+    return '<div class="tr '+(buy?"rb":"rs")+(isNew?" new":"")+'" style="--w:'+(o.nt/mx*100).toFixed(1)+'%"><span class="c-t">'+new Date(o.time).toLocaleTimeString("en-GB")+'</span><span class="'+(buy?"bu":"se")+'">'+(buy?"BUY":"SELL")+'</span><b class="c-m">'+esc(o.coin)+'</b><span class="c-z">'+fmtUSD(o.nt)+'</span><span class="c-p">'+nf(o.px,o.px<10?4:o.px<1000?2:0)+'</span><button class="c-w rdw" data-a="'+esc(o.addr)+'" title="Open in the checker">'+rdShort(o.addr)+'</button><button class="rk'+(hot?" hot":"")+(q.st==="pend"?" pend":"")+(pop?" pop":"")+'" data-a="'+esc(o.addr)+'" title="Open in the checker">'+rk+'</button><button class="shbtn" data-sh="'+o.id+'" title="Share">↗</button></div>';}).join("");
+  RD.lastId=maxId;
+  const em=$("rd_empty");em.style.display=rows.length?"none":"";em.textContent=RD.rows.length?"No Top 1% wallet in the latest orders yet…":"Waiting for large orders…";
+  $("rd_cnt").textContent=rows.length?rows.length+" shown":"";
+  const net=RD.buy-RD.sell,ne=$("rd_net");
+  $("rd_n").textContent=RD.n;$("rd_bv").textContent=RD.n?fmtUSD(RD.buy):"—";$("rd_sv").textContent=RD.n?fmtUSD(RD.sell):"—";
+  ne.className=RD.n?(net>=0?"up":"dn"):"";ne.textContent=RD.n?(net>=0?"+":"−")+fmtUSD(Math.abs(net)):"—";
+  $("rd_big").textContent=RD.big?fmtUSD(RD.big.nt)+" "+RD.big.coin:"—";$("rd_top").textContent=RD.top;
+  rdSide();rdStat();
+}
+function drawRadarCard(o){
+  const {c,g}=cardBase("LIVE RADAR"),q=RD.q.get(o.addr),buy=o.side==="B",col=buy?"#58e3a4":"#ff7b7b",ok=q&&q.st==="ok"&&q.v>0;
+  g.textAlign="left";g.font="700 34px "+SANS;g.fillStyle=col;g.fillText((buy?"MARKET BUY":"MARKET SELL")+" · "+o.coin,72,162);
+  heroText(g,fmtUSD(o.nt),72,376,1056,200);
+  statRow(g,[["Average price","$"+nf(o.px,o.px<10?4:o.px<1000?2:0)],["Wallet rank (30d volume)",ok?topText(q.r):"—",ok&&rdHot(q)?"#6fe3cf":null],["Wallet 30d volume",ok?fmtUSD(q.v):"—"]],478);
+  g.font="500 22px "+SANS;g.fillStyle="#8fb2a8";g.fillText(new Date(o.time).toLocaleString("en-GB",{day:"numeric",month:"short",hour:"2-digit",minute:"2-digit"})+" · Hyperliquid perps",72,602);
+  cardFoot(g);return c;
+}
+function rdShare(id){
+  const o=RD.rows.find(x=>x.id===id);if(!o)return;
+  openShare({draw:()=>drawRadarCard(o),name:"hyperliquid-radar.png",text:()=>{const q=RD.q.get(o.addr),ok=q&&q.st==="ok"&&q.v>0,coin=esc(o.coin).replace(/[^A-Za-z0-9]/g,"");return (ok?"A "+topText(q.r)+" wallet just "+(o.side==="B"?"bought ":"sold ")+fmtUSD(o.nt)+" of $"+coin+" at market on Hyperliquid.":"A "+fmtUSD(o.nt)+" market "+(o.side==="B"?"buy":"sell")+" of $"+coin+" just hit Hyperliquid.");}});
+}
+async function openRadar(){
+  const cur=document.querySelector(".view.on");if(cur&&cur.id!=="v-radar")prevView=cur.id;
+  RD.on=true;RD.paused=false;$("rd_pause").textContent="Pause";
+  await show("v-radar");
+  $("rd_thr").querySelectorAll(".tab").forEach(b=>b.setAttribute("aria-pressed",String(+b.dataset.t===RD.thr)));$("rd_flt").querySelectorAll(".tab").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.f===RD.flt)));["rd_thr","rd_flt"].forEach(i=>moveInd($(i)));
+  rdRender();rdConnect();clearInterval(RD.tmr);RD.tmr=setInterval(()=>{if(RD.on&&!document.hidden&&!RD.paused)rdSide();},1000);
+}
+function closeRadar(){RD.on=false;clearInterval(RD.ping);clearInterval(RD.tmr);if(RD.ws){try{RD.ws.close();}catch(e){}RD.ws=null;}}
+$("rd_pause").onclick=()=>{RD.paused=!RD.paused;$("rd_pause").textContent=RD.paused?"Resume":"Pause";rdStat();};
+$("rd_thr").addEventListener("click",e=>{const b=e.target.closest("[data-t]");if(!b)return;RD.thr=+b.dataset.t;rdSave();$("rd_thr").querySelectorAll(".tab").forEach(x=>x.setAttribute("aria-pressed",String(x===b)));moveInd($("rd_thr"));rdStat();rdRender();});
+$("rd_flt").addEventListener("click",e=>{const b=e.target.closest("[data-f]");if(!b)return;RD.flt=b.dataset.f;rdSave();$("rd_flt").querySelectorAll(".tab").forEach(x=>x.setAttribute("aria-pressed",String(x===b)));moveInd($("rd_flt"));rdRender();});
+$("v-radar").addEventListener("click",e=>{
+  const w=e.target.closest("[data-a]");if(w){closeRadar();$("addr").value=w.dataset.a;lookup();return;}
+  const s=e.target.closest("[data-sh]");if(s)rdShare(+s.dataset.sh);
+});
 $("subbtn").onclick=toggleSubs;
-document.querySelectorAll("[data-pulse]").forEach(b=>b.addEventListener("click",openPulse));
-$("pback").onclick=async()=>{closePulse();await show(prevView);};
+/* ============ UNIFIED NAV ============ */
+function navActive(){const c=document.querySelector(".view.on"),id=c?c.id:"";return id==="v-radar"?"radar":id==="v-pulse"?"market":(id==="v-results"||id==="v-landing")?"checker":"";}
+function renderNav(){
+  const act=navActive(),cur=document.querySelector(".view.on"),land=cur&&cur.id==="v-landing";
+  const wal=(last&&(manual||addrShown))?(manual?S.manualwho:addrShown):"";
+  const t=(k,l)=>'<button class="tab" data-nav="'+k+'" aria-pressed="'+(act===k)+'">'+l+'</button>';
+  const h='<div class="brand" data-nav="checker" title="Home"><span class="bl">Hyperliquid Volume Checker</span><span class="bs">Volume Checker</span></div><div class="seg gnav" role="group" aria-label="Main"'+(wal?'':' style="visibility:hidden"')+'><i class="ind"></i>'+t("checker","Checker")+t("radar","Radar")+t("market","Market")+'</div><div class="gr">'+(wal&&!land?'<button class="addr" data-nav="change" title="Change address"><span class="aw">'+esc(wal)+'</span><em>Change</em></button>':'')+'</div>';
+  document.querySelectorAll("[data-gtop]").forEach(e=>{if(e._h!==h){e.innerHTML=h;e._h=h;}});
+  const f='<a data-gm>How it works</a> · Independent tool, not affiliated with Hyperliquid · Powered by <a href="https://x.com/hugocrza" target="_blank" rel="noopener">@hugocrza</a>';
+  document.querySelectorAll("[data-gfoot]").forEach(e=>{if(e._h!==f){e.innerHTML=f;e._h=f;}});
+  document.querySelectorAll(".gnav").forEach(moveInd);
+}
+async function goNav(k){
+  const cur=document.querySelector(".view.on"),id=cur?cur.id:"";
+  if(id==="v-loading")return;
+  if(k==="radar"){if(id==="v-radar")return;if(id==="v-pulse")closePulse();return openRadar();}
+  if(k==="market"){if(id==="v-pulse")return;if(id==="v-radar")closeRadar();return openPulse();}
+  if(id==="v-radar")closeRadar();if(id==="v-pulse")closePulse();
+  if(k==="change"){await show("v-landing");$("addr").focus();return;}
+  if(id==="v-landing"){window.scrollTo({top:0,behavior:"smooth"});return;}
+  const tg=last?"v-results":"v-landing";
+  if(id===tg){window.scrollTo({top:0,behavior:"smooth"});return;}
+  await show(tg);
+}
+document.addEventListener("click",e=>{
+  const n=e.target.closest("[data-nav]");if(n){e.preventDefault();goNav(n.dataset.nav);return;}
+  const m=e.target.closest("[data-gm]");if(m){e.preventDefault();openMethod();}
+});
+window.addEventListener("resize",()=>document.querySelectorAll(".gnav").forEach(moveInd));
+renderNav();
 $("pview").addEventListener("click",e=>{const b=e.target.closest("[data-v]");if(!b)return;PU.view=b.dataset.v;PU.anim=true;$("pview").querySelectorAll(".tab").forEach(x=>x.setAttribute("aria-pressed",String(x===b)));moveInd($("pview"));pulseRender();});
 $("psearch").addEventListener("input",e=>{PU.q=e.target.value;PU.anim=false;pulseRender();});
 $("pfilter").addEventListener("click",e=>{const b=e.target.closest("[data-f]");if(!b)return;PU.filter=b.dataset.f;PU.anim=true;$("pfilter").querySelectorAll(".tab").forEach(x=>x.setAttribute("aria-pressed",String(x===b)));moveInd($("pfilter"));pulseRender();});
@@ -2288,5 +2548,5 @@ $("copytxt").onclick=async()=>{
 };
 setupStatic();
 </script>
-<div style="position:fixed;left:12px;bottom:12px;z-index:99999;padding:4px 10px;border-radius:999px;background:#f97316;color:#fff;font:700 11px system-ui;letter-spacing:.08em;pointer-events:none">BETA</div></body>
+</body>
 </html>
