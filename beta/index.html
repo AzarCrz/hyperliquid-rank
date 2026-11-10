@@ -188,51 +188,58 @@ textarea:focus{outline:2px solid var(--acc);outline-offset:1px}
 .note{font-size:12.5px;color:var(--mute);text-align:center;margin:0 auto;max-width:860px}
 .mlink{margin-left:auto}
 .ltop{gap:10px}
-.rdctl{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:4px 0 12px}
-.rdhero{display:grid;grid-template-columns:minmax(220px,300px) 1fr;gap:14px;margin-bottom:12px;align-items:stretch}
-.rdradar{background:radial-gradient(circle at 50% 50%,rgba(0,92,68,.55),rgba(0,0,0,.28) 70%);border:1px solid rgba(111,227,207,.2);border-radius:22px;padding:10px 10px 8px;display:flex;flex-direction:column;align-items:center}
-.rdradar canvas{display:block;flex:none;width:min(100%,300px)}
-.rdradar small{color:var(--mute);font:500 11.5px var(--sans);letter-spacing:.04em;margin-top:2px;text-align:center}
-.rdsum{display:grid;grid-template-columns:1fr 1fr;gap:10px;align-content:stretch}
-.rdsum>div{background:rgba(0,0,0,.22);border:1px solid rgba(111,227,207,.16);border-radius:16px;padding:14px 16px;display:flex;flex-direction:column;justify-content:center}
-.rdsum small{display:block;color:var(--mute);font:500 12px var(--sans);letter-spacing:.04em;margin-bottom:5px}
-.rdsum b{font:700 24px var(--sans);color:var(--ink);font-variant-numeric:tabular-nums}
-.rdbar{height:5px;border-radius:9px;background:rgba(255,123,123,.45);margin-top:9px;overflow:hidden}
-.rdbar i{display:block;height:100%;width:50%;background:#58e3a4;border-radius:9px;transition:width .7s cubic-bezier(.2,.8,.2,1)}
-@media(max-width:640px){.rdhero{grid-template-columns:minmax(0,1fr)}.rdradar{align-items:center}.rdsum b{font-size:20px}}
-.rdfeed{display:flex;flex-direction:column}
-.rdrow{position:relative;isolation:isolate;display:grid;grid-template-columns:auto 1fr auto;gap:14px;align-items:center;padding:13px 6px;border-bottom:1px solid rgba(255,255,255,.06);animation:rdin .5s ease both}
-.rdrow:last-child{border-bottom:0}
-.rdrow.new{animation:rdin .6s cubic-bezier(.2,.8,.2,1) both}
-.rdrow.new::before{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;background:linear-gradient(90deg,var(--fl,rgba(111,227,207,.25)),transparent 78%);animation:rdfl 1.8s ease-out forwards}
-.rdrow.rb{--fl:rgba(88,227,164,.32)}.rdrow.rs{--fl:rgba(255,123,123,.32)}
-@keyframes rdin{from{opacity:0;transform:translateY(-16px) scale(.985)}to{opacity:1;transform:none}}
-@keyframes rdfl{0%{opacity:0;transform:translateX(-35%)}18%{opacity:1}100%{opacity:0;transform:none}}
-.rdrow.big .rdn{font-size:27px}
-.rdrow.mega{box-shadow:inset 3px 0 0 var(--acc)}
-.rdrow.mega .rdn{text-shadow:0 0 20px rgba(111,227,207,.55)}
-.rdq.pop{animation:rdpop .6s cubic-bezier(.2,1.4,.4,1) both}
-.rdq.hot{animation:rdglow 2.6s ease-in-out infinite}
-.rdq.hot.pop{animation:rdpop .6s cubic-bezier(.2,1.4,.4,1) both,rdglow 2.6s ease-in-out .6s infinite}
-.rdq.pend{background:linear-gradient(90deg,rgba(255,255,255,.04),rgba(255,255,255,.14),rgba(255,255,255,.04));background-size:200% 100%;animation:rdsk 1.3s linear infinite;min-width:64px;text-align:center}
-@keyframes rdpop{0%{transform:scale(.55);opacity:0}100%{transform:none;opacity:1}}
-@keyframes rdglow{0%,100%{box-shadow:0 0 0 0 rgba(111,227,207,0)}50%{box-shadow:0 0 14px 1px rgba(111,227,207,.38)}}
+#v-radar{align-items:center;padding:20px 20px 48px}
+#v-radar .wrap{max-width:1180px;animation:rise .6s cubic-bezier(.2,.8,.2,1) both}
+.rdlead{margin:4px 4px 0;color:#cfe5de;font-size:15px;line-height:1.55;max-width:700px}
+.rdctl{display:flex;gap:10px 14px;flex-wrap:wrap;align-items:center;margin:2px 4px}
+.rdlbl{color:var(--mute);font:600 11px var(--sans);letter-spacing:.14em;text-transform:uppercase}
+.rdkpi{display:grid;grid-template-columns:repeat(6,1fr);border:1px solid rgba(111,227,207,.18);border-radius:14px;background:rgba(0,0,0,.30);overflow:hidden}
+.rdkpi>div{padding:12px 16px;border-right:1px solid rgba(111,227,207,.10);min-width:0}
+.rdkpi>div:last-child{border-right:0}
+.rdkpi small{display:block;color:var(--mute);font:600 10.5px var(--sans);letter-spacing:.14em;text-transform:uppercase;margin-bottom:6px}
+.rdkpi b{display:block;font:700 19px ui-monospace,"SF Mono",Menlo,Consolas,monospace;color:var(--ink);font-variant-numeric:tabular-nums;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rdkpi b.up{color:#58e3a4}.rdkpi b.dn{color:#ff7b7b}
+.rdgrid{display:grid;grid-template-columns:minmax(0,1.75fr) minmax(0,1fr);gap:16px;align-items:start}
+.rdside{display:flex;flex-direction:column;gap:16px}
+.rdp{border:1px solid rgba(111,227,207,.18);border-radius:14px;background:rgba(0,0,0,.28);overflow:hidden}
+.rdp>h3{margin:0;padding:11px 16px;border-bottom:1px solid rgba(111,227,207,.14);font:700 11px var(--sans);letter-spacing:.16em;text-transform:uppercase;color:var(--acc);display:flex;justify-content:space-between;gap:10px}
+.rdp>h3 span{color:var(--mute);font-weight:500;letter-spacing:.06em;text-transform:none}
+.tape{max-height:640px;overflow:auto}
+.tr{position:relative;isolation:isolate;display:grid;grid-template-columns:64px 44px 58px minmax(0,1fr) 92px 100px 88px 26px;align-items:center;gap:8px;padding:0 14px;height:34px;font:500 12.5px ui-monospace,"SF Mono",Menlo,Consolas,monospace;color:var(--ink);border-bottom:1px solid rgba(255,255,255,.045);font-variant-numeric:tabular-nums}
+.tr.th{position:sticky;top:0;z-index:3;height:30px;background:#06201a;color:var(--mute);font:600 10.5px var(--sans);letter-spacing:.12em;text-transform:uppercase;border-bottom:1px solid rgba(111,227,207,.18)}
+.tr::before{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(90deg,var(--hc,transparent) var(--w,0%),transparent var(--w,0%))}
+.tr.rb{--hc:rgba(88,227,164,.15);--fl:rgba(88,227,164,.38)}.tr.rs{--hc:rgba(255,123,123,.15);--fl:rgba(255,123,123,.38)}
+.tr.new::after{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;background:var(--fl);animation:rdfl 1.6s ease-out forwards}
+@keyframes rdfl{from{opacity:1}to{opacity:0}}
+.tr .bu{color:#58e3a4;font-weight:700}.tr .se{color:#ff7b7b;font-weight:700}
+.tr .c-m{font-weight:700;letter-spacing:.02em}
+.tr .c-z,.tr .c-p{text-align:right}
+.tr .c-z{font-weight:700;font-size:13.5px}
+.tr .c-t,.tr .c-p{color:var(--mute)}
+.tr button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer;text-align:left}
+.tr .rdw{color:#9fc4ba;text-decoration:none}.tr .rdw:hover{color:var(--acc);text-decoration:underline}
+.tr .rk{padding:3px 8px;border-radius:6px;background:rgba(255,255,255,.06);color:var(--mute);font:600 11.5px ui-monospace,"SF Mono",Menlo,Consolas,monospace;text-align:center;white-space:nowrap}
+.tr .rk.hot{background:rgba(111,227,207,.18);color:#6fe3cf;box-shadow:inset 0 0 0 1px rgba(111,227,207,.5)}
+.tr .rk.pend{background:linear-gradient(90deg,rgba(255,255,255,.04),rgba(255,255,255,.14),rgba(255,255,255,.04));background-size:200% 100%;animation:rdsk 1.3s linear infinite;color:transparent}
+.tr .rk.pop{animation:rdpop .5s cubic-bezier(.2,1.4,.4,1) both}
+@keyframes rdpop{0%{transform:scale(.6);opacity:0}100%{transform:none;opacity:1}}
 @keyframes rdsk{from{background-position:200% 0}to{background-position:-200% 0}}
-@media(prefers-reduced-motion:reduce){.rdrow,.rdrow::before,.rdq{animation:none!important}}
-.rds{display:inline-block;min-width:54px;text-align:center;padding:6px 10px;border-radius:99px;font:700 12px var(--sans);letter-spacing:.08em}
-.rds.rbuy{background:rgba(88,227,164,.14);color:#58e3a4;border:1px solid rgba(88,227,164,.4)}
-.rds.rsell{background:rgba(255,123,123,.14);color:#ff7b7b;border:1px solid rgba(255,123,123,.4)}
-.rdm b{font:700 17px var(--sans);color:var(--ink)}
-.rdm .rdn{font:700 22px var(--sans);color:var(--ink);margin-left:10px}
-.rdm small{display:block;color:var(--mute);font:500 12.5px var(--sans);margin-top:3px}
-.rdr{display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:flex-end}
-.rdw{background:none;border:1px solid rgba(111,227,207,.28);color:var(--ink);border-radius:99px;padding:5px 11px;font:500 12.5px ui-monospace,Menlo,monospace;cursor:pointer}
-.rdw:hover{border-color:var(--acc);color:var(--acc)}
-.rdq{padding:5px 11px;border-radius:99px;font:700 12.5px var(--sans);background:rgba(255,255,255,.06);color:var(--mute);white-space:nowrap}
-.rdq.hot{background:rgba(111,227,207,.16);color:#6fe3cf;border:1px solid rgba(111,227,207,.5)}
-.rdrow .shbtn{position:relative;background:none;border:0;color:var(--mute);cursor:pointer;font:600 12px var(--sans);padding:5px 6px}
-.rdrow .shbtn:hover{color:var(--acc)}
-@media(max-width:640px){.rdrow{grid-template-columns:auto 1fr}.rdr{grid-column:1/-1;justify-content:flex-start}}
+.tr .shbtn{color:var(--mute);font-size:14px;text-align:center}.tr .shbtn:hover{color:var(--acc)}
+.rdempty{padding:26px 16px;color:var(--mute);font:500 13px ui-monospace,"SF Mono",Menlo,Consolas,monospace}
+.sg{display:grid;align-items:center;gap:8px;padding:0 16px;height:34px;font:500 12.5px ui-monospace,"SF Mono",Menlo,Consolas,monospace;border-bottom:1px solid rgba(255,255,255,.045);font-variant-numeric:tabular-nums}
+.sg.th{height:28px;color:var(--mute);font:600 10.5px var(--sans);letter-spacing:.12em;text-transform:uppercase}
+.sg.fl{grid-template-columns:48px 1fr 1fr 1fr 70px}.sg.wl{grid-template-columns:1fr 34px 1fr 82px}
+.sg>*:not(:first-child){text-align:right}
+.sg b{font-weight:700}
+.sg .up{color:#58e3a4}.sg .dn{color:#ff7b7b}
+.dv{position:relative;height:8px;background:rgba(255,255,255,.05);border-radius:4px}
+.dv::after{content:"";position:absolute;left:50%;top:-2px;bottom:-2px;width:1px;background:rgba(255,255,255,.3)}
+.dv i{position:absolute;top:0;bottom:0;border-radius:4px}
+.sg button{font:inherit;color:#9fc4ba;background:none;border:0;padding:0;cursor:pointer;text-align:left}.sg button:hover{color:var(--acc);text-decoration:underline}
+.sg .rk{padding:3px 6px;border-radius:6px;background:rgba(255,255,255,.06);color:var(--mute);font:600 11px ui-monospace,"SF Mono",Menlo,Consolas,monospace;text-align:center;white-space:nowrap}.sg .rk.hot{background:rgba(111,227,207,.18);color:#6fe3cf;box-shadow:inset 0 0 0 1px rgba(111,227,207,.5)}
+@media(max-width:900px){.rdgrid{grid-template-columns:minmax(0,1fr)}.rdkpi{grid-template-columns:repeat(3,1fr)}.rdkpi>div{border-bottom:1px solid rgba(111,227,207,.10)}}
+@media(max-width:640px){#v-radar{padding:16px 12px 36px}.tr{grid-template-columns:42px 52px minmax(0,1fr) 84px 24px;gap:6px;padding:0 10px}.tr .c-t,.tr .c-p,.tr .c-w{display:none}.rdkpi b{font-size:16px;white-space:normal;overflow:visible}.sg.fl{grid-template-columns:44px 1fr 1fr 1fr}.sg.fl .dv,.sg.fl .dvh{display:none}}
+@media(prefers-reduced-motion:reduce){.tr.new::after,.tr .rk{animation:none!important}}
 
 #v-pulse{align-items:center;padding:20px 20px 48px}
 #v-pulse .wrap{animation:rise .6s cubic-bezier(.2,.8,.2,1) both}
@@ -796,22 +803,32 @@ textarea:focus{outline:2px solid var(--acc);outline-offset:1px}
     <div class="tb-right"><button class="pill ghost sm" id="rback">Back</button></div>
   </header>
   <div class="phead"><div><h1 class="ptitle">Radar</h1><p class="psub"><i class="live"></i><span id="rd_stat">Connecting…</span></p></div></div>
+  <p class="rdlead">Large market orders on Hyperliquid as they happen, with the 30-day volume rank of the trader behind each one.</p>
   <div class="rdctl">
-    <div class="seg" id="rd_thr" role="group" aria-label="Minimum trade size"><i class="ind"></i><button class="tab" data-t="100000" aria-pressed="false">$100k</button><button class="tab" data-t="250000" aria-pressed="true">$250k</button><button class="tab" data-t="500000" aria-pressed="false">$500k</button><button class="tab" data-t="1000000" aria-pressed="false">$1M</button></div>
-    <div class="seg" id="rd_flt" role="group" aria-label="Wallet filter"><i class="ind"></i><button class="tab" data-f="all" aria-pressed="true">All wallets</button><button class="tab" data-f="top" aria-pressed="false">Top 1% only</button></div>
+    <span class="rdlbl">Min size</span>
+    <div class="seg" id="rd_thr" role="group" aria-label="Minimum order size"><i class="ind"></i><button class="tab" data-t="100000" aria-pressed="true">$100k</button><button class="tab" data-t="250000" aria-pressed="false">$250k</button><button class="tab" data-t="500000" aria-pressed="false">$500k</button><button class="tab" data-t="1000000" aria-pressed="false">$1M</button></div>
+    <span class="rdlbl">Wallets</span>
+    <div class="seg" id="rd_flt" role="group" aria-label="Wallet filter"><i class="ind"></i><button class="tab" data-f="all" aria-pressed="true">All</button><button class="tab" data-f="top" aria-pressed="false">Top 1% only</button></div>
     <button class="pill ghost sm" id="rd_pause">Pause</button>
   </div>
-  <div class="rdhero">
-    <div class="rdradar"><canvas id="rd_cv" aria-label="Live radar of large orders"></canvas><small>Closer to the center = bigger order</small></div>
-    <div class="rdsum" id="rd_sum">
-      <div><small>Large orders</small><b id="rd_n">0</b></div>
-      <div><small>Buy vs sell</small><b id="rd_bs">—</b><div class="rdbar"><i id="rd_bar"></i></div></div>
-      <div><small>Biggest</small><b><span id="rd_bigv">—</span> <span id="rd_bigc"></span></b></div>
-      <div><small>Top 1% wallets</small><b id="rd_top">0</b></div>
+  <div class="rdkpi">
+    <div><small>Orders</small><b id="rd_n">0</b></div>
+    <div><small>Buy volume</small><b id="rd_bv">—</b></div>
+    <div><small>Sell volume</small><b id="rd_sv">—</b></div>
+    <div><small>Net flow</small><b id="rd_net">—</b></div>
+    <div><small>Biggest</small><b id="rd_big">—</b></div>
+    <div><small>Top 1% wallets</small><b id="rd_top">0</b></div>
+  </div>
+  <div class="rdgrid">
+    <div class="rdp"><h3>Tape · latest orders <span id="rd_cnt"></span></h3>
+      <div class="tape"><div class="tr th"><span class="c-t">Time</span><span>Side</span><span>Mkt</span><span style="text-align:right">Size</span><span class="c-p" style="text-align:right">Avg px</span><span class="c-w">Wallet</span><span>Rank</span><span></span></div><div id="rd_tape"></div><div class="rdempty" id="rd_empty">Waiting for large orders…</div></div>
+    </div>
+    <div class="rdside">
+      <div class="rdp"><h3>Flow by market <span>last 10 min</span></h3><div id="rd_mk"></div></div>
+      <div class="rdp"><h3>Most active wallets <span>last 10 min</span></h3><div id="rd_wl"></div></div>
     </div>
   </div>
-  <section class="card"><div class="rdfeed" id="rd_feed"></div><p class="mini" id="rd_empty" style="padding:18px 6px">Waiting for large trades…</p></section>
-  <p class="fn" style="padding:0 6px 24px">Market orders on Hyperliquid perps, read live from the public trade feed. Fills of one order are added up. The rank is the trader's 30-day volume compared with the sample, like the main rank. HIP-3 markets are not included yet. Click a wallet to open it in the checker.</p>
+  <p class="fn" style="padding:0 6px 24px">Market orders (the side that takes liquidity) on Hyperliquid perps, read live from the public trade feed; fills of one order are added up. Rank = the trader's 30-day volume against the sample, like the main rank, read for the biggest orders first (a few small ones may show "n/a"). HIP-3 markets are not included yet. Click a wallet or a rank to open it in the checker.</p>
  </div>
 </section>
 
@@ -2349,10 +2366,10 @@ async function openMethod(){
 }
 
 /* ============ RADAR (live trades + wallet rank) ============ */
-const RD={ws:null,on:false,thr:250000,flt:"all",rows:[],q:new Map(),paused:false,backoff:1000,coins:null,n:0,buy:0,sell:0,big:null,top:0,seen:new Set(),pop:new Set(),lastId:0,blips:[],raf:0,cv:null,queue:[],busy:0,rt:0,ping:0,tmr:0,mk:0};
+const RD={ws:null,on:false,thr:100000,flt:"all",rows:[],q:new Map(),paused:false,backoff:1000,coins:null,n:0,buy:0,sell:0,big:null,top:0,seen:new Set(),pop:new Set(),lastId:0,pts:[],queue:[],busy:0,rt:0,ping:0,tmr:0};
 try{const j=JSON.parse(localStorage.getItem("hl_rd")||"null");if(j){if([1e5,25e4,5e5,1e6].includes(j.thr))RD.thr=j.thr;if(j.flt==="top")RD.flt="top";}}catch(e){}
 const rdSave=()=>{try{localStorage.setItem("hl_rd",JSON.stringify({thr:RD.thr,flt:RD.flt}));}catch(e){}};
-const RDZ="0x"+"0".repeat(64);
+const RDZ="0x"+"0".repeat(64),RDWIN=600000;
 function rdQ(v){const t=T.month,n=t.length;if(!(v>0))return null;if(v<=t[0])return {q:QS[0],edge:"low"};if(v>=t[n-1])return {q:QS[n-1],edge:"high"};let lo=0,hi=n-1;while(hi-lo>1){const m=(lo+hi)>>1;if(t[m]<=v)lo=m;else hi=m;}const f=(Math.log(v)-Math.log(t[lo]))/(Math.log(t[hi])-Math.log(t[lo]));return {q:QS[lo]+f*(QS[hi]-QS[lo]),edge:null};}
 const rdTop=q=>!q||q.st!=="ok"?"…":!(q.v>0)?"No 30d volume":topText(q.r);
 const rdHot=q=>!!(q&&q.st==="ok"&&q.r&&(q.r.edge==="high"||(!q.r.edge&&(1-q.r.q)<=0.01)));
@@ -2380,78 +2397,56 @@ function rdTrades(arr){
     o.sz+=sz;o.nt+=px*sz;o.n++;
   }
   let add=false;
-  g.forEach(o=>{if(o.nt<RD.thr||RD.seen.has(o.k))return;RD.seen.add(o.k);if(RD.seen.size>400)RD.seen.delete(RD.seen.values().next().value);o.px=o.nt/o.sz;o.id=++RD.n;RD.rows.unshift(o);if(RD.rows.length>80)RD.rows.pop();
-    if(o.side==="B")RD.buy+=o.nt;else RD.sell+=o.nt;if(!RD.big||o.nt>RD.big.nt)RD.big=o;rdBlip(o);rdRank(o.addr);add=true;});
+  g.forEach(o=>{if(o.nt<RD.thr||RD.seen.has(o.k))return;RD.seen.add(o.k);if(RD.seen.size>600)RD.seen.delete(RD.seen.values().next().value);o.px=o.nt/o.sz;o.id=++RD.n;o.at=Date.now();RD.rows.unshift(o);if(RD.rows.length>300)RD.rows.pop();
+    if(o.side==="B")RD.buy+=o.nt;else RD.sell+=o.nt;if(!RD.big||o.nt>RD.big.nt)RD.big=o;rdRank(o.addr,o.nt);add=true;});
   if(add)rdSchedule();
 }
-function rdRank(a){
-  if(RD.q.has(a))return;RD.q.set(a,{st:"pend"});RD.queue.push(a);if(RD.queue.length>30){const x=RD.queue.shift();const q=RD.q.get(x);if(q&&q.st==="pend")RD.q.set(x,{st:"err"});}
+function rdRank(a,nt){
+  const q=RD.q.get(a);
+  if(q){if(q.st==="pend"){const it=RD.queue.find(x=>x.a===a);if(it&&nt>it.nt)it.nt=nt;return;}if(!q.drop)return;}
+  RD.q.set(a,{st:"pend"});RD.queue.push({a,nt});
+  if(RD.queue.length>40){RD.queue.sort((x,y)=>y.nt-x.nt);const d=RD.queue.pop();RD.q.set(d.a,{st:"err",drop:true});}
   rdPump();
 }
 function rdPump(){
-  while(RD.busy<2&&RD.queue.length){
-    const a=RD.queue.shift();RD.busy++;
-    hlPost({type:"portfolio",user:a}).then(j=>{const r=parseP(j),v=r.v[2],rk=rdQ(v);RD.q.set(a,{st:"ok",v,r:rk,all:r.v[3]});if(rdHot({st:"ok",r:rk})&&v>0){RD.top++;RD.blips.forEach(b=>{if(b.addr===a)b.hot=true;});}}).catch(()=>{RD.q.set(a,{st:"err"});}).finally(()=>{RD.busy--;rdSchedule();setTimeout(rdPump,1100);});
-  }
+  if(RD.busy>=1||!RD.queue.length)return;
+  RD.queue.sort((x,y)=>y.nt-x.nt);const a=RD.queue.shift().a;RD.busy++;
+  hlPost({type:"portfolio",user:a}).then(j=>{const r=parseP(j),v=r.v[2],rk=rdQ(v);RD.q.set(a,{st:"ok",v,r:rk,all:r.v[3]});if(rdHot({st:"ok",r:rk})&&v>0)RD.top++;}).catch(()=>{RD.q.set(a,{st:"err"});}).finally(()=>{RD.busy--;rdSchedule();setTimeout(rdPump,1500);});
 }
 function rdSchedule(){if(RD.rt)return;RD.rt=setTimeout(()=>{RD.rt=0;rdRender();},250);}
-function rdRender(){
-  if(!RD.on)return;
-  const feed=$("rd_feed");if(!feed)return;
-  const rows=RD.rows.filter(o=>RD.flt==="all"||rdHot(RD.q.get(o.addr)));
-  const lastId=RD.lastId||0;let maxId=lastId;
-  feed.innerHTML=rows.map(o=>{const q=RD.q.get(o.addr)||{st:"pend"},buy=o.side==="B",hot=rdHot(q),isNew=o.id>lastId,pop=q.st==="ok"&&!RD.pop.has(o.id);
-    if(o.id>maxId)maxId=o.id;if(pop)RD.pop.add(o.id);
-    return '<div class="rdrow '+(buy?"rb":"rs")+(isNew?" new":"")+(o.nt>=RD.thr*3?" big":"")+((o.nt>=RD.thr*10||hot)?" mega":"")+'"><div class="rdl"><span class="rds '+(buy?"rbuy":"rsell")+'">'+(buy?"BUY":"SELL")+'</span></div>'
-    +'<div class="rdm"><b>'+esc(o.coin)+'</b><span class="rdn" data-nt="'+o.nt+'">'+fmtUSD(o.nt)+'</span><small>avg $'+nf(o.px,o.px<10?4:o.px<1000?2:0)+' · '+new Date(o.time).toLocaleTimeString("en-GB")+(o.n>1?" · "+o.n+" fills":"")+'</small></div>'
-    +'<div class="rdr"><button class="rdw" data-a="'+esc(o.addr)+'" title="Open in the checker">'+rdShort(o.addr)+'</button><span class="rdq'+(hot?" hot":"")+(q.st==="pend"?" pend":"")+(pop?" pop":"")+'">'+(q.st==="err"?"Rank n/a":q.st==="pend"?"":rdTop(q))+'</span><button class="shbtn" data-sh="'+o.id+'">Share</button></div></div>';}).join("");
-  RD.lastId=maxId;
-  if(!REDUCE)feed.querySelectorAll(".rdrow.new .rdn").forEach(el=>{el.dataset.v=0;rdTween(el,+el.dataset.nt,fmtUSD,750);});
-  const em=$("rd_empty");em.style.display=rows.length?"none":"";em.textContent=RD.rows.length?"No Top 1% wallet in the latest trades yet…":"Waiting for large trades…";
-  const tot=RD.buy+RD.sell;
-  rdTween($("rd_n"),RD.n,x=>String(Math.round(x)),500);rdTween($("rd_top"),RD.top,x=>String(Math.round(x)),500);
-  $("rd_bs").textContent=tot>0?nf(RD.buy/tot*100,0)+"% buys":"—";$("rd_bar").style.width=(tot>0?RD.buy/tot*100:50)+"%";
-  if(RD.big){rdTween($("rd_bigv"),RD.big.nt,fmtUSD,700);$("rd_bigc").textContent=RD.big.coin;}
-  rdStat();
-}
-
 function rdTween(el,to,fmt,ms){
   if(!el)return;if(REDUCE){el.textContent=fmt(to);return;}
   const from=+el.dataset.v||0;el.dataset.v=to;const t0=performance.now();
   (function f(t){const k=Math.min(1,(t-t0)/ms),e=1-Math.pow(1-k,3);el.textContent=fmt(from+(to-from)*e);if(k<1)requestAnimationFrame(f);})(t0);
 }
-function rdHash(x){let h=2166136261;for(let i=0;i<x.length;i++){h^=x.charCodeAt(i);h=Math.imul(h,16777619);}return (h>>>0)/4294967296;}
-function rdBlip(o){
-  const lg=Math.max(0,Math.min(1,Math.log10(o.nt/RD.thr)/1.5));
-  RD.blips.push({ang:rdHash(o.coin)*Math.PI*2+(rdHash(o.k)-.5)*.5,r:.9-.64*lg+(rdHash(o.k+"r")-.5)*.07,sz:4+9*lg,buy:o.side==="B",t:performance.now(),coin:o.coin,big:lg>.4,addr:o.addr,hot:false});
-  if(RD.blips.length>60)RD.blips.shift();
+const rdWin=()=>{const t0=Date.now()-RDWIN;return RD.rows.filter(o=>o.at>=t0&&(RD.flt==="all"||rdHot(RD.q.get(o.addr))));};
+function rdSide(){
+  const mk=$("rd_mk"),wl=$("rd_wl");if(!mk||!wl)return;
+  const win=rdWin(),m=new Map(),w=new Map();
+  win.forEach(o=>{let x=m.get(o.coin);if(!x){x={coin:o.coin,b:0,s:0};m.set(o.coin,x);}if(o.side==="B")x.b+=o.nt;else x.s+=o.nt;
+    let y=w.get(o.addr);if(!y){y={a:o.addr,n:0,v:0};w.set(o.addr,y);}y.n++;y.v+=o.nt;});
+  const f=[...m.values()].sort((x,y)=>(y.b+y.s)-(x.b+x.s)).slice(0,8),mxn=Math.max(1,...f.map(x=>Math.abs(x.b-x.s)));
+  mk.innerHTML=f.length?'<div class="sg fl th"><span>Mkt</span><span>Buy</span><span>Sell</span><span>Net</span><span class="dvh">Bias</span></div>'+f.map(x=>{const n=x.b-x.s,pc=Math.abs(n)/mxn*50;return '<div class="sg fl"><b>'+esc(x.coin)+'</b><span class="up">'+fmtUSD(x.b)+'</span><span class="dn">'+fmtUSD(x.s)+'</span><b class="'+(n>=0?"up":"dn")+'">'+(n>=0?"+":"−")+fmtUSD(Math.abs(n))+'</b><div class="dv"><i style="'+(n>=0?"left:50%;background:#58e3a4;":"right:50%;background:#ff7b7b;")+'width:'+pc.toFixed(1)+'%"></i></div></div>';}).join(""):'<div class="rdempty">No orders yet.</div>';
+  const ws=[...w.values()].sort((x,y)=>y.v-x.v).slice(0,6);
+  wl.innerHTML=ws.length?'<div class="sg wl th"><span>Wallet</span><span>Ord</span><span>Volume</span><span>Rank</span></div>'+ws.map(x=>{const q=RD.q.get(x.a)||{st:"pend"};return '<div class="sg wl"><button data-a="'+esc(x.a)+'">'+rdShort(x.a)+'</button><span>'+x.n+'</span><b>'+fmtUSD(x.v)+'</b><span class="rk'+(rdHot(q)?" hot":"")+'">'+(q.st==="ok"?(q.v>0?topText(q.r).replace("Top ",""):"—"):"…")+'</span></div>';}).join(""):'<div class="rdempty">No orders yet.</div>';
 }
-function rdLoop(t){
-  if(!RD.on){RD.raf=0;return;}
-  RD.raf=requestAnimationFrame(rdLoop);if(document.hidden)return;
-  const cv=RD.cv;if(!cv)return;const dpr=Math.min(2,window.devicePixelRatio||1),cw=cv.parentNode.clientWidth?Math.min(300,cv.parentNode.clientWidth-20):0,w=Math.round(cw*dpr);if(!w)return;
-  if(cv.width!==w||cv.height!==w){cv.width=w;cv.height=w;cv.style.width=cw+"px";cv.style.height=cw+"px";}
-  const g=cv.getContext("2d"),S=w/2,R=S*.94;g.clearRect(0,0,w,w);g.save();g.translate(S,S);
-  const AC="111,227,207";
-  g.lineWidth=Math.max(1,dpr);[.25,.5,.75,1].forEach(k=>{g.beginPath();g.arc(0,0,R*k,0,7);g.strokeStyle="rgba("+AC+","+(k===1?.34:.14)+")";g.stroke();});
-  g.strokeStyle="rgba("+AC+",.10)";g.beginPath();g.moveTo(-R,0);g.lineTo(R,0);g.moveTo(0,-R);g.lineTo(0,R);g.stroke();
-  const sw=REDUCE?-Math.PI/2:((t/5200)%1)*Math.PI*2-Math.PI/2;
-  if(!REDUCE){for(let i=0;i<46;i++){const a0=sw-i*.021-.021,a1=sw-i*.021;g.beginPath();g.moveTo(0,0);g.arc(0,0,R,a0,a1+.004);g.closePath();g.fillStyle="rgba("+AC+","+(.2*Math.pow(1-i/46,1.6)).toFixed(3)+")";g.fill();}
-    g.beginPath();g.moveTo(0,0);g.lineTo(Math.cos(sw)*R,Math.sin(sw)*R);g.strokeStyle="rgba("+AC+",.75)";g.lineWidth=1.6*dpr;g.stroke();}
-  const now=performance.now();
-  RD.blips.forEach(b=>{
-    const age=now-b.t,life=age/18000;if(life>=1)return;
-    const x=Math.cos(b.ang)*b.r*R,y=Math.sin(b.ang)*b.r*R,c=b.buy?"88,227,164":"255,123,123";
-    let d=(sw-b.ang)%(Math.PI*2);if(d<0)d+=Math.PI*2;const boost=REDUCE?0:Math.max(0,1-d/1.3);
-    const base=Math.pow(1-life,1.3)*.8,al=Math.min(1,base+boost*.55*(1-life)),sz=b.sz*dpr*(1+boost*.28);
-    if(!REDUCE&&age<1500){const k=age/1500;g.beginPath();g.arc(x,y,sz+k*46*dpr,0,7);g.strokeStyle="rgba("+c+","+(.7*(1-k)).toFixed(3)+")";g.lineWidth=2*dpr;g.stroke();}
-    const gr=g.createRadialGradient(x,y,0,x,y,sz*2.6);gr.addColorStop(0,"rgba("+c+","+(al*.55).toFixed(3)+")");gr.addColorStop(1,"rgba("+c+",0)");g.fillStyle=gr;g.beginPath();g.arc(x,y,sz*2.6,0,7);g.fill();
-    g.beginPath();g.arc(x,y,sz,0,7);g.fillStyle="rgba("+c+","+al.toFixed(3)+")";g.fill();
-    if(b.hot){g.beginPath();g.arc(x,y,sz+4*dpr,0,7);g.strokeStyle="rgba("+AC+","+al.toFixed(3)+")";g.lineWidth=1.6*dpr;g.stroke();}
-    if(b.big&&age<7000){g.font="600 "+(11*dpr)+"px "+SANS;g.fillStyle="rgba(241,251,248,"+(al*(1-age/7000)).toFixed(3)+")";g.textAlign=x>0?"right":"left";g.fillText(b.coin,x+(x>0?-1:1)*(sz+6*dpr),y+4*dpr);}
-  });
-  g.beginPath();g.arc(0,0,3.5*dpr,0,7);g.fillStyle="rgba("+AC+",.9)";g.fill();
-  g.restore();
+function rdRender(){
+  if(!RD.on)return;
+  const tape=$("rd_tape");if(!tape)return;
+  const rows=RD.rows.filter(o=>RD.flt==="all"||rdHot(RD.q.get(o.addr))).slice(0,60);
+  const lastId=RD.lastId||0;let maxId=lastId;const mx=Math.max(1,...rows.map(o=>o.nt));
+  tape.innerHTML=rows.map(o=>{const q=RD.q.get(o.addr)||{st:"pend"},buy=o.side==="B",hot=rdHot(q),isNew=o.id>lastId,pop=q.st==="ok"&&!RD.pop.has(o.id);
+    if(o.id>maxId)maxId=o.id;if(pop)RD.pop.add(o.id);
+    const rk=q.st==="err"?"n/a":q.st==="pend"?"":(q.v>0?topText(q.r).replace("Top ","TOP "):"NO VOL");
+    return '<div class="tr '+(buy?"rb":"rs")+(isNew?" new":"")+'" style="--w:'+(o.nt/mx*100).toFixed(1)+'%"><span class="c-t">'+new Date(o.time).toLocaleTimeString("en-GB")+'</span><span class="'+(buy?"bu":"se")+'">'+(buy?"BUY":"SELL")+'</span><b class="c-m">'+esc(o.coin)+'</b><span class="c-z">'+fmtUSD(o.nt)+'</span><span class="c-p">'+nf(o.px,o.px<10?4:o.px<1000?2:0)+'</span><button class="c-w rdw" data-a="'+esc(o.addr)+'" title="Open in the checker">'+rdShort(o.addr)+'</button><button class="rk'+(hot?" hot":"")+(q.st==="pend"?" pend":"")+(pop?" pop":"")+'" data-a="'+esc(o.addr)+'" title="Open in the checker">'+rk+'</button><button class="shbtn" data-sh="'+o.id+'" title="Share">↗</button></div>';}).join("");
+  RD.lastId=maxId;
+  const em=$("rd_empty");em.style.display=rows.length?"none":"";em.textContent=RD.rows.length?"No Top 1% wallet in the latest orders yet…":"Waiting for large orders…";
+  $("rd_cnt").textContent=rows.length?rows.length+" shown":"";
+  const net=RD.buy-RD.sell,ne=$("rd_net");
+  $("rd_n").textContent=RD.n;$("rd_bv").textContent=RD.n?fmtUSD(RD.buy):"—";$("rd_sv").textContent=RD.n?fmtUSD(RD.sell):"—";
+  ne.className=RD.n?(net>=0?"up":"dn"):"";ne.textContent=RD.n?(net>=0?"+":"−")+fmtUSD(Math.abs(net)):"—";
+  $("rd_big").textContent=RD.big?fmtUSD(RD.big.nt)+" "+RD.big.coin:"—";$("rd_top").textContent=RD.top;
+  rdSide();rdStat();
 }
 function drawRadarCard(o){
   const {c,g}=cardBase("LIVE RADAR"),q=RD.q.get(o.addr),buy=o.side==="B",col=buy?"#58e3a4":"#ff7b7b",ok=q&&q.st==="ok"&&q.v>0;
@@ -2468,18 +2463,17 @@ function rdShare(id){
 async function openRadar(){
   const cur=document.querySelector(".view.on");if(cur&&cur.id!=="v-radar")prevView=cur.id;
   RD.on=true;RD.paused=false;$("rd_pause").textContent="Pause";
-  await show("v-radar");["rd_thr","rd_flt"].forEach(i=>moveInd($(i)));
+  await show("v-radar");
   $("rd_thr").querySelectorAll(".tab").forEach(b=>b.setAttribute("aria-pressed",String(+b.dataset.t===RD.thr)));$("rd_flt").querySelectorAll(".tab").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.f===RD.flt)));["rd_thr","rd_flt"].forEach(i=>moveInd($(i)));
-  RD.cv=$("rd_cv");cancelAnimationFrame(RD.raf);RD.raf=requestAnimationFrame(rdLoop);
-  rdRender();rdConnect();
+  rdRender();rdConnect();clearInterval(RD.tmr);RD.tmr=setInterval(()=>{if(RD.on&&!document.hidden&&!RD.paused)rdSide();},1000);
 }
-function closeRadar(){RD.on=false;cancelAnimationFrame(RD.raf);clearInterval(RD.ping);if(RD.ws){try{RD.ws.close();}catch(e){}RD.ws=null;}}
+function closeRadar(){RD.on=false;clearInterval(RD.ping);clearInterval(RD.tmr);if(RD.ws){try{RD.ws.close();}catch(e){}RD.ws=null;}}
 document.querySelectorAll("[data-radar]").forEach(b=>b.addEventListener("click",openRadar));
 $("rback").onclick=async()=>{closeRadar();await show(prevView);};
 $("rd_pause").onclick=()=>{RD.paused=!RD.paused;$("rd_pause").textContent=RD.paused?"Resume":"Pause";rdStat();};
-$("rd_thr").addEventListener("click",e=>{const b=e.target.closest("[data-t]");if(!b)return;RD.thr=+b.dataset.t;rdSave();$("rd_thr").querySelectorAll(".tab").forEach(x=>x.setAttribute("aria-pressed",String(x===b)));moveInd($("rd_thr"));rdStat();});
+$("rd_thr").addEventListener("click",e=>{const b=e.target.closest("[data-t]");if(!b)return;RD.thr=+b.dataset.t;rdSave();$("rd_thr").querySelectorAll(".tab").forEach(x=>x.setAttribute("aria-pressed",String(x===b)));moveInd($("rd_thr"));rdStat();rdRender();});
 $("rd_flt").addEventListener("click",e=>{const b=e.target.closest("[data-f]");if(!b)return;RD.flt=b.dataset.f;rdSave();$("rd_flt").querySelectorAll(".tab").forEach(x=>x.setAttribute("aria-pressed",String(x===b)));moveInd($("rd_flt"));rdRender();});
-$("rd_feed").addEventListener("click",e=>{
+$("v-radar").addEventListener("click",e=>{
   const w=e.target.closest("[data-a]");if(w){closeRadar();$("addr").value=w.dataset.a;lookup();return;}
   const s=e.target.closest("[data-sh]");if(s)rdShare(+s.dataset.sh);
 });
