@@ -1100,6 +1100,7 @@ function renderResults(){
   crowdRender(v,t,r,tp,med);
   $("subbtn").style.display=(vols&&!manual)?"":"none";
   last={top:topText(r),v:fmtUSD(v),vol:volLabel(W),subs:subsOn,hip:MODE==="hip"};
+  renderNav();
   renderNote();
   $("ttext").value=shareText();
   cacheCard();
@@ -2491,9 +2492,9 @@ function renderNav(){
   const act=navActive(),cur=document.querySelector(".view.on"),land=cur&&cur.id==="v-landing";
   const wal=(last&&(manual||addrShown))?(manual?S.manualwho:addrShown):"";
   const t=(k,l)=>'<button class="tab" data-nav="'+k+'" aria-pressed="'+(act===k)+'">'+l+'</button>';
-  const h='<div class="brand" data-nav="checker" title="Home"><span class="bl">Hyperliquid Volume Checker</span><span class="bs">Volume Checker</span></div><div class="seg gnav" role="group" aria-label="Main"><i class="ind"></i>'+t("checker","Checker")+t("radar","Radar")+t("market","Market")+'</div><div class="gr">'+(wal&&!land?'<button class="addr" data-nav="change" title="Change address"><span class="aw">'+esc(wal)+'</span><em>Change</em></button>':'')+'</div>';
+  const h='<div class="brand" data-nav="checker" title="Home"><span class="bl">Hyperliquid Volume Checker</span><span class="bs">Volume Checker</span></div><div class="seg gnav" role="group" aria-label="Main"'+(wal?'':' style="visibility:hidden"')+'><i class="ind"></i>'+t("checker","Checker")+t("radar","Radar")+t("market","Market")+'</div><div class="gr">'+(wal&&!land?'<button class="addr" data-nav="change" title="Change address"><span class="aw">'+esc(wal)+'</span><em>Change</em></button>':'')+'</div>';
   document.querySelectorAll("[data-gtop]").forEach(e=>{if(e._h!==h){e.innerHTML=h;e._h=h;}});
-  const f='<a data-gm>How it works</a> · Independent tool, not affiliated with Hyperliquid · Made by <a href="https://x.com/hugocrza" target="_blank" rel="noopener">@hugocrza</a>';
+  const f='<a data-gm>How it works</a> · Independent tool, not affiliated with Hyperliquid · Powered by <a href="https://x.com/hugocrza" target="_blank" rel="noopener">@hugocrza</a>';
   document.querySelectorAll("[data-gfoot]").forEach(e=>{if(e._h!==f){e.innerHTML=f;e._h=f;}});
   document.querySelectorAll(".gnav").forEach(moveInd);
 }
